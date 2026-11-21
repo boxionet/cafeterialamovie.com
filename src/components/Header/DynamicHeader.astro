@@ -1,10 +1,10 @@
 ---
 import navData from "@data/navData.json";
-import { Icon } from "astro-icon/components";
 import { getLocalizedRoute } from "@js/routes";
-import Settings from "@components/Settings/Settings.astro";
 import { getSiteContext } from "@js/getSiteContext";
+import { BUSINESS } from "@data/client";
 import type { NavItem } from "src/typescript/global";
+import logo from "@assets/svgs/logo.svg";
 
 const { locale, content } = await getSiteContext(Astro.url);
 ---
@@ -12,7 +12,7 @@ const { locale, content } = await getSiteContext(Astro.url);
 <header id="cs-navigation">
 	<div class="cs-container">
 		<a href={getLocalizedRoute(locale, "/")} class="cs-logo" aria-label={content.common.backToHome}>
-			<Icon name="logo-black" width={210} height={29} aria-hidden="true" />
+			<img src={logo.src} alt="Cafetería La Movie — La Movie del Sabor" />
 		</a>
 
 		<nav class="cs-nav" role="navigation">
@@ -33,101 +33,39 @@ const { locale, content } = await getSiteContext(Astro.url);
 			<div class="cs-ul-wrapper">
 				<ul id="cs-expanded-ul" class="cs-ul">
 					{navData.map((entry: NavItem) => {
-						const entryUrl = entry.urls?.[locale] ?? entry.urls?.en ?? "/";
-						const entryLabel = entry.label?.[locale] ?? entry.label?.en ?? entry.key;
+						const entryUrl = entry.urls?.[locale] ?? entry.urls?.es ?? "/";
+						const entryLabel = entry.label?.[locale] ?? entry.label?.es ?? entry.key;
+						const href = getLocalizedRoute(locale, entryUrl);
+						const isActive = Astro.url.pathname === href;
 
 						return (
-							<li
-								class:list={[
-									"cs-li",
-									{
-										"cs-dropdown": entry.children?.length > 0,
-									},
-								]}
-							>
-								{entry.children?.length ? (
-									<button
-										aria-expanded="false"
-										aria-controls={`submenu-${entry.key}`}
-										class:list={[
-											"cs-li-link cs-dropdown-button",
-											{
-												"cs-active": entry.children.some((child: NavItem) =>
-													Astro.url.pathname.startsWith(
-														getLocalizedRoute(
-															locale,
-															child.urls?.[locale] ?? child.urls?.en ?? "/",
-														),
-													),
-												),
-											},
-										]}
-									>
-										{entryLabel}
-										<Icon name="mdi--caret" class="cs-drop-icon" />
-									</button>
-								) : (
-									<a
-										href={getLocalizedRoute(locale, entryUrl)}
-										class:list={[
-											"cs-li-link",
-											{
-												"cs-active": Astro.url.pathname === getLocalizedRoute(locale, entryUrl),
-											},
-										]}
-										aria-current={
-											Astro.url.pathname === getLocalizedRoute(locale, entryUrl)
-												? "page"
-												: undefined
-										}
-									>
-										{entryLabel}
-									</a>
-								)}
-
-								{entry.children?.length ? (
-									<ul id={`submenu-${entry.key}`} class="cs-drop-ul">
-										{entry.children.map((child: NavItem) => {
-											const childUrl = child.urls?.[locale] ?? child.urls?.en ?? "/";
-											const childLabel = child.label?.[locale] ?? child.label?.en ?? child.key;
-
-											const localizedRoute = getLocalizedRoute(locale, childUrl);
-
-											return (
-												<li class="cs-drop-li">
-													<a
-														href={localizedRoute}
-														class:list={[
-															"cs-li-link",
-															"cs-drop-link",
-															{
-																"cs-active": Astro.url.pathname === localizedRoute,
-															},
-														]}
-														aria-current={
-															Astro.url.pathname === localizedRoute ? "page" : undefined
-														}
-													>
-														{childLabel}
-													</a>
-												</li>
-											);
-										})}
-									</ul>
-								) : null}
+							<li class="cs-li">
+								<a
+									href={href}
+									class:list={["cs-li-link", { "cs-active": isActive }]}
+									aria-current={isActive ? "page" : undefined}
+								>
+									{entryLabel}
+								</a>
 							</li>
 						);
 					})}
 				</ul>
 
-				<div class="cs-shown cs-settings">
-					<Settings />
+				<div class="cs-nav-cta">
+					<span class="cs-hours">{BUSINESS.hours.short}</span>
+					<a class="cs-pedir" href={BUSINESS.whatsapp} target="_blank" rel="noopener">
+						Pedir por WhatsApp
+					</a>
 				</div>
 			</div>
 		</nav>
 
-		<div class="cs-hidden cs-settings">
-			<Settings />
+		<div class="cs-desktop-cta">
+			<span class="cs-hours">{BUSINESS.hours.short}</span>
+			<a class="cs-pedir" href={BUSINESS.whatsapp} target="_blank" rel="noopener">
+				Pedir por WhatsApp
+			</a>
 		</div>
 	</div>
 </header>
@@ -146,14 +84,12 @@ const { locale, content } = await getSiteContext(Astro.url);
 		}
 
 		#cs-navigation {
-			/* remove the font family so the Stitch inherits the fonts from your global stylesheet */
 			font-family: var(--font-primary);
 			width: 100%;
-			/* prevents padding from affecting height and width */
 			box-sizing: border-box;
 			padding: (12/16rem) (16/16rem);
-			background-color: #fff;
-			box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+			background-color: #000;
+			border-bottom: 1px solid #1f1f1f;
 			position: fixed;
 			z-index: 10000;
 
@@ -203,25 +139,24 @@ const { locale, content } = await getSiteContext(Astro.url);
 			}
 
 			.cs-logo {
-				width: 40%;
-				max-width: (146/16rem);
-				height: 100%;
+				width: auto;
+				max-width: (176/16rem);
+				height: (48/16rem);
 				margin: 0 auto 0 0;
-				/* prevents padding from affecting height and width */
 				box-sizing: border-box;
 				padding: 0;
 				display: flex;
-				justify-content: center;
+				justify-content: flex-start;
 				align-items: center;
 				z-index: 10;
 
-				svg {
-					width: 100%;
+				img {
+					width: auto;
+					max-width: 100%;
 					height: 100%;
-					/* ensures the image never overflows the container. It stays contained within it's width and height and expands to fill it then stops once it reaches an edge */
 					object-fit: contain;
-					/* places the image to the left edge of the parent */
 					object-position: left;
+					display: block;
 				}
 			}
 
@@ -236,11 +171,6 @@ const { locale, content } = await getSiteContext(Astro.url);
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				&.cs-active {
-					.select-wrapper {
-						display: flex;
-					}
-				}
 			}
 
 			.cs-active {
@@ -272,7 +202,7 @@ const { locale, content } = await getSiteContext(Astro.url);
 			.cs-line {
 				width: 100%;
 				height: 2px;
-				background-color: #1a1a1a;
+				background-color: #fff;
 				border-radius: 2px;
 				position: absolute;
 				left: 50%;
@@ -314,7 +244,7 @@ const { locale, content } = await getSiteContext(Astro.url);
 
 			.cs-ul-wrapper {
 				height: 100vh;
-				background-color: #fff;
+				background-color: #0a0a0a;
 				box-shadow: inset rgba(0, 0, 0, 0.2) 0px 8px 24px;
 				opacity: 0;
 				visibility: hidden;
@@ -332,15 +262,13 @@ const { locale, content } = await getSiteContext(Astro.url);
 				padding: (48/16rem) clamp(1.75rem, 3vw, 2.5rem) (32/16rem) (70/16rem);
 				display: grid;
 				gap: clamp(1.25rem, 2.6vw, 2.25rem);
+				align-content: start;
 			}
 
 			.cs-ul {
 				width: auto;
 				min-width: 40%;
-				// height: 65vh;
 				margin: 0;
-				/* 28px - 40px */
-				// padding: (48/16rem) clamp(1.75rem, 3vw, 2.5rem) (32/16rem) (70/16rem);
 				display: flex;
 				flex-direction: column;
 				justify-content: flex-start;
@@ -355,7 +283,6 @@ const { locale, content } = await getSiteContext(Astro.url);
 				width: 100%;
 				margin-right: 0;
 				opacity: 0;
-				/* transition from these values */
 				transform: translateX(-40/16rem);
 				transition:
 					transform 0.6s,
@@ -373,27 +300,12 @@ const { locale, content } = await getSiteContext(Astro.url);
 				&:nth-of-type(4) {
 					transition-delay: 0.2s;
 				}
-				&:nth-of-type(5) {
-					transition-delay: 0.25s;
-				}
-				&:nth-of-type(6) {
-					transition-delay: 0.3s;
-				}
-				&:nth-of-type(7) {
-					transition-delay: 0.35s;
-				}
-				&:nth-of-type(8) {
-					transition-delay: 0.4s;
-				}
-				&:nth-of-type(9) {
-					transition-delay: 0.45s;
-				}
 			}
 
 			.cs-li-link {
 				/* 16px - 24px */
 				font-size: clamp(1rem, 2.5vw, 1.5rem);
-				color: inherit;
+				color: #fff;
 				line-height: 1.2em;
 				text-decoration: none;
 				margin: 0;
@@ -405,7 +317,7 @@ const { locale, content } = await getSiteContext(Astro.url);
 					content: "";
 					width: 100%;
 					height: 1px;
-					background: currentColor;
+					background: var(--primary);
 					opacity: 1;
 					display: none;
 					position: absolute;
@@ -414,323 +326,44 @@ const { locale, content } = await getSiteContext(Astro.url);
 				}
 
 				&.cs-active {
+					color: var(--secondary);
 					&:before {
 						display: block;
 					}
 				}
-
-				/* styles these li items that are also dropdown buttons */
-				&.cs-dropdown-button {
-					display: flex;
-					align-items: center;
-					margin-left: auto;
-					gap: 0.5em;
-				}
 			}
 
-			.cs-button-solid {
-				display: none;
-			}
-		}
-	}
-
-	/* Dark Mode */
-	@media only screen and (max-width: 63.9375rem) {
-		body.dark-mode {
-			#cs-navigation {
-				background-color: var(--dark);
-
-				.cs-logo {
-					/* makes it white */
-					filter: grayscale(1) brightness(1000%);
-				}
-
-				.cs-line {
-					background-color: #fff;
-				}
-
-				.cs-ul-wrapper {
-					background-color: var(--medium);
-				}
-
-				.cs-li-link {
-					color: var(--bodyTextColorWhite);
-				}
-			}
-		}
-	}
-
-	/*-- -------------------------- -->
-	<---     Navigation Dropdown    -->
-	<--- -------------------------- -*/
-
-	/* Mobile - 1023px */
-	@media only screen and (max-width: 63.9375rem) {
-		#cs-navigation {
-			.cs-dropdown {
-				color: var(--bodyTextColorWhite);
-				color: var(--headerColor);
-
-				position: relative;
-
-				&.cs-active {
-					.cs-drop-ul {
-						height: auto;
-						margin: (12/16rem) 0 0 0;
-						padding: (24/16rem);
-						opacity: 1;
-						visibility: visible;
-						transform: scale(1);
-					}
-
-					.cs-drop-link {
-						opacity: 1;
-					}
-
-					.cs-drop-icon {
-						transform: rotate(0);
-					}
-				}
-
-				.cs-li-link {
-					position: relative;
-					transition: opacity 0.3s;
-				}
-			}
-
-			.cs-drop-icon {
-				width: (15/16rem);
-				height: auto;
-				display: inline-block;
-				color: inherit;
-				transform: rotate(180deg);
-				transition: 0.3s;
-			}
-
-			.cs-drop-ul {
-				width: 100%;
-				height: 0;
-				margin: 0;
-				box-sizing: border-box;
-				padding: 0 (24/16rem) 0 (24/16rem);
-				background-color: var(--primary);
-				opacity: 0;
+			.cs-nav-cta {
 				display: flex;
-				visibility: hidden;
 				flex-direction: column;
-				justify-content: flex-start;
 				align-items: flex-end;
 				gap: (12/16rem);
-				overflow: hidden;
-				transform: scale(0);
-				transition:
-					padding 0.3s,
-					margin 0.3s,
-					height 0.3s,
-					opacity 0.3s,
-					transform 0.3s,
-					visibility 0.3s;
-				transform-origin: top right;
+				border-top: 1px solid #1f1f1f;
+				padding-top: (20/16rem);
 			}
 
-			.cs-drop-li {
-				text-align: inherit;
-				list-style: none;
+			.cs-hours {
+				font-size: (13/16rem);
+				font-weight: 700;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+				color: var(--secondary);
 			}
 
-			.cs-li-link {
-				&.cs-drop-link {
-					/* 14px - 16px */
-					font-size: clamp(0.875rem, 2vw, 1.25rem);
-					color: inherit;
-				}
-			}
-
-			.cs-dropdown-button {
-				background-color: transparent;
-				border: none;
-				appearance: none;
-			}
-		}
-	}
-
-	/* Desktop - 1024px */
-	@media only screen and (min-width: 64rem) {
-		#cs-navigation {
-			.cs-dropdown {
-				position: relative;
-				&:hover,
-				&.cs-active {
-					cursor: pointer;
-					.cs-drop-ul {
-						opacity: 1;
-						visibility: visible;
-						transform: scaleY(1);
-					}
-
-					.cs-drop-li {
-						opacity: 1;
-						transform: translateY(0);
-					}
-				}
-			}
-
-			.cs-dropdown:has(.cs-drop-icon) {
-				display: flex;
-				align-items: center;
-				&:hover {
-					.cs-drop-icon {
-						transform: rotate(0);
-					}
-				}
-			}
-
-			.cs-drop-icon {
-				width: (15/16rem);
-				height: auto;
-				display: inline-block;
-				color: inherit;
-				transform: rotate(180deg);
-				transition: 0.3s;
-			}
-
-			.cs-drop-ul {
-				min-width: (200/16rem);
-				margin: 0;
-				padding: 0;
-				background-color: #fff;
-				box-shadow: rgba(149, 157, 165, 0.2) 0px 10px 16px;
-				opacity: 0;
-				border-bottom: 5px solid var(--primary);
-				visibility: hidden;
-				/* if you have 8 or more links in your dropdown nav, uncomment the columns property to make the list into 2 even columns. Change it to 3 or 4 if you need extra columns. Then remove the transition delays on the cs-drop-li so they don't have weird scattered animations */
-				// columns: 2;
-				position: absolute;
-				top: 100%;
-				z-index: -100;
-				overflow: hidden;
-				transform: scaleY(0);
-				transition:
-					transform 0.3s,
-					visibility 0.3s,
-					opacity 0.3s;
-				transform-origin: top;
-			}
-
-			.cs-drop-li {
-				font-size: (16/16rem);
+			.cs-pedir {
+				font-size: (15/16rem);
+				font-weight: 800;
+				line-height: 1.2em;
 				text-decoration: none;
-				list-style: none;
-				width: 100%;
-				height: auto;
-				color: var(--bodyTextColor);
-				opacity: 0;
-				display: block;
-				transform: translateY(-10/16rem);
-				transition:
-					opacity 0.6s,
-					transform 0.6s;
-
-				&:nth-of-type(1) {
-					transition-delay: 0.05s;
-				}
-				&:nth-of-type(2) {
-					transition-delay: 0.1s;
-				}
-				&:nth-of-type(3) {
-					transition-delay: 0.15s;
-				}
-				&:nth-of-type(4) {
-					transition-delay: 0.2s;
-				}
-				&:nth-of-type(5) {
-					transition-delay: 0.25s;
-				}
-				&:nth-of-type(6) {
-					transition-delay: 0.3s;
-				}
-				&:nth-of-type(7) {
-					transition-delay: 0.35s;
-				}
-				&:nth-of-type(8) {
-					transition-delay: 0.4s;
-				}
-				&:nth-of-type(9) {
-					transition-delay: 0.45s;
-				}
-				&:nth-of-type(10) {
-					transition-delay: 0.5s;
-				}
-				&:nth-of-type(11) {
-					transition-delay: 0.55s;
-				}
-				&:nth-of-type(12) {
-					transition-delay: 0.6s;
-				}
-				&:nth-of-type(13) {
-					transition-delay: 0.65s;
-				}
+				color: #fff;
+				background-color: var(--primary);
+				border-radius: 999px;
+				padding: (12/16rem) (20/16rem);
+				display: inline-block;
 			}
 
-			.cs-li-link {
-				&.cs-drop-link {
-					font-size: (16/16rem);
-					line-height: 1.5em;
-					text-decoration: none;
-					white-space: nowrap;
-					width: 100%;
-					/* prevents padding from affecting height and width */
-					box-sizing: border-box;
-					padding: (12/16rem);
-					color: var(--bodyTextColor);
-					display: block;
-					transition:
-						color 0.3s,
-						background-color 0.3s;
-
-					&:hover {
-						background-color: #f7f7f7;
-					}
-
-					&:focus-within {
-						outline: 2px solid currentColor;
-						outline-offset: -2px;
-					}
-
-					&:before {
-						display: none;
-					}
-				}
-			}
-
-			.cs-dropdown-button {
-				background-color: transparent;
-				border: none;
-				appearance: none;
-			}
-		}
-	}
-
-	/* Dark Mode */
-	@media only screen and (min-width: 0rem) {
-		body.dark-mode {
-			#cs-navigation {
-				.cs-drop-ul {
-					background-color: var(--dark);
-				}
-
-				.cs-li-link {
-					&.cs-drop-link {
-						&:hover {
-							background-color: var(--medium);
-						}
-					}
-				}
-
-				.cs-drop-icon {
-					/* turns it white */
-					filter: grayscale(1) brightness(1000%);
-				}
+			.cs-desktop-cta {
+				display: none;
 			}
 		}
 	}
@@ -742,14 +375,12 @@ const { locale, content } = await getSiteContext(Astro.url);
 	/* Small Desktop - 1024px */
 	@media only screen and (min-width: 64rem) {
 		#cs-navigation {
-			/* remove the font family so the Stitch inherits the fonts from your global stylesheet */
 			font-family: var(--font-primary);
 			width: 100%;
-			/* prevents padding from affecting height and width */
 			box-sizing: border-box;
-			padding: 0 (16/16rem);
-			background-color: #fff;
-			box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+			padding: (10/16rem) (16/16rem);
+			background-color: #000;
+			border-bottom: 1px solid #1f1f1f;
 			position: fixed;
 			z-index: 10000;
 
@@ -768,22 +399,22 @@ const { locale, content } = await getSiteContext(Astro.url);
 			}
 
 			.cs-logo {
-				width: 18.4%;
-				max-width: (350/16rem);
-				height: (65/16rem);
-				/* margin-right auto pushes everything away from it to the right */
+				width: auto;
+				max-width: (220/16rem);
+				height: (56/16rem);
 				margin: 0 auto 0 0;
 				padding: 0;
 				display: flex;
-				justify-content: center;
+				justify-content: flex-start;
 				align-items: center;
 				z-index: 100;
 
-				svg {
-					width: 100%;
+				img {
+					width: auto;
+					max-width: 100%;
 					height: 100%;
-					/* ensures the image never overflows the container. It stays contained within it's width and height and expands to fill it then stops once it reaches an edge */
 					object-fit: contain;
+					display: block;
 				}
 			}
 
@@ -796,12 +427,6 @@ const { locale, content } = await getSiteContext(Astro.url);
 				align-items: center;
 				/* 20px - 36px */
 				gap: clamp(1.25rem, 2.6vw, 2.25rem);
-				/* separator between cs-ul and darkmode toggle */
-				&::after {
-					content: "";
-					height: 2rem;
-					border-inline-end: 1px solid hsl(224, 6%, 77%);
-				}
 			}
 
 			.cs-li {
@@ -814,10 +439,11 @@ const { locale, content } = await getSiteContext(Astro.url);
 			.cs-li-link {
 				/* 14px - 16px */
 				font-size: clamp(0.875rem, 1vw, 1rem);
+				font-weight: 600;
 				line-height: 1.5em;
 				text-decoration: none;
 				margin: 0;
-				color: var(--bodyTextColor);
+				color: #fff;
 				display: block;
 				position: relative;
 				&:hover {
@@ -827,6 +453,7 @@ const { locale, content } = await getSiteContext(Astro.url);
 				}
 
 				&.cs-active {
+					color: var(--secondary);
 					&:before {
 						width: 100%;
 					}
@@ -845,54 +472,43 @@ const { locale, content } = await getSiteContext(Astro.url);
 					left: 0;
 					transition: width 0.3s;
 				}
-
-				&.cs-dropdown-button {
-					display: flex;
-					align-items: center;
-					gap: 0.5em;
-				}
 			}
 
-			.cs-settings {
-				gap: 0.5rem;
-			}
-
-			.cs-settings.cs-hidden {
-				display: flex;
-			}
-
-			.cs-settings.cs-shown {
+			.cs-nav-cta {
 				display: none;
 			}
-		}
-	}
 
-	/* Dark Mode */
-	@media only screen and (min-width: 64rem) {
-		body.dark-mode {
-			#cs-navigation {
-				background-color: var(--dark);
+			.cs-desktop-cta {
+				display: flex;
+				align-items: center;
+				gap: (16/16rem);
+				flex: none;
+			}
 
-				.cs-logo {
-					/* makes it turn white */
-					filter: grayscale(1) brightness(1000%);
-				}
+			.cs-hours {
+				font-size: (12/16rem);
+				font-weight: 700;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+				color: var(--secondary);
+				white-space: nowrap;
+			}
 
-				.cs-ul {
-					/* separator between cs-ul and darkmode toggle */
-					&::after {
-						border-inline-end: 1px solid hsl(224, 10%, 23%);
-					}
-				}
+			.cs-pedir {
+				font-size: (14/16rem);
+				font-weight: 800;
+				line-height: 1.2em;
+				text-decoration: none;
+				white-space: nowrap;
+				color: #fff;
+				background-color: var(--primary);
+				border-radius: 999px;
+				padding: (11/16rem) (18/16rem);
+				display: inline-block;
+				transition: background-color 0.3s;
 
-				.cs-li-link {
-					color: var(--bodyTextColorWhite);
-				}
-
-				.cs-li-link {
-					&:before {
-						background-color: var(--primaryLight);
-					}
+				&:hover {
+					background-color: #d40400;
 				}
 			}
 		}

@@ -6,8 +6,8 @@ import { SITE } from "./src/data/siteConfig";
 export default defineConfig({
 	site: SITE.url,
 	i18n: {
-		defaultLocale: "en",
-		locales: ["en"],
+		defaultLocale: "es",
+		locales: ["es"],
 		routing: {
 			prefixDefaultLocale: false,
 		},
@@ -19,18 +19,26 @@ export default defineConfig({
 		sitemap({
 			filter: (page) => !page.includes("/admin"),
 			i18n: {
-				defaultLocale: "en",
-				locales: { en: "en-US" },
+				defaultLocale: "es",
+				locales: { es: "es-DO" },
 			},
 		}),
 	],
 	fonts: [
 		{
 			provider: fontProviders.fontsource(),
-			name: "Roboto",
+			name: "Lilita One",
+			cssVariable: "--font-display",
+			fallbacks: ["Arial Black", "sans-serif"],
+			weights: [400],
+			styles: ["normal"],
+		},
+		{
+			provider: fontProviders.fontsource(),
+			name: "Nunito",
 			cssVariable: "--font-primary",
 			fallbacks: ["Arial", "sans-serif"],
-			weights: [400, 700, 900],
+			weights: [400, 600, 700, 800],
 			styles: ["normal"],
 		},
 	],

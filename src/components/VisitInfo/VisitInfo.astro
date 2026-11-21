@@ -1,0 +1,93 @@
+---
+import { BUSINESS } from "@data/client";
+---
+
+<section class="visit">
+	<div class="visit-inner">
+		<div class="visit-block">
+			<p class="cs-topper">Ven a vernos</p>
+			<h2 class="font-display">Horario y ubicación</h2>
+			<p class="visit-hours">
+				{BUSINESS.hours.open}
+				<br />
+				{BUSINESS.hours.closed}
+			</p>
+		</div>
+		<div class="visit-block">
+			<p class="visit-address">
+				{BUSINESS.address.lineOne}
+				<br />
+				{BUSINESS.address.lineTwo}
+			</p>
+			<div class="visit-actions">
+				<a href={BUSINESS.address.mapLink} target="_blank" rel="noopener" class="cs-button-solid">
+					Cómo llegar
+				</a>
+				<a href={BUSINESS.whatsapp} target="_blank" rel="noopener" class="cs-button-transparent">
+					WhatsApp
+				</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style lang="less">
+	.visit {
+		padding: (64/16rem) (16/16rem);
+	}
+
+	.visit-inner {
+		max-width: (1100/16rem);
+		margin: auto;
+		background-color: #141414;
+		border: 1px solid #232323;
+		border-radius: (20/16rem);
+		padding: (40/16rem) (24/16rem);
+		display: flex;
+		flex-direction: column;
+		gap: (32/16rem);
+	}
+
+	.visit-block h2 {
+		font-size: clamp(1.75rem, 4vw, 2.5rem);
+		color: #fff;
+		margin-bottom: (12/16rem);
+	}
+
+	.visit-hours {
+		font-size: (17/16rem);
+		line-height: 1.7em;
+		color: #d4d4d4;
+		margin-bottom: 0;
+	}
+
+	.visit-address {
+		font-size: (17/16rem);
+		line-height: 1.7em;
+		color: #fff;
+		margin-bottom: (24/16rem);
+	}
+
+	.visit-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: (12/16rem);
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.visit-inner {
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			padding: (48/16rem) (48/16rem);
+		}
+
+		.visit-block:last-child {
+			text-align: right;
+		}
+
+		.visit-actions {
+			justify-content: flex-end;
+		}
+	}
+</style>

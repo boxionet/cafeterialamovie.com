@@ -12,7 +12,7 @@ function normalizePath(path: string) {
 export function getLocalizedRoute(locale: string | undefined, path: string) {
 	const cleanPath = normalizePath(path);
 
-	if (!locale || locale === "en") {
+	if (!locale || locale === "es") {
 		return cleanPath;
 	}
 

@@ -1,0 +1,387 @@
+import type { ImageMetadata } from "astro";
+
+// Dish photos live in src/assets/images/dishes/ (31 real WebP + 4 recreated
+// black-plate JPG). Resolved with import.meta.glob so <Image> gets real
+// metadata without 35 static imports.
+const images = import.meta.glob<{ default: ImageMetadata }>(
+	"/src/assets/images/dishes/*.{webp,jpg}",
+	{ eager: true },
+);
+
+export function dishImage(file: string): ImageMetadata {
+	const entry = images[`/src/assets/images/dishes/${file}`];
+	if (!entry) throw new Error(`Missing dish image: ${file}`);
+	return entry.default;
+}
+
+export interface DishOption {
+	label: string;
+	price: number;
+}
+
+export interface Dish {
+	id: string;
+	name: string;
+	desc: string;
+	category: string;
+	/** real photo file in src/assets/images/dishes/ */
+	photo: string;
+	/** recreated black-plate shot (only the 4 favorites have one) */
+	platePhoto?: string;
+	options: DishOption[];
+}
+
+export interface Category {
+	id: string;
+	label: string;
+}
+
+export const CATEGORIES: Category[] = [
+	{ id: "hamburguesas", label: "Hamburguesas y Hot Dogs" },
+	{ id: "mofongo", label: "Mofongo" },
+	{ id: "plancha", label: "Pollo, Cerdo y Res a la Plancha" },
+	{ id: "yaroa", label: "Yaroa, Patacón, Chimi y Burritos" },
+	{ id: "sandwiches", label: "Sándwiches y Tostadas" },
+	{ id: "extras", label: "Papas, Fritos y Extras" },
+];
+
+// Prices exactly from ~/workspace/cafeteria-la-movie/menu.md (resolved values).
+export const DISHES: Dish[] = [
+	{
+		id: "hamburguesa",
+		name: "Hamburguesa",
+		desc: "Con papas fritas y salsas de la casa.",
+		category: "hamburguesas",
+		photo: "11-hamburguesa.webp",
+		platePhoto: "hamburguesa-black-plate.jpg",
+		options: [
+			{ label: "Sola", price: 275 },
+			{ label: "Con papas", price: 400 },
+		],
+	},
+	{
+		id: "hot-dog",
+		name: "Hot dog",
+		desc: "Clásico hot dog de la casa.",
+		category: "hamburguesas",
+		photo: "04-hot-dog.webp",
+		options: [{ label: "Clásico", price: 150 }],
+	},
+	{
+		id: "hotdog-con-papa",
+		name: "Hotdog con papa",
+		desc: "Hot dog con papas fritas.",
+		category: "hamburguesas",
+		photo: "05-hotdog-con-papas.webp",
+		options: [
+			{ label: "Solo", price: 150 },
+			{ label: "Con papa", price: 250 },
+		],
+	},
+	{
+		id: "mofongo-longaniza",
+		name: "Mofongo con longaniza",
+		desc: "Mofongo con queso y longaniza.",
+		category: "mofongo",
+		photo: "12-mofongo-con-longaniza.webp",
+		platePhoto: "mofongo-con-longaniza-black-plate.jpg",
+		options: [{ label: "Plato", price: 300 }],
+	},
+	{
+		id: "mofongo-pechuga",
+		name: "Mofongo con pechuga a la plancha",
+		desc: "Mofongo con pechuga a la plancha.",
+		category: "mofongo",
+		photo: "29-mofongo-con-camarones-a-la-crema.webp",
+		options: [{ label: "Plato", price: 450 }],
+	},
+	{
+		id: "mofongo-camarones",
+		name: "Mofongo con camarones a la crema",
+		desc: "Mofongo con camarones a la crema.",
+		category: "mofongo",
+		photo: "29-mofongo-con-camarones-a-la-crema.webp",
+		options: [{ label: "Plato", price: 600 }],
+	},
+	{
+		id: "camarones-criolla",
+		name: "Camarones a la criolla",
+		desc: "Con mofongo o fritos.",
+		category: "mofongo",
+		photo: "02-camarones-a-la-criolla-con-mofongo.webp",
+		platePhoto: "camarones-con-mofongo-black-plate.jpg",
+		options: [{ label: "Plato", price: 575 }],
+	},
+	{
+		id: "chuleta",
+		name: "Chuleta a la plancha",
+		desc: "Chuleta a la plancha con papas fritas.",
+		category: "plancha",
+		photo: "01-chuleta-a-la-plancha-con-papas.webp",
+		options: [{ label: "Plato", price: 400 }],
+	},
+	{
+		id: "chuleta-ensalada",
+		name: "Chuleta a la plancha con ensalada",
+		desc: "Papas fritas, fritos o ensalada.",
+		category: "plancha",
+		photo: "06-chuleta-a-la-plancha-con-ensalada.webp",
+		options: [
+			{ label: "Sola", price: 350 },
+			{ label: "Con frito o papa", price: 400 },
+		],
+	},
+	{
+		id: "pechuga-plancha",
+		name: "Pechuga a la plancha",
+		desc: "Papas fritas o fritos y ensalada.",
+		category: "plancha",
+		photo: "26-pechuga-a-la-plancha.webp",
+		options: [{ label: "Plato", price: 400 }],
+	},
+	{
+		id: "pechuga-crema",
+		name: "Pechuga a la crema",
+		desc: "Papas fritas, fritos o mofongo.",
+		category: "plancha",
+		photo: "19-pechuga-a-la-crema.webp",
+		options: [{ label: "Plato", price: 475 }],
+	},
+	{
+		id: "camarones-crema",
+		name: "Camarones a la crema",
+		desc: "Papas fritas, fritos o mofongo.",
+		category: "plancha",
+		photo: "19-pechuga-a-la-crema.webp",
+		options: [{ label: "Plato", price: 600 }],
+	},
+	{
+		id: "pierna-frito",
+		name: "Pierna con frito o papa",
+		desc: "Pierna con frito o papa.",
+		category: "plancha",
+		photo: "17-pierna-con-frito.webp",
+		options: [{ label: "Plato", price: 450 }],
+	},
+	{
+		id: "pescado-fritos",
+		name: "Pescado con fritos",
+		desc: "Pescado frito con fritos.",
+		category: "plancha",
+		photo: "27-pescado-con-fritos.webp",
+		options: [{ label: "Plato", price: 450 }],
+	},
+	{
+		id: "yaroa",
+		name: "Yaroa",
+		desc: "Queso derretido, carne a elegir y salsas.",
+		category: "yaroa",
+		photo: "24-yaroa.webp",
+		platePhoto: "yaroa-black-plate.jpg",
+		options: [
+			{ label: "Pollo · Pequeña", price: 225 },
+			{ label: "Pollo · Mediana", price: 300 },
+			{ label: "Pollo · Grande", price: 400 },
+			{ label: "Res · Pequeña", price: 275 },
+			{ label: "Res · Mediana", price: 350 },
+			{ label: "Res · Grande", price: 450 },
+		],
+	},
+	{
+		id: "patacon",
+		name: "Patacón",
+		desc: "Patacón con pollo o pierna.",
+		category: "yaroa",
+		photo: "18-patacon.webp",
+		options: [
+			{ label: "Pollo", price: 250 },
+			{ label: "Pierna", price: 325 },
+		],
+	},
+	{
+		id: "chimi",
+		name: "Chimi de pierna",
+		desc: "De pierna, con repollo, tomate y salsas de la casa.",
+		category: "yaroa",
+		photo: "23-chimi-de-pierna.webp",
+		options: [
+			{ label: "Solo", price: 250 },
+			{ label: "Con papas", price: 350 },
+		],
+	},
+	{
+		id: "burritos",
+		name: "Burritos",
+		desc: "Pollo, res o pierna.",
+		category: "yaroa",
+		photo: "21-burritos.webp",
+		options: [
+			{ label: "Solo", price: 125 },
+			{ label: "Con papa", price: 250 },
+		],
+	},
+	{
+		id: "burrito-papa",
+		name: "Burrito con papa",
+		desc: "Pollo, res o pierna, con papas fritas.",
+		category: "yaroa",
+		photo: "07-burrito-con-papas.webp",
+		options: [
+			{ label: "Pollo o res", price: 250 },
+			{ label: "Pierna", price: 300 },
+		],
+	},
+	{
+		id: "sandwich",
+		name: "Sándwich",
+		desc: "Normal, pollo o res.",
+		category: "sandwiches",
+		photo: "30-sandwich.webp",
+		options: [
+			{ label: "Normal", price: 100 },
+			{ label: "Pollo", price: 150 },
+			{ label: "Res", price: 175 },
+		],
+	},
+	{
+		id: "tostadas",
+		name: "Tostadas",
+		desc: "Jamón y queso, vegetales, pollo, res, huevo o completa.",
+		category: "sandwiches",
+		photo: "08-club-sandwich.webp",
+		options: [
+			{ label: "Jamón y queso", price: 60 },
+			{ label: "Con vegetales", price: 75 },
+			{ label: "Pollo", price: 125 },
+			{ label: "Res", price: 125 },
+			{ label: "Huevo", price: 75 },
+			{ label: "Completa", price: 200 },
+		],
+	},
+	{
+		id: "club-sandwich",
+		name: "Club sándwich",
+		desc: "Club sándwich de la casa.",
+		category: "sandwiches",
+		photo: "08-club-sandwich.webp",
+		options: [{ label: "Plato", price: 350 }],
+	},
+	{
+		id: "pasteles-hoja",
+		name: "Pasteles en hoja",
+		desc: "Pollo, res o cerdo.",
+		category: "sandwiches",
+		photo: "13-pasteles-en-hoja.webp",
+		options: [{ label: "Plato", price: 200 }],
+	},
+	{
+		id: "papa-queso",
+		name: "Papa con queso",
+		desc: "Papas fritas con queso derretido.",
+		category: "extras",
+		photo: "10-papa-con-queso.webp",
+		options: [
+			{ label: "Pequeña", price: 150 },
+			{ label: "Mediana", price: 250 },
+			{ label: "Grande", price: 350 },
+		],
+	},
+	{
+		id: "salchipapas",
+		name: "Salchipapas",
+		desc: "Salchicha con papas fritas.",
+		category: "extras",
+		photo: "16-salchipapas.webp",
+		options: [
+			{ label: "Pequeña", price: 150 },
+			{ label: "Mediana", price: 250 },
+			{ label: "Grande", price: 350 },
+		],
+	},
+	{
+		id: "frito-jamon",
+		name: "Frito con jamón",
+		desc: "Frito con jamón.",
+		category: "extras",
+		photo: "20-frito-con-jamon.webp",
+		options: [
+			{ label: "Pequeño", price: 200 },
+			{ label: "Mediano", price: 250 },
+			{ label: "Grande", price: 300 },
+		],
+	},
+	{
+		id: "jamon-papa",
+		name: "Jamón con papa",
+		desc: "Jamón con papa.",
+		category: "extras",
+		photo: "22-jamon-con-papa.webp",
+		options: [
+			{ label: "Pequeña", price: 150 },
+			{ label: "Mediana", price: 250 },
+			{ label: "Grande", price: 350 },
+		],
+	},
+	{
+		id: "alitas",
+		name: "Alitas fritas",
+		desc: "Picante, BBQ o normal — con papa o frito · 5 alitas.",
+		category: "extras",
+		photo: "03-alitas-fritas.webp",
+		options: [{ label: "5 alitas", price: 400 }],
+	},
+	{
+		id: "servicio-papa",
+		name: "Servicio de papa o frito",
+		desc: "Porción de papa o frito.",
+		category: "extras",
+		photo: "09-hamburguesa-con-papas-tray.webp",
+		options: [{ label: "Porción", price: 100 }],
+	},
+];
+
+export interface Favorite {
+	dishId: string;
+	/** display name on the favorites card (may differ from the menu name) */
+	name: string;
+	desc: string;
+	/** which option the "Pedir ahora" button adds */
+	optionIndex: number;
+}
+
+export const FAVORITES: Favorite[] = [
+	{
+		dishId: "hamburguesa",
+		name: "Hamburguesa con papas",
+		desc: "Con papas fritas y salsas de la casa.",
+		optionIndex: 1,
+	},
+	{
+		dishId: "mofongo-longaniza",
+		name: "Mofongo con longaniza",
+		desc: "Mofongo con queso y longaniza.",
+		optionIndex: 0,
+	},
+	{
+		dishId: "yaroa",
+		name: "Yaroa de pollo",
+		desc: "Queso derretido, pollo y salsas.",
+		optionIndex: 0,
+	},
+	{
+		dishId: "camarones-criolla",
+		name: "Camarones a la criolla",
+		desc: "Con mofongo o fritos.",
+		optionIndex: 0,
+	},
+];
+
+export function getDish(id: string): Dish {
+	const dish = DISHES.find((d) => d.id === id);
+	if (!dish) throw new Error(`Unknown dish: ${id}`);
+	return dish;
+}
+
+export function formatPrice(price: number): string {
+	return `RD$${price}`;
+}

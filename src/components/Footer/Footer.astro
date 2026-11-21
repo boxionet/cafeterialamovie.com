@@ -1,10 +1,10 @@
 ---
-import { Icon } from "astro-icon/components";
 import { BUSINESS } from "@data/client";
 import navData from "@data/navData.json";
 import { getCurrentYear } from "@js/utils";
 import { getSiteContext } from "@js/getSiteContext";
 import { getLocalizedRoute } from "@js/routes";
+import logo from "@assets/svgs/logo.svg";
 
 const { locale, content } = await getSiteContext(Astro.url);
 
@@ -15,10 +15,14 @@ const currentYear = getCurrentYear();
 	<div class="container">
 		<section class="left-section">
 			<a class="logo" href={getLocalizedRoute(locale, "/")} aria-label={content.common.backToHome}>
-				<Icon name="logo-white" width={264} height={78} aria-hidden="true" />
+				<img src={logo.src} alt="Cafetería La Movie — La Movie del Sabor" />
 			</a>
 
 			<p>{content.common.footer.p}</p>
+
+			<a class="cs-button-solid" href={BUSINESS.whatsapp} target="_blank" rel="noopener">
+				Pedir por WhatsApp
+			</a>
 		</section>
 
 		<section class="right-section">
@@ -29,8 +33,8 @@ const currentYear = getCurrentYear();
 					</li>
 
 					{navData.map((entry) => {
-						const entryUrl = entry.urls?.[locale] ?? entry.urls?.en;
-						const entryLabel = entry.label?.[locale] ?? entry.label?.en ?? entry.key;
+						const entryUrl = entry.urls?.[locale] ?? entry.urls?.es;
+						const entryLabel = entry.label?.[locale] ?? entry.label?.es ?? entry.key;
 
 						if (!entryUrl) return null;
 
@@ -44,51 +48,34 @@ const currentYear = getCurrentYear();
 
 				<ul>
 					<li>
-						<h2>{content.common.footer.services}</h2>
-					</li>
-					<li>Service1</li>
-					<li>Service2</li>
-					<li>Service4</li>
-					<li>Service5</li>
-				</ul>
-
-				<ul>
-					<li>
 						<h2>{content.common.footer.contact}</h2>
 					</li>
 
 					<li>
-						<a href={getLocalizedRoute(locale, "/contact")}>
-							{BUSINESS.address.lineOne}
-							<br />
-							{BUSINESS.address.lineTwo}
-							<br />
-							{BUSINESS.address.city}
-							{BUSINESS.address.state}
-							{BUSINESS.address.zip}
+						<a href={BUSINESS.whatsapp} target="_blank" rel="noopener">
+							WhatsApp: {BUSINESS.phoneFormatted}
 						</a>
 					</li>
 
 					<li>
-						<a href={`tel:${BUSINESS.phoneForTel}`}>T: {BUSINESS.phoneFormatted}</a>
+						<a href={BUSINESS.address.mapLink} target="_blank" rel="noopener">
+							{BUSINESS.address.lineOne}
+							<br />
+							{BUSINESS.address.lineTwo}
+						</a>
 					</li>
 
-					<li>
-						<a href={`mailto:${BUSINESS.email}`}>{content.common.footer.click}</a>
-					</li>
+					<li>{BUSINESS.hours.open}</li>
+					<li>{BUSINESS.hours.closed}</li>
 				</ul>
 			</div>
 		</section>
 	</div>
 
 	<section class="credit">
-		<span>{content.common.footer.credit}</span>
-
-		<a href={getLocalizedRoute(locale, "/")} target="_blank" rel="noopener">
-			Your Company Name
-		</a>
-
-		<span class="copyright">Copyright {currentYear}</span>
+		<span>
+			{content.common.footer.credit} {currentYear} · Santo Domingo Este, República Dominicana
+		</span>
 	</section>
 </footer>
 
@@ -97,8 +84,9 @@ const currentYear = getCurrentYear();
 	@media only screen and (min-width: 0em) {
 		#footer {
 			font-size: ~"min(4vw, 1.2em)";
-			padding: (84/16rem) 0 (20/16rem);
-			background: var(--dark);
+			padding: (64/16rem) 0 (20/16rem);
+			background: #000;
+			border-top: 1px solid #1f1f1f;
 
 			.left-section {
 				text-align: center;
@@ -107,12 +95,12 @@ const currentYear = getCurrentYear();
 				.logo {
 					text-align: center;
 					width: auto;
-					height: (32/16em);
+					height: (88/16em);
 					margin: auto;
-					margin-bottom: (30/16em);
+					margin-bottom: (24/16em);
 					display: inline-block;
 
-					svg {
+					img {
 						width: auto;
 						height: 100%;
 						display: block;
@@ -124,10 +112,17 @@ const currentYear = getCurrentYear();
 					line-height: 27/14;
 					text-align: center;
 					width: 100%;
-					width: 307/14rem;
+					max-width: 307/14rem;
 					margin: auto;
-					color: #fff;
+					margin-bottom: (24/16rem);
+					color: #d4d4d4;
 					opacity: 0.9;
+				}
+
+				.cs-button-solid {
+					height: auto;
+					line-height: 1.2em;
+					padding: (14/16rem) (24/16rem);
 				}
 			}
 
@@ -147,7 +142,7 @@ const currentYear = getCurrentYear();
 						margin-bottom: 0;
 						padding: 0;
 
-						&:nth-of-type(3) {
+						&:nth-of-type(2) {
 							margin-top: (50/16rem);
 							li {
 								margin-bottom: (16/16rem);
@@ -201,51 +196,16 @@ const currentYear = getCurrentYear();
 						}
 					}
 				}
-
-				.buttons {
-					display: flex;
-					justify-content: center;
-				}
-
-				.cs-button-solid {
-					width: (250/16rem);
-					height: (53/16rem);
-					margin: 0;
-					padding-top: (3/16rem);
-				}
 			}
 
 			.credit {
-				font-size: (16/16rem);
-				line-height: (36/16rem);
+				font-size: (14/16rem);
+				line-height: (24/16rem);
 				text-align: center;
 				width: 96%;
 				margin: auto;
-				margin-top: (100/16rem);
-				color: #fff;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				gap: 2em;
-
-				a {
-					font-size: (16/16rem);
-					text-decoration: none;
-					color: var(--primaryDark);
-
-					&:hover {
-						text-decoration: underline;
-					}
-				}
-
-				.copyright {
-					font-size: (16/16rem);
-					display: block;
-				}
-
-				.settings {
-					display: flex;
-				}
+				margin-top: (64/16rem);
+				color: #a8a8a8;
 			}
 		}
 	}
@@ -272,7 +232,7 @@ const currentYear = getCurrentYear();
 
 				.logo {
 					text-align: left;
-					height: (40/16rem);
+					height: (104/16rem);
 					margin-left: 0;
 				}
 
@@ -293,7 +253,7 @@ const currentYear = getCurrentYear();
 					margin: 0;
 
 					ul {
-						&:nth-of-type(3) {
+						&:nth-of-type(2) {
 							margin-top: 0;
 
 							li:first-of-type {
@@ -327,30 +287,10 @@ const currentYear = getCurrentYear();
 						}
 					}
 				}
-
-				.buttons {
-					justify-content: flex-start;
-				}
 			}
 
 			.credit {
-				flex-direction: row;
-				justify-content: center;
-
-				.copyright {
-					display: inline-block;
-				}
-			}
-		}
-	}
-
-	/* Dark Mode */
-	@media only screen and (min-width: 0em) {
-		body.dark-mode {
-			#footer {
-				.credit a {
-					color: var(--primaryDark);
-				}
+				margin-top: (64/16rem);
 			}
 		}
 	}

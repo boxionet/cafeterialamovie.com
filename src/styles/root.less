@@ -7,19 +7,19 @@
 /* CodeStitch Root and Helpers */
 @media only screen and (min-width: 0em) {
 	:root {
-		--primary: #c00065;
-		--primaryLight: #8c5363;
-		--secondary: #302321;
-		--secondaryLight: #423432;
-		--headerColor: #1a1a1a;
-		--bodyTextColor: #4e4b66;
+		--primary: #fe0500;
+		--primaryLight: #ff6b65;
+		--secondary: #fdcc00;
+		--secondaryLight: #d87f2a;
+		--headerColor: #ffffff;
+		--bodyTextColor: #d4d4d4;
 		--bodyTextColorWhite: #fafbfc;
 
 		/* dark mode colors */
-		--primaryDark: #fab0c6;
-		--dark: #1d1715;
-		--medium: #1d1715;
-		--accent: #460b05;
+		--primaryDark: #fdcc00;
+		--dark: #000000;
+		--medium: #141414;
+		--accent: #bf1313;
 		--grey: hsl(224, 14%, 16%);
 		--light: hsl(230, 20%, 94%);
 
@@ -105,27 +105,33 @@
 			transition: width 0.3s;
 		}
 	}
-}
 
-/* Dark mode general styles */
-@media only screen and (min-width: 0em) {
-	body.dark-mode {
-		background-color: var(--dark);
+	// Transparent button — same shape as .cs-button-solid, outline style
+	.cs-button-transparent {
+		font-size: (16/16rem);
+		font-weight: bold;
+		line-height: (50/16em);
+		text-align: center;
+		text-transform: uppercase;
+		text-decoration: none;
+		width: auto;
+		height: (50/16rem);
+		padding: 0 (30/16rem);
+		color: #fff;
+		background-color: transparent;
+		border: 1px solid #fff;
+		display: inline-block;
+		position: relative;
+		z-index: 1;
+		transition:
+			color 0.3s,
+			border-color 0.3s,
+			background-color 0.3s;
 
-		/* Fallback text color */
-		p,
-		li,
-		h1,
-		h2,
-		h3,
-		h4,
-		h5,
-		h6 {
-			color: #fff;
-		}
-
-		.cs-topper {
-			color: var(--primaryDark);
+		&:hover {
+			color: #000;
+			background-color: var(--secondary);
+			border-color: var(--secondary);
 		}
 	}
 }
@@ -140,6 +146,22 @@
 		padding: 0;
 		color: var(--bodyTextColor);
 		overflow-x: hidden;
+	}
+
+	// Cafetería La Movie is dark by design
+	body {
+		background-color: #000;
+	}
+
+	// Clear the fixed header
+	main {
+		padding-top: (72/16rem);
+	}
+
+	// Display font (Lilita One) for headings and dish names
+	.font-display {
+		font-family: var(--font-display);
+		font-weight: 400;
 	}
 
 	*,
@@ -180,7 +202,7 @@
 
 	p,
 	li {
-		color: #353535;
+		color: var(--bodyTextColor);
 	}
 
 	a,
@@ -206,6 +228,11 @@
 	html {
 		margin: 0;
 		padding: 0;
+	}
+
+	// Taller fixed header on desktop
+	main {
+		padding-top: (76/16rem);
 	}
 }
 

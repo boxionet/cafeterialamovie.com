@@ -1,0 +1,157 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import OrderBar from "@components/OrderBar/OrderBar.astro";
+import VisitInfo from "@components/VisitInfo/VisitInfo.astro";
+import { BUSINESS } from "@data/client";
+import { dishImage } from "@data/menu";
+
+const interiorPhoto = dishImage("25-interior.webp");
+const frontPhoto = dishImage("28-frente.webp");
+---
+
+<BaseLayout
+	title="Conócenos — Cafetería La Movie"
+	description="Cafetería La Movie en Los Mina, Katanga, Santo Domingo Este: comida dominicana hecha al momento, de noche. Chimis, mofongo, yaroa y plátanos — pide por WhatsApp."
+>
+	<section class="about-head">
+		<p class="cs-topper">Conócenos</p>
+		<h1 class="font-display">Una cafetería de barrio, de noche</h1>
+		<p class="about-lead">
+			Estamos en Los Mina, Katanga, y abrimos cuando cae la tarde: comida dominicana
+			hecha al momento, para llevar o delivery.
+		</p>
+	</section>
+
+	<section class="about-photos">
+		<Image
+			src={interiorPhoto}
+			alt="Interior de Cafetería La Movie"
+			width={900}
+			height={700}
+			loading="eager"
+			decoding="async"
+			class="about-photo"
+		/>
+		<Image
+			src={frontPhoto}
+			alt="Frente de Cafetería La Movie"
+			width={900}
+			height={700}
+			loading="lazy"
+			decoding="async"
+			class="about-photo"
+		/>
+	</section>
+
+	<section class="about-blocks">
+		<div class="about-block">
+			<h2 class="font-display">Lo que servimos</h2>
+			<p>
+				Chimis de pierna, mofongo con longaniza o camarones, yaroa de pollo o res,
+				patacón, burritos, chuletas y pechuga a la plancha, alitas, salchipapas y más.
+				Todo con plátanos, papas y fritos de la casa.
+			</p>
+		</div>
+		<div class="about-block">
+			<h2 class="font-display">Cómo se pide</h2>
+			<p>
+				Arma tu pedido en el menú y envíalo por WhatsApp, o escríbenos directo al
+				{BUSINESS.phoneFormatted}. Dinos si lo recoges o si te lo llevamos.
+			</p>
+			<a href={BUSINESS.whatsapp} target="_blank" rel="noopener" class="cs-button-solid">
+				Pedir por WhatsApp
+			</a>
+		</div>
+		<div class="about-block">
+			<h2 class="font-display">Cuándo estamos</h2>
+			<p>
+				{BUSINESS.hours.open}
+				<br />
+				{BUSINESS.hours.closed}
+			</p>
+		</div>
+	</section>
+
+	<VisitInfo />
+	<OrderBar />
+</BaseLayout>
+
+<style lang="less">
+	.about-head {
+		text-align: center;
+		max-width: (720/16rem);
+		margin: auto;
+		padding: (48/16rem) (16/16rem) (32/16rem);
+
+		h1 {
+			font-size: clamp(2.5rem, 7vw, 4rem);
+			line-height: 1.05em;
+			color: #fff;
+			margin-bottom: (16/16rem);
+		}
+	}
+
+	.about-lead {
+		font-size: (18/16rem);
+		line-height: 1.7em;
+		color: #d4d4d4;
+		margin-bottom: 0;
+	}
+
+	.about-photos {
+		max-width: (1280/16rem);
+		margin: auto;
+		padding: 0 (16/16rem) (48/16rem);
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: (16/16rem);
+	}
+
+	.about-photo {
+		width: 100%;
+		height: auto;
+		border-radius: (20/16rem);
+		display: block;
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.about-photos {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	.about-blocks {
+		max-width: (1280/16rem);
+		margin: auto;
+		padding: 0 (16/16rem) (48/16rem);
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: (24/16rem);
+	}
+
+	.about-block {
+		border-top: 2px solid #232323;
+		padding-top: (24/16rem);
+
+		h2 {
+			font-size: (24/16rem);
+			color: #fff;
+			margin-bottom: (12/16rem);
+		}
+
+		p {
+			font-size: (16/16rem);
+			line-height: 1.7em;
+			color: #d4d4d4;
+			margin-bottom: (16/16rem);
+		}
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.about-blocks {
+			grid-template-columns: repeat(3, 1fr);
+			gap: (32/16rem);
+		}
+	}
+</style>

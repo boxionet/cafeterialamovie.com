@@ -1,8 +1,9 @@
 export const SITE = {
-	title: "Code Stitch Web Designs",
-	description: "Meta description for the page",
-	url: "https://www.codestitch.app",
-	author: "Code Stitch",
+	title: "Cafetería La Movie",
+	description:
+		"Chimis, mofongo, yaroa y más — comida dominicana recién hecha en Los Mina, de noche. Para recoger o a domicilio. Mié–Dom 6:45 PM – 12:00 AM.",
+	url: "https://cafeterialamovie.com",
+	author: "Cafetería La Movie",
 };
 
 export const OG = {

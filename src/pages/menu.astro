@@ -1,0 +1,151 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import DishCard from "@components/DishCard/DishCard.astro";
+import OrderBar from "@components/OrderBar/OrderBar.astro";
+import AlsoHave from "@components/AlsoHave/AlsoHave.astro";
+import { CATEGORIES, DISHES } from "@data/menu";
+---
+
+<BaseLayout
+	title="Menú — Cafetería La Movie"
+	description="Menú completo de Cafetería La Movie: hamburguesas, mofongo, platos a la plancha, yaroa, patacón, chimi, sándwiches, tostadas y más. Arma tu pedido y envíalo por WhatsApp."
+>
+	<section class="menu-head">
+		<p class="cs-topper">Hecho al momento</p>
+		<h1 class="font-display">Nuestro menú</h1>
+		<p class="menu-intro">
+			Elige tu plato, elige el tamaño y agrega al pedido. Cuando termines, envíalo por
+			WhatsApp — pickup o delivery.
+		</p>
+	</section>
+
+	<div class="filters" data-filters role="group" aria-label="Filtrar por categoría">
+		<button type="button" class="filter-pill is-active" data-filter="todos" aria-pressed="true">
+			Todos
+		</button>
+		{
+			CATEGORIES.map((cat) => (
+				<button type="button" class="filter-pill" data-filter={cat.id} aria-pressed="false">
+					{cat.label}
+				</button>
+			))
+		}
+	</div>
+
+	{
+		CATEGORIES.map((cat) => {
+			const dishes = DISHES.filter((d) => d.category === cat.id);
+			return (
+				<section class="menu-category" data-category-section={cat.id} id={cat.id}>
+					<h2 class="font-display">{cat.label}</h2>
+					<div class="menu-grid">
+						{dishes.map((dish) => (
+							<DishCard dish={dish} mode="menu" />
+						))}
+					</div>
+				</section>
+			);
+		})
+	}
+
+	<AlsoHave />
+	<OrderBar />
+</BaseLayout>
+
+<style lang="less">
+	.menu-head {
+		text-align: center;
+		max-width: (720/16rem);
+		margin: auto;
+		padding: (48/16rem) (16/16rem) (8/16rem);
+
+		h1 {
+			font-size: clamp(2.75rem, 8vw, 4.5rem);
+			color: #fff;
+			margin-bottom: (16/16rem);
+		}
+	}
+
+	.menu-intro {
+		font-size: (17/16rem);
+		line-height: 1.7em;
+		color: #d4d4d4;
+		margin-bottom: 0;
+	}
+
+	.filters {
+		max-width: (1280/16rem);
+		margin: auto;
+		padding: (32/16rem) (16/16rem) (8/16rem);
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: (10/16rem);
+		position: sticky;
+		top: (72/16rem);
+		z-index: 100;
+		background-color: rgba(0, 0, 0, 0.9);
+		backdrop-filter: blur(8px);
+	}
+
+	.filter-pill {
+		font-family: var(--font-primary);
+		font-size: (14/16rem);
+		font-weight: 800;
+		line-height: 1.2em;
+		color: #fff;
+		background-color: #1e1e1e;
+		border: 1px solid #333;
+		border-radius: 999px;
+		padding: (11/16rem) (18/16rem);
+		cursor: pointer;
+		transition:
+			background-color 0.3s,
+			color 0.3s,
+			border-color 0.3s;
+
+		&:hover {
+			border-color: var(--secondary);
+		}
+
+		&.is-active {
+			color: #000;
+			background-color: var(--secondary);
+			border-color: var(--secondary);
+		}
+	}
+
+	.menu-category {
+		max-width: (1280/16rem);
+		margin: auto;
+		padding: (40/16rem) (16/16rem) (16/16rem);
+
+		h2 {
+			font-size: clamp(1.75rem, 4vw, 2.5rem);
+			color: #fff;
+			margin-bottom: (8/16rem);
+		}
+	}
+
+	.menu-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: (24/16rem);
+	}
+
+	@media only screen and (min-width: 45rem) {
+		.menu-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.filters {
+			top: (76/16rem);
+		}
+
+		.menu-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+</style>

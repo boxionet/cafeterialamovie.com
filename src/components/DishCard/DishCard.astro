@@ -1,0 +1,290 @@
+---
+import { Image } from "astro:assets";
+import { dishImage, formatPrice, type Dish } from "@data/menu";
+
+interface Props {
+	dish: Dish;
+	mode: "favorite" | "menu";
+	displayName?: string;
+	displayDesc?: string;
+	optionIndex?: number;
+}
+
+const { dish, mode } = Astro.props;
+const displayName = Astro.props.displayName ?? dish.name;
+const displayDesc = Astro.props.displayDesc ?? dish.desc;
+const fixedOptionIndex = Astro.props.optionIndex ?? 0;
+const photo = dishImage(dish.platePhoto ?? dish.photo);
+const initialPrice = dish.options[mode === "favorite" ? fixedOptionIndex : 0].price;
+const hasOptions = dish.options.length > 1;
+---
+
+<article
+	class="dish-card"
+	data-dish-card
+	data-category={dish.category}
+	data-dish-id={dish.id}
+	data-dish-name={displayName}
+	data-options={JSON.stringify(dish.options)}
+	data-fixed-option={mode === "favorite" ? String(fixedOptionIndex) : ""}
+>
+	<div class="dish-photo">
+		<Image src={photo} alt={displayName} width={480} height={480} loading="lazy" decoding="async" />
+	</div>
+
+	<h3 class="dish-name font-display">{displayName}</h3>
+	<p class="dish-desc">{displayDesc}</p>
+
+	{
+		mode === "menu" && hasOptions && (
+			<label class="dish-option">
+				<span class="sr-only">Elige una opción de {displayName}</span>
+				<select data-option-select>
+					{dish.options.map((opt, i) => (
+						<option value={i}>
+							{opt.label} — {formatPrice(opt.price)}
+						</option>
+					))}
+				</select>
+			</label>
+		)
+	}
+
+	<div class="dish-foot">
+		<span class="dish-price" data-price>{formatPrice(initialPrice)}</span>
+		<button
+			class="dish-heart"
+			type="button"
+			data-heart
+			aria-pressed="false"
+			aria-label={`Guardar ${displayName} como favorito`}
+		>
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+				<path
+					d="M12 21s-7.5-4.6-9.5-9C1 8.5 3 5 6.5 5c2 0 3.5 1.1 4.5 2.6l1 1.4 1-1.4C14 6.1 15.5 5 17.5 5 21 5 23 8.5 21.5 12c-2 4.4-9.5 9-9.5 9Z"
+				></path>
+			</svg>
+		</button>
+	</div>
+
+	<div class="dish-actions">
+		{
+			mode === "menu" && (
+				<div class="dish-qty" data-qty>
+					<button type="button" data-qty-minus aria-label="Quitar uno">
+						−
+					</button>
+					<span data-qty-value>1</span>
+					<button type="button" data-qty-plus aria-label="Agregar uno">
+						+
+					</button>
+				</div>
+			)
+		}
+		<button class="dish-order" type="button" data-add>
+			<span>{mode === "menu" ? "Agregar" : "Pedir ahora"}</span>
+			<span class="dish-order-arrow" aria-hidden="true">↗</span>
+		</button>
+	</div>
+</article>
+
+<style lang="less">
+	.dish-card {
+		background-color: #141414;
+		border: 1px solid #232323;
+		border-radius: (20/16rem);
+		/* room for the plate photo overlapping the top edge */
+		margin-top: (72/16rem);
+		padding: (116/16rem) (20/16rem) (20/16rem);
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+	}
+
+	.dish-photo {
+		width: (176/16rem);
+		height: (176/16rem);
+		border-radius: 50%;
+		overflow: hidden;
+		border: (4/16rem) solid #000;
+		box-shadow: 0 (12/16rem) (32/16rem) rgba(0, 0, 0, 0.55);
+		position: absolute;
+		top: (-72/16rem);
+		left: 50%;
+		transform: translateX(-50%);
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	.dish-name {
+		font-size: (24/16rem);
+		line-height: 1.15em;
+		color: #fff;
+		margin-bottom: (8/16rem);
+	}
+
+	.dish-desc {
+		font-size: (14/16rem);
+		line-height: 1.5em;
+		color: #a8a8a8;
+		margin-bottom: (16/16rem);
+		flex: 1;
+	}
+
+	.dish-option {
+		display: block;
+		margin-bottom: (16/16rem);
+
+		select {
+			font-family: var(--font-primary);
+			font-size: (14/16rem);
+			font-weight: 700;
+			color: #fff;
+			width: 100%;
+			background-color: #1e1e1e;
+			border: 1px solid #333;
+			border-radius: 999px;
+			padding: (10/16rem) (14/16rem);
+			appearance: none;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23fdcc00' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: right (14/16rem) center;
+			cursor: pointer;
+
+			option {
+				color: #000;
+			}
+		}
+	}
+
+	.dish-foot {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: (16/16rem);
+	}
+
+	.dish-price {
+		font-family: var(--font-display);
+		font-size: (22/16rem);
+		color: var(--secondary);
+	}
+
+	.dish-heart {
+		width: (40/16rem);
+		height: (40/16rem);
+		background: transparent;
+		border: none;
+		border-radius: 50%;
+		color: #fff;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		transition:
+			color 0.3s,
+			background-color 0.3s;
+
+		svg {
+			width: (22/16rem);
+			height: (22/16rem);
+		}
+
+		&:hover {
+			background-color: #1e1e1e;
+		}
+
+		&[aria-pressed="true"] {
+			color: var(--primary);
+
+			svg {
+				fill: var(--primary);
+			}
+		}
+	}
+
+	.dish-actions {
+		display: flex;
+		align-items: center;
+		gap: (10/16rem);
+	}
+
+	.dish-qty {
+		display: flex;
+		align-items: center;
+		gap: (4/16rem);
+		background-color: #1e1e1e;
+		border: 1px solid #333;
+		border-radius: 999px;
+		padding: (4/16rem);
+
+		button {
+			font-size: (18/16rem);
+			font-weight: 800;
+			line-height: 1em;
+			width: (32/16rem);
+			height: (32/16rem);
+			color: #fff;
+			background-color: transparent;
+			border: none;
+			border-radius: 50%;
+			cursor: pointer;
+
+			&:hover {
+				background-color: #2a2a2a;
+			}
+		}
+
+		span {
+			font-weight: 800;
+			min-width: (20/16rem);
+			text-align: center;
+			color: #fff;
+		}
+	}
+
+	.dish-order {
+		font-family: var(--font-primary);
+		font-size: (15/16rem);
+		font-weight: 800;
+		line-height: 1em;
+		color: #fff;
+		background-color: var(--secondaryLight);
+		border: none;
+		border-radius: 999px;
+		padding: (12/16rem) (8/16rem) (12/16rem) (18/16rem);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: (10/16rem);
+		flex: 1;
+		cursor: pointer;
+		transition: background-color 0.3s;
+
+		&:hover {
+			background-color: #c06f1f;
+		}
+
+		&.added {
+			background-color: var(--primary);
+		}
+	}
+
+	.dish-order-arrow {
+		width: (28/16rem);
+		height: (28/16rem);
+		font-size: (15/16rem);
+		line-height: (28/16rem);
+		text-align: center;
+		color: #fff;
+		background-color: #000;
+		border-radius: 50%;
+		flex: none;
+	}
+</style>

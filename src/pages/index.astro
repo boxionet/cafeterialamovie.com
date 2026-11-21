@@ -1,24 +1,731 @@
 ---
-import landingImage from "@assets/images/hero.jpg";
-import { getSiteContext } from "@js/getSiteContext";
+import { Image } from "astro:assets";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import CTA from "src/features/demo/CTA.astro";
-import Gallery from "src/features/demo/Gallery.astro";
-import Hero from "src/features/demo/Hero.astro";
-import Services from "src/features/demo/Services.astro";
-import SideBySide from "src/features/demo/SideBySide.astro";
-import SideBySideReverse from "src/features/demo/SideBySideReverse.astro";
-import Testimonials from "src/features/demo/Testimonials.astro";
+import DishCard from "@components/DishCard/DishCard.astro";
+import OrderBar from "@components/OrderBar/OrderBar.astro";
+import AlsoHave from "@components/AlsoHave/AlsoHave.astro";
+import VisitInfo from "@components/VisitInfo/VisitInfo.astro";
+import { BUSINESS } from "@data/client";
+import { CATEGORIES, FAVORITES, getDish, dishImage } from "@data/menu";
 
-const { content } = await getSiteContext(Astro.url);
+const heroPhoto = dishImage("23-chimi-de-pierna.webp");
+const frontPhoto = dishImage("28-frente.webp");
+const interiorPhoto = dishImage("25-interior.webp");
+
+const gallery = [
+	{ file: "01-chuleta-a-la-plancha-con-papas.webp", alt: "Chuleta a la plancha con papas" },
+	{ file: "03-alitas-fritas.webp", alt: "Alitas fritas" },
+	{ file: "06-chuleta-a-la-plancha-con-ensalada.webp", alt: "Chuleta a la plancha con ensalada" },
+	{ file: "10-papa-con-queso.webp", alt: "Papa con queso" },
+	{ file: "13-pasteles-en-hoja.webp", alt: "Pasteles en hoja" },
+	{ file: "16-salchipapas.webp", alt: "Salchipapas" },
+	{ file: "18-patacon.webp", alt: "Patacón" },
+	{ file: "27-pescado-con-fritos.webp", alt: "Pescado con fritos" },
+];
+
+const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) }));
 ---
 
-<BaseLayout title={content.home.layout.title} description={content.home.layout.description}>
-	<Hero image={landingImage} />
-	<Services />
-	<SideBySide />
-	<SideBySideReverse />
-	<Gallery />
-	<Testimonials />
-	<CTA />
+<BaseLayout
+	title="Cafetería La Movie — Chimis, mofongo y yaroa en Santo Domingo Este"
+	description="Cafetería La Movie: chimis, mofongo, yaroa y plátanos hechos al momento, de miércoles a domingo de 6:45 PM a 12 AM. Pide por WhatsApp — pickup o delivery en Santo Domingo Este."
+>
+	<!-- ============================================ -->
+	<!--                    Hero                      -->
+	<!-- ============================================ -->
+	<section class="hero">
+		<p class="hero-eyebrow">Cafetería · Santo Domingo Este</p>
+		<h1 class="hero-title font-display">
+			<span class="hero-line">¿ANTOJO<span class="hero-q">?</span></span>
+			<span class="hero-braces" aria-hidden="true">
+				<span class="hero-brace">{"{"}</span>
+				<Image
+					src={heroPhoto}
+					alt=""
+					width={840}
+					height={340}
+					loading="eager"
+					decoding="async"
+					class="hero-photo"
+				/>
+				<span class="hero-brace">{"}"}</span>
+			</span>
+			<span class="sr-only">Chimi de pierna</span>
+		</h1>
+		<p class="hero-sub">
+			Chimis, mofongo, yaroa y plátanos — hechos al momento, servidos cuando cae la noche.
+		</p>
+		<div class="hero-cta">
+			<a href="/menu/" class="cs-button-solid">Ver menú</a>
+			<a href={BUSINESS.whatsapp} target="_blank" rel="noopener" class="cs-button-transparent">
+				Pedir por WhatsApp
+			</a>
+		</div>
+		<span class="hero-sticker">Abierto hasta las 12 AM</span>
+	</section>
+
+	<!-- ============================================ -->
+	<!--                  Marquee                     -->
+	<!-- ============================================ -->
+	<div class="marquee" aria-hidden="true">
+		<div class="marquee-track">
+			<span>
+				CHIMIS • MOFONGO • YAROA • PLÁTANOS • ABIERTO TARDE • PICKUP O DELIVERY •&nbsp;
+			</span>
+			<span>
+				CHIMIS • MOFONGO • YAROA • PLÁTANOS • ABIERTO TARDE • PICKUP O DELIVERY •&nbsp;
+			</span>
+		</div>
+	</div>
+
+	<!-- ============================================ -->
+	<!--                 Categorías                   -->
+	<!-- ============================================ -->
+	<section class="categories">
+		<div class="categories-panel">
+			<Image
+				src={frontPhoto}
+				alt="Frente de Cafetería La Movie"
+				width={1600}
+				height={700}
+				loading="lazy"
+				decoding="async"
+				class="categories-bg"
+			/>
+			<div class="categories-overlay"></div>
+			<div class="categories-content">
+				<p class="cs-topper">¿Qué se te antoja?</p>
+				<h2 class="font-display">Elige tu antojo</h2>
+				<div class="categories-chips">
+					{
+						CATEGORIES.map((cat) => (
+							<a href={`/menu/?categoria=${cat.id}`} class="categories-chip">
+								{cat.label}
+							</a>
+						))
+					}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ============================================ -->
+	<!--               Los más pedidos                -->
+	<!-- ============================================ -->
+	<section class="favorites">
+		<div class="section-head">
+			<div>
+				<p class="cs-topper">Los favoritos de la casa</p>
+				<h2 class="font-display">Los más pedidos</h2>
+			</div>
+			<div class="fav-arrows">
+				<button type="button" data-fav-prev aria-label="Ver anteriores">←</button>
+				<button type="button" data-fav-next aria-label="Ver siguientes">→</button>
+			</div>
+		</div>
+
+		<div class="fav-track" data-fav-track>
+			{
+				favorites.map((fav) => (
+					<DishCard
+						dish={fav.dish}
+						mode="favorite"
+						displayName={fav.name}
+						displayDesc={fav.desc}
+						optionIndex={fav.optionIndex}
+					/>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- ============================================ -->
+	<!--                 Features                     -->
+	<!-- ============================================ -->
+	<section class="features">
+		<div class="feature">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+				<path
+					d="M12 2.5s5.5 4.6 5.5 10a5.5 5.5 0 0 1-11 0c0-2 1-3.8 2.2-5.2.3 1.2 1 2.2 2 2.7C10.3 7 11 4.6 12 2.5Z"
+				></path>
+			</svg>
+			<h3 class="font-display">Hecho al momento</h3>
+			<p>Todo se prepara cuando pides. Nada de ayer.</p>
+		</div>
+		<div class="feature">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+				<path
+					d="M5 8h14l-1.2 12.2a1.5 1.5 0 0 1-1.5 1.3H7.7a1.5 1.5 0 0 1-1.5-1.3L5 8Z"
+				></path>
+				<path d="M8.5 10V6.5a3.5 3.5 0 0 1 7 0V10"></path>
+			</svg>
+			<h3 class="font-display">Para llevar o delivery</h3>
+			<p>Recoge en el local o te lo llevamos a tu casa.</p>
+		</div>
+		<div class="feature">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+				<path d="M20 13.5A8.5 8.5 0 0 1 10.5 4 8.5 8.5 0 1 0 20 13.5Z"></path>
+			</svg>
+			<h3 class="font-display">Abierto de noche</h3>
+			<p>Miércoles a domingo, de 6:45 PM a 12 AM.</p>
+		</div>
+	</section>
+
+	<!-- ============================================ -->
+	<!--                  Galería                     -->
+	<!-- ============================================ -->
+	<section class="gallery">
+		<p class="cs-topper">De la plancha a tu mesa</p>
+		<h2 class="font-display">Un festín para los ojos</h2>
+		<div class="gallery-grid">
+			{
+				gallery.map((item) => (
+					<Image
+						src={dishImage(item.file)}
+						alt={item.alt}
+						width={600}
+						height={600}
+						loading="lazy"
+						decoding="async"
+						class="gallery-photo"
+					/>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- ============================================ -->
+	<!--                Cómo pedir                    -->
+	<!-- ============================================ -->
+	<section class="how">
+		<p class="cs-topper">Así de fácil</p>
+		<h2 class="font-display">Cómo pedir</h2>
+		<ol class="how-steps">
+			<li>
+				<span class="how-num font-display">01</span>
+				<h3>Elige tus platos</h3>
+				<p>Explora el menú y agrega lo que se te antoje.</p>
+			</li>
+			<li>
+				<span class="how-num font-display">02</span>
+				<h3>Arma tu pedido</h3>
+				<p>Elige tamaño, cantidad y revisa tu pedido abajo.</p>
+			</li>
+			<li>
+				<span class="how-num font-display">03</span>
+				<h3>Envía por WhatsApp</h3>
+				<p>Tu pedido llega listo al chat — dinos pickup o delivery.</p>
+			</li>
+		</ol>
+	</section>
+
+	<!-- ============================================ -->
+	<!--              Conócenos teaser                -->
+	<!-- ============================================ -->
+	<section class="about-teaser">
+		<Image
+			src={interiorPhoto}
+			alt="Interior de Cafetería La Movie"
+			width={900}
+			height={700}
+			loading="lazy"
+			decoding="async"
+			class="about-teaser-photo"
+		/>
+		<div class="about-teaser-text">
+			<p class="cs-topper">Conócenos</p>
+			<h2 class="font-display">Una cafetería de barrio, de noche</h2>
+			<p>
+				En Los Mina, Katanga, servimos comida dominicana hecha al momento, de noche.
+				Sin formalidades: pides por WhatsApp, recoges o te lo llevamos.
+			</p>
+			<a href="/conocenos/" class="cs-button-solid">Conócenos</a>
+		</div>
+	</section>
+
+	<VisitInfo />
+	<AlsoHave />
+
+	<!-- ============================================ -->
+	<!--                 Cierre                       -->
+	<!-- ============================================ -->
+	<section class="close">
+		<h2 class="font-display">PIDE <span>AHORA</span></h2>
+		<a href={BUSINESS.whatsapp} target="_blank" rel="noopener" class="cs-button-solid">
+			Pedir por WhatsApp
+		</a>
+	</section>
+
+	<OrderBar />
 </BaseLayout>
+
+<style lang="less">
+	/*-- -------------------------- -->
+	<---           Hero             -->
+	<--- -------------------------- -*/
+	.hero {
+		text-align: center;
+		padding: (48/16rem) (16/16rem) (64/16rem);
+		overflow: hidden;
+	}
+
+	.hero-eyebrow {
+		font-size: (13/16rem);
+		font-weight: 800;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--secondary);
+		margin-bottom: (28/16rem);
+	}
+
+	.hero-title {
+		// Lilita One's glyphs paint well above the line box at display sizes;
+		// the padding keeps the title clear of the eyebrow above it
+		padding-top: (48/16rem);
+		line-height: 1.05em;
+		color: #fff;
+		margin-bottom: (24/16rem);
+	}
+
+	.hero-line {
+		display: block;
+		font-size: clamp(4rem, 17vw, 11rem);
+		letter-spacing: 0.01em;
+	}
+
+	.hero-q {
+		color: var(--secondary);
+	}
+
+	.hero-braces {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: clamp(0.5rem, 2vw, 1.5rem);
+		margin-top: (8/16rem);
+	}
+
+	.hero-brace {
+		font-size: clamp(3.5rem, 12vw, 7.5rem);
+		line-height: 1em;
+		color: var(--secondary);
+	}
+
+	.hero-photo {
+		width: clamp(180px, 42vw, 420px);
+		height: clamp(90px, 16vw, 170px);
+		border-radius: 999px;
+		object-fit: cover;
+		display: block;
+	}
+
+	.hero-sub {
+		font-size: clamp(1rem, 2.5vw, 1.25rem);
+		line-height: 1.6em;
+		max-width: (560/16rem);
+		margin: 0 auto (32/16rem);
+		color: #d4d4d4;
+	}
+
+	.hero-cta {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: (12/16rem);
+	}
+
+	.hero-sticker {
+		display: inline-block;
+		font-size: (13/16rem);
+		font-weight: 800;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #fff;
+		background-color: var(--primary);
+		border-radius: 999px;
+		padding: (10/16rem) (18/16rem);
+		margin-top: (32/16rem);
+		transform: rotate(-3deg);
+	}
+
+	/*-- -------------------------- -->
+	<---         Marquee            -->
+	<--- -------------------------- -*/
+	.marquee {
+		background-color: var(--secondary);
+		color: #000;
+		overflow: hidden;
+		padding: (12/16rem) 0;
+		transform: rotate(-1deg);
+		width: 104%;
+		margin-left: -2%;
+	}
+
+	.marquee-track {
+		display: flex;
+		width: max-content;
+		animation: marquee 24s linear infinite;
+
+		span {
+			font-family: var(--font-display);
+			font-size: (20/16rem);
+			letter-spacing: 0.04em;
+			white-space: nowrap;
+		}
+	}
+
+	@keyframes marquee {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(-50%);
+		}
+	}
+
+	/*-- -------------------------- -->
+	<---       Categorías           -->
+	<--- -------------------------- -*/
+	.categories {
+		padding: (64/16rem) (16/16rem) 0;
+	}
+
+	.categories-panel {
+		max-width: (1280/16rem);
+		margin: auto;
+		border-radius: (20/16rem);
+		overflow: hidden;
+		position: relative;
+		min-height: (420/16rem);
+		display: flex;
+		align-items: flex-end;
+	}
+
+	.categories-bg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.categories-overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.45) 55%, rgba(0, 0, 0, 0.25) 100%);
+	}
+
+	.categories-content {
+		position: relative;
+		padding: (32/16rem) (24/16rem);
+		width: 100%;
+
+		h2 {
+			font-size: clamp(2rem, 5vw, 3rem);
+			color: #fff;
+			margin-bottom: (20/16rem);
+		}
+	}
+
+	.categories-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: (10/16rem);
+	}
+
+	.categories-chip {
+		font-size: (14/16rem);
+		font-weight: 800;
+		line-height: 1.2em;
+		text-decoration: none;
+		color: #000;
+		background-color: #fff;
+		border-radius: 999px;
+		padding: (11/16rem) (18/16rem);
+		transition:
+			background-color 0.3s,
+			color 0.3s;
+
+		&:hover {
+			background-color: var(--secondary);
+		}
+	}
+
+	/*-- -------------------------- -->
+	<---      Los más pedidos       -->
+	<--- -------------------------- -*/
+	.favorites {
+		max-width: (1280/16rem);
+		margin: auto;
+		padding: (80/16rem) (16/16rem) (32/16rem);
+	}
+
+	.section-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: (16/16rem);
+		margin-bottom: (8/16rem);
+
+		h2 {
+			font-size: clamp(2rem, 5vw, 3rem);
+			color: #fff;
+			margin-bottom: 0;
+		}
+	}
+
+	.fav-arrows {
+		display: none;
+		gap: (8/16rem);
+
+		button {
+			font-size: (18/16rem);
+			line-height: 1em;
+			width: (44/16rem);
+			height: (44/16rem);
+			color: #fff;
+			background-color: #1e1e1e;
+			border: 1px solid #333;
+			border-radius: 50%;
+			cursor: pointer;
+			transition: background-color 0.3s;
+
+			&:hover {
+				background-color: var(--primary);
+			}
+		}
+	}
+
+	.fav-track {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: (24/16rem);
+	}
+
+	@media only screen and (min-width: 40rem) {
+		.fav-track {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.fav-arrows {
+			display: flex;
+		}
+
+		.fav-track {
+			display: flex;
+			overflow-x: auto;
+			scroll-snap-type: x mandatory;
+			scrollbar-width: none;
+			padding-bottom: (8/16rem);
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+
+			:global(.dish-card) {
+				flex: 0 0 calc(25% - (18/16rem));
+				scroll-snap-align: start;
+			}
+		}
+	}
+
+	/*-- -------------------------- -->
+	<---        Features            -->
+	<--- -------------------------- -*/
+	.features {
+		max-width: (1280/16rem);
+		margin: auto;
+		padding: (48/16rem) (16/16rem);
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: (16/16rem);
+	}
+
+	.feature {
+		text-align: center;
+		background-color: #141414;
+		border: 1px solid #232323;
+		border-radius: (20/16rem);
+		padding: (32/16rem) (24/16rem);
+
+		svg {
+			width: (40/16rem);
+			height: (40/16rem);
+			color: var(--secondary);
+			margin-bottom: (16/16rem);
+		}
+
+		h3 {
+			font-size: (22/16rem);
+			color: #fff;
+			margin-bottom: (8/16rem);
+		}
+
+		p {
+			font-size: (15/16rem);
+			color: #a8a8a8;
+			margin-bottom: 0;
+		}
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.features {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	/*-- -------------------------- -->
+	<---         Galería            -->
+	<--- -------------------------- -*/
+	.gallery {
+		max-width: (1280/16rem);
+		margin: auto;
+		padding: (48/16rem) (16/16rem);
+
+		h2 {
+			font-size: clamp(2rem, 5vw, 3rem);
+			color: #fff;
+			margin-bottom: (24/16rem);
+		}
+	}
+
+	.gallery-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: (12/16rem);
+	}
+
+	.gallery-photo {
+		width: 100%;
+		height: 100%;
+		aspect-ratio: 1;
+		object-fit: cover;
+		border-radius: (16/16rem);
+		display: block;
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.gallery-grid {
+			grid-template-columns: repeat(4, 1fr);
+		}
+	}
+
+	/*-- -------------------------- -->
+	<---       Cómo pedir           -->
+	<--- -------------------------- -*/
+	.how {
+		max-width: (1280/16rem);
+		margin: auto;
+		padding: (48/16rem) (16/16rem);
+
+		h2 {
+			font-size: clamp(2rem, 5vw, 3rem);
+			color: #fff;
+			margin-bottom: (32/16rem);
+		}
+	}
+
+	.how-steps {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: (24/16rem);
+
+		li {
+			border-top: 2px solid #232323;
+			padding-top: (20/16rem);
+		}
+
+		h3 {
+			font-size: (20/16rem);
+			color: #fff;
+			margin-bottom: (8/16rem);
+		}
+
+		p {
+			font-size: (15/16rem);
+			color: #a8a8a8;
+			margin-bottom: 0;
+		}
+	}
+
+	.how-num {
+		font-size: (40/16rem);
+		line-height: 1em;
+		color: var(--secondary);
+		display: block;
+		margin-bottom: (12/16rem);
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.how-steps {
+			grid-template-columns: repeat(3, 1fr);
+			gap: (32/16rem);
+		}
+	}
+
+	/*-- -------------------------- -->
+	<---    Conócenos teaser       -->
+	<--- -------------------------- -*/
+	.about-teaser {
+		max-width: (1280/16rem);
+		margin: auto;
+		padding: (48/16rem) (16/16rem) (64/16rem);
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: (32/16rem);
+		align-items: center;
+	}
+
+	.about-teaser-photo {
+		width: 100%;
+		height: auto;
+		border-radius: (20/16rem);
+		display: block;
+	}
+
+	.about-teaser-text {
+		h2 {
+			font-size: clamp(1.75rem, 4vw, 2.5rem);
+			color: #fff;
+			margin-bottom: (16/16rem);
+		}
+
+		p:not(.cs-topper) {
+			font-size: (17/16rem);
+			line-height: 1.7em;
+			color: #d4d4d4;
+			margin-bottom: (24/16rem);
+		}
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.about-teaser {
+			grid-template-columns: 1fr 1fr;
+			gap: (48/16rem);
+		}
+	}
+
+	/*-- -------------------------- -->
+	<---         Cierre             -->
+	<--- -------------------------- -*/
+	.close {
+		text-align: center;
+		padding: (64/16rem) (16/16rem) (96/16rem);
+
+		h2 {
+			font-size: clamp(3.5rem, 13vw, 8rem);
+			line-height: 0.95em;
+			color: #fff;
+			margin-bottom: (32/16rem);
+
+			span {
+				color: var(--secondary);
+			}
+		}
+	}
+</style>
