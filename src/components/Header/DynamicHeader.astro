@@ -53,7 +53,6 @@ const { locale, content } = await getSiteContext(Astro.url);
 				</ul>
 
 				<div class="cs-nav-cta">
-					<span class="cs-hours">{BUSINESS.hours.short}</span>
 					<a class="cs-pedir" href={BUSINESS.whatsapp} target="_blank" rel="noopener">
 						Pedir por WhatsApp
 					</a>
@@ -62,7 +61,6 @@ const { locale, content } = await getSiteContext(Astro.url);
 		</nav>
 
 		<div class="cs-desktop-cta">
-			<span class="cs-hours">{BUSINESS.hours.short}</span>
 			<a class="cs-pedir" href={BUSINESS.whatsapp} target="_blank" rel="noopener">
 				Pedir por WhatsApp
 			</a>
@@ -342,14 +340,6 @@ const { locale, content } = await getSiteContext(Astro.url);
 				padding-top: (20/16rem);
 			}
 
-			.cs-hours {
-				font-size: (13/16rem);
-				font-weight: 700;
-				letter-spacing: 0.06em;
-				text-transform: uppercase;
-				color: var(--secondary);
-			}
-
 			.cs-pedir {
 				font-size: (15/16rem);
 				font-weight: 800;
@@ -484,15 +474,6 @@ const { locale, content } = await getSiteContext(Astro.url);
 				align-items: center;
 				gap: (16/16rem);
 				flex: none;
-			}
-
-			.cs-hours {
-				font-size: (12/16rem);
-				font-weight: 700;
-				letter-spacing: 0.06em;
-				text-transform: uppercase;
-				color: var(--secondary);
-				white-space: nowrap;
 			}
 
 			.cs-pedir {

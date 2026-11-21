@@ -1,6 +1,6 @@
 import type { ImageMetadata } from "astro";
 
-// Dish photos live in src/assets/images/dishes/ (31 real WebP + 4 recreated
+// Dish photos live in src/assets/images/dishes/ (31 real WebP + 29 recreated
 // black-plate JPG). Resolved with import.meta.glob so <Image> gets real
 // metadata without 35 static imports.
 const images = import.meta.glob<{ default: ImageMetadata }>(
@@ -26,7 +26,7 @@ export interface Dish {
 	category: string;
 	/** real photo file in src/assets/images/dishes/ */
 	photo: string;
-	/** recreated black-plate shot (only the 4 favorites have one) */
+	/** recreated black-plate shot (all 29 dishes have one) */
 	platePhoto?: string;
 	options: DishOption[];
 }
@@ -65,6 +65,7 @@ export const DISHES: Dish[] = [
 		desc: "Clásico hot dog de la casa.",
 		category: "hamburguesas",
 		photo: "04-hot-dog.webp",
+		platePhoto: "hot-dog-black-plate.jpg",
 		options: [{ label: "Clásico", price: 150 }],
 	},
 	{
@@ -73,6 +74,7 @@ export const DISHES: Dish[] = [
 		desc: "Hot dog con papas fritas.",
 		category: "hamburguesas",
 		photo: "05-hotdog-con-papas.webp",
+		platePhoto: "hotdog-con-papa-black-plate.jpg",
 		options: [
 			{ label: "Solo", price: 150 },
 			{ label: "Con papa", price: 250 },
@@ -93,6 +95,7 @@ export const DISHES: Dish[] = [
 		desc: "Mofongo con pechuga a la plancha.",
 		category: "mofongo",
 		photo: "29-mofongo-con-camarones-a-la-crema.webp",
+		platePhoto: "mofongo-con-pechuga-black-plate.jpg",
 		options: [{ label: "Plato", price: 450 }],
 	},
 	{
@@ -101,6 +104,7 @@ export const DISHES: Dish[] = [
 		desc: "Mofongo con camarones a la crema.",
 		category: "mofongo",
 		photo: "29-mofongo-con-camarones-a-la-crema.webp",
+		platePhoto: "mofongo-con-camarones-a-la-crema-black-plate.jpg",
 		options: [{ label: "Plato", price: 600 }],
 	},
 	{
@@ -118,6 +122,7 @@ export const DISHES: Dish[] = [
 		desc: "Chuleta a la plancha con papas fritas.",
 		category: "plancha",
 		photo: "01-chuleta-a-la-plancha-con-papas.webp",
+		platePhoto: "chuleta-a-la-plancha-black-plate.jpg",
 		options: [{ label: "Plato", price: 400 }],
 	},
 	{
@@ -126,6 +131,7 @@ export const DISHES: Dish[] = [
 		desc: "Papas fritas, fritos o ensalada.",
 		category: "plancha",
 		photo: "06-chuleta-a-la-plancha-con-ensalada.webp",
+		platePhoto: "chuleta-con-ensalada-black-plate.jpg",
 		options: [
 			{ label: "Sola", price: 350 },
 			{ label: "Con frito o papa", price: 400 },
@@ -137,6 +143,7 @@ export const DISHES: Dish[] = [
 		desc: "Papas fritas o fritos y ensalada.",
 		category: "plancha",
 		photo: "26-pechuga-a-la-plancha.webp",
+		platePhoto: "pechuga-a-la-plancha-black-plate.jpg",
 		options: [{ label: "Plato", price: 400 }],
 	},
 	{
@@ -145,6 +152,7 @@ export const DISHES: Dish[] = [
 		desc: "Papas fritas, fritos o mofongo.",
 		category: "plancha",
 		photo: "19-pechuga-a-la-crema.webp",
+		platePhoto: "pechuga-a-la-crema-black-plate.jpg",
 		options: [{ label: "Plato", price: 475 }],
 	},
 	{
@@ -153,6 +161,7 @@ export const DISHES: Dish[] = [
 		desc: "Papas fritas, fritos o mofongo.",
 		category: "plancha",
 		photo: "19-pechuga-a-la-crema.webp",
+		platePhoto: "camarones-a-la-crema-black-plate.jpg",
 		options: [{ label: "Plato", price: 600 }],
 	},
 	{
@@ -161,6 +170,7 @@ export const DISHES: Dish[] = [
 		desc: "Pierna con frito o papa.",
 		category: "plancha",
 		photo: "17-pierna-con-frito.webp",
+		platePhoto: "pierna-con-frito-black-plate.jpg",
 		options: [{ label: "Plato", price: 450 }],
 	},
 	{
@@ -169,6 +179,7 @@ export const DISHES: Dish[] = [
 		desc: "Pescado frito con fritos.",
 		category: "plancha",
 		photo: "27-pescado-con-fritos.webp",
+		platePhoto: "pescado-con-fritos-black-plate.jpg",
 		options: [{ label: "Plato", price: 450 }],
 	},
 	{
@@ -193,6 +204,7 @@ export const DISHES: Dish[] = [
 		desc: "Patacón con pollo o pierna.",
 		category: "yaroa",
 		photo: "18-patacon.webp",
+		platePhoto: "patacon-black-plate.jpg",
 		options: [
 			{ label: "Pollo", price: 250 },
 			{ label: "Pierna", price: 325 },
@@ -204,6 +216,7 @@ export const DISHES: Dish[] = [
 		desc: "De pierna, con repollo, tomate y salsas de la casa.",
 		category: "yaroa",
 		photo: "23-chimi-de-pierna.webp",
+		platePhoto: "chimi-de-pierna-black-plate.jpg",
 		options: [
 			{ label: "Solo", price: 250 },
 			{ label: "Con papas", price: 350 },
@@ -215,6 +228,7 @@ export const DISHES: Dish[] = [
 		desc: "Pollo, res o pierna.",
 		category: "yaroa",
 		photo: "21-burritos.webp",
+		platePhoto: "burritos-black-plate.jpg",
 		options: [
 			{ label: "Solo", price: 125 },
 			{ label: "Con papa", price: 250 },
@@ -226,6 +240,7 @@ export const DISHES: Dish[] = [
 		desc: "Pollo, res o pierna, con papas fritas.",
 		category: "yaroa",
 		photo: "07-burrito-con-papas.webp",
+		platePhoto: "burrito-con-papa-black-plate.jpg",
 		options: [
 			{ label: "Pollo o res", price: 250 },
 			{ label: "Pierna", price: 300 },
@@ -237,6 +252,7 @@ export const DISHES: Dish[] = [
 		desc: "Normal, pollo o res.",
 		category: "sandwiches",
 		photo: "30-sandwich.webp",
+		platePhoto: "sandwich-black-plate.jpg",
 		options: [
 			{ label: "Normal", price: 100 },
 			{ label: "Pollo", price: 150 },
@@ -249,6 +265,7 @@ export const DISHES: Dish[] = [
 		desc: "Jamón y queso, vegetales, pollo, res, huevo o completa.",
 		category: "sandwiches",
 		photo: "08-club-sandwich.webp",
+		platePhoto: "tostadas-black-plate.jpg",
 		options: [
 			{ label: "Jamón y queso", price: 60 },
 			{ label: "Con vegetales", price: 75 },
@@ -264,6 +281,7 @@ export const DISHES: Dish[] = [
 		desc: "Club sándwich de la casa.",
 		category: "sandwiches",
 		photo: "08-club-sandwich.webp",
+		platePhoto: "club-sandwich-black-plate.jpg",
 		options: [{ label: "Plato", price: 350 }],
 	},
 	{
@@ -272,6 +290,7 @@ export const DISHES: Dish[] = [
 		desc: "Pollo, res o cerdo.",
 		category: "sandwiches",
 		photo: "13-pasteles-en-hoja.webp",
+		platePhoto: "pasteles-en-hoja-black-plate.jpg",
 		options: [{ label: "Plato", price: 200 }],
 	},
 	{
@@ -280,6 +299,7 @@ export const DISHES: Dish[] = [
 		desc: "Papas fritas con queso derretido.",
 		category: "extras",
 		photo: "10-papa-con-queso.webp",
+		platePhoto: "papa-con-queso-black-plate.jpg",
 		options: [
 			{ label: "Pequeña", price: 150 },
 			{ label: "Mediana", price: 250 },
@@ -292,6 +312,7 @@ export const DISHES: Dish[] = [
 		desc: "Salchicha con papas fritas.",
 		category: "extras",
 		photo: "16-salchipapas.webp",
+		platePhoto: "salchipapas-black-plate.jpg",
 		options: [
 			{ label: "Pequeña", price: 150 },
 			{ label: "Mediana", price: 250 },
@@ -304,6 +325,7 @@ export const DISHES: Dish[] = [
 		desc: "Frito con jamón.",
 		category: "extras",
 		photo: "20-frito-con-jamon.webp",
+		platePhoto: "frito-con-jamon-black-plate.jpg",
 		options: [
 			{ label: "Pequeño", price: 200 },
 			{ label: "Mediano", price: 250 },
@@ -316,6 +338,7 @@ export const DISHES: Dish[] = [
 		desc: "Jamón con papa.",
 		category: "extras",
 		photo: "22-jamon-con-papa.webp",
+		platePhoto: "jamon-con-papa-black-plate.jpg",
 		options: [
 			{ label: "Pequeña", price: 150 },
 			{ label: "Mediana", price: 250 },
@@ -328,6 +351,7 @@ export const DISHES: Dish[] = [
 		desc: "Picante, BBQ o normal — con papa o frito · 5 alitas.",
 		category: "extras",
 		photo: "03-alitas-fritas.webp",
+		platePhoto: "alitas-fritas-black-plate.jpg",
 		options: [{ label: "5 alitas", price: 400 }],
 	},
 	{
@@ -336,6 +360,7 @@ export const DISHES: Dish[] = [
 		desc: "Porción de papa o frito.",
 		category: "extras",
 		photo: "09-hamburguesa-con-papas-tray.webp",
+		platePhoto: "servicio-de-papa-o-frito-black-plate.jpg",
 		options: [{ label: "Porción", price: 100 }],
 	},
 ];
