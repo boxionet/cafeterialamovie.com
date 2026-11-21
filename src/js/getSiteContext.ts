@@ -1,22 +1,15 @@
+// AFTER DELETING I18N THIS BECOMES THE MAIN getSiteContext FILE
 import { getContent } from "./getContent";
-import { getHrefLangLinks } from "../features/i18n/getHrefLangLinks";
-import { getLocaleFromUrl, toOgLocale } from "../features/i18n/localeUtils";
-import { localeMap } from "../features/i18n/i18nConfig";
 
 export async function getSiteContext(url: URL) {
-	const locale = getLocaleFromUrl(url);
-
-	const [content, alternates] = await Promise.all([getContent(locale), getHrefLangLinks(url)]);
-
-	const currentHreflang = localeMap[locale];
-	const ogLocale = toOgLocale(currentHreflang ?? "en-US");
+	const content = await getContent("en");
 
 	return {
-		locale,
-		lang: locale,
+		locale: "en",
+		lang: "en",
 		content,
-		alternates,
-		currentHreflang,
-		ogLocale,
+		alternates: [],
+		currentHreflang: "en-US",
+		ogLocale: "en_US",
 	};
 }

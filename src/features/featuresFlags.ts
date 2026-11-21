@@ -9,7 +9,7 @@ export type FeatureFlags = {
 
 export const features: FeatureFlags = {
 	setup: true, //true means the script hasn't been used yet in this case
-	i18n: true,
+	i18n: false,
 	cms: true,
 	demo: true,
 	darkMode: true,

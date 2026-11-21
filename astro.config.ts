@@ -7,7 +7,7 @@ export default defineConfig({
 	site: SITE.url,
 	i18n: {
 		defaultLocale: "en",
-		locales: ["en", "fr"],
+		locales: ["en"],
 		routing: {
 			prefixDefaultLocale: false,
 		},
@@ -20,10 +20,7 @@ export default defineConfig({
 			filter: (page) => !page.includes("/admin"),
 			i18n: {
 				defaultLocale: "en",
-				locales: {
-					en: "en-US",
-					fr: "fr-FR",
-				},
+				locales: { en: "en-US" },
 			},
 		}),
 	],
