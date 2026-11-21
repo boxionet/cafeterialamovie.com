@@ -42,8 +42,8 @@ const pageTitle = isLandingPage
 
 const ogType = "website";
 
-const ogTitle = pageTitle;
-const ogDescription = description;
+const ogTitle = OG.title ?? pageTitle;
+const ogDescription = OG.description ?? description;
 
 let socialImage: string;
 

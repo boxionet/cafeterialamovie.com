@@ -379,13 +379,19 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 		margin-top: (30/16rem);
 
 		// proposal hero buttons are mixed case (not uppercase) and a touch
-		// larger, with a soft red glow on the solid one
+		// larger, with a soft red glow on the solid one.
+		// Center the label with flex: the old line-height:(56/16em) trick
+		// computed to 3.5em × 18px = 63px inside a 56px button, so the
+		// text sat ~3.5px below center.
 		.cs-button-solid,
 		.cs-button-transparent {
 			text-transform: none;
 			font-size: (18/16rem);
 			height: (56/16rem);
-			line-height: (56/16em);
+			line-height: 1.2em;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
 		}
 
 		.cs-button-solid {
