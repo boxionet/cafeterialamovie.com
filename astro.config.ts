@@ -35,6 +35,14 @@ export default defineConfig({
 		},
 		{
 			provider: fontProviders.fontsource(),
+			name: "Playfair Display",
+			cssVariable: "--font-serif",
+			fallbacks: ["Georgia", "serif"],
+			weights: [600, 700],
+			styles: ["normal"],
+		},
+		{
+			provider: fontProviders.fontsource(),
 			name: "Nunito",
 			cssVariable: "--font-primary",
 			fallbacks: ["Arial", "sans-serif"],

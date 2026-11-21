@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
 import { dishImage, formatPrice, type Dish } from "@data/menu";
 
 interface Props {
@@ -32,7 +33,7 @@ const hasOptions = dish.options.length > 1;
 		<Image src={photo} alt={displayName} width={480} height={480} loading="lazy" decoding="async" />
 	</div>
 
-	<h3 class="dish-name font-display">{displayName}</h3>
+	<h3 class="dish-name font-serif">{displayName}</h3>
 	<p class="dish-desc">{displayDesc}</p>
 
 	{
@@ -59,11 +60,7 @@ const hasOptions = dish.options.length > 1;
 			aria-pressed="false"
 			aria-label={`Guardar ${displayName} como favorito`}
 		>
-			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-				<path
-					d="M12 21s-7.5-4.6-9.5-9C1 8.5 3 5 6.5 5c2 0 3.5 1.1 4.5 2.6l1 1.4 1-1.4C14 6.1 15.5 5 17.5 5 21 5 23 8.5 21.5 12c-2 4.4-9.5 9-9.5 9Z"
-				></path>
-			</svg>
+			<Icon name="fa6-regular:heart" aria-hidden="true" />
 		</button>
 	</div>
 
@@ -171,7 +168,7 @@ const hasOptions = dish.options.length > 1;
 	}
 
 	.dish-price {
-		font-family: var(--font-display);
+		font-family: var(--font-serif);
 		font-size: (22/16rem);
 		color: var(--secondary);
 	}
@@ -194,6 +191,7 @@ const hasOptions = dish.options.length > 1;
 		svg {
 			width: (22/16rem);
 			height: (22/16rem);
+			fill: currentColor;
 		}
 
 		&:hover {
@@ -255,7 +253,7 @@ const hasOptions = dish.options.length > 1;
 		font-weight: 800;
 		line-height: 1em;
 		color: #fff;
-		background-color: var(--secondaryLight);
+		background-color: var(--primary);
 		border: none;
 		border-radius: 999px;
 		padding: (12/16rem) (8/16rem) (12/16rem) (18/16rem);
@@ -268,11 +266,11 @@ const hasOptions = dish.options.length > 1;
 		transition: background-color 0.3s;
 
 		&:hover {
-			background-color: #c06f1f;
+			background-color: #bf1313;
 		}
 
 		&.added {
-			background-color: var(--primary);
+			background-color: #bf1313;
 		}
 	}
 

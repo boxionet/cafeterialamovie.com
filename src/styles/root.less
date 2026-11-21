@@ -11,6 +11,7 @@
 		--primaryLight: #ff6b65;
 		--secondary: #fdcc00;
 		--secondaryLight: #d87f2a;
+		--green: #5f9b0a;
 		--headerColor: #ffffff;
 		--bodyTextColor: #d4d4d4;
 		--bodyTextColorWhite: #fafbfc;
@@ -76,6 +77,7 @@
 		// Transition Properties
 		color: var(--light);
 		background-color: var(--primary);
+		border-radius: 999px;
 		display: inline-block;
 		position: relative;
 		z-index: 1;
@@ -96,6 +98,7 @@
 			width: 0;
 			height: 100%;
 			background-color: #000;
+			border-radius: 999px;
 			opacity: 1;
 			display: block;
 			position: absolute;
@@ -120,6 +123,7 @@
 		color: #fff;
 		background-color: transparent;
 		border: 1px solid #fff;
+		border-radius: 999px;
 		display: inline-block;
 		position: relative;
 		z-index: 1;
@@ -158,10 +162,16 @@
 		padding-top: (72/16rem);
 	}
 
-	// Display font (Lilita One) for headings and dish names
+	// Display font (Lilita One) for headings and hero
 	.font-display {
 		font-family: var(--font-display);
 		font-weight: 400;
+	}
+
+	// Serif font (Playfair Display) for dish names, as in the proposal
+	.font-serif {
+		font-family: var(--font-serif);
+		font-weight: 700;
 	}
 
 	*,
