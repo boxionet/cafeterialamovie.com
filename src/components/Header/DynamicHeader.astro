@@ -5,70 +5,154 @@ import { getSiteContext } from "@js/getSiteContext";
 import { BUSINESS } from "@data/client";
 import type { NavItem } from "src/typescript/global";
 import logo from "@assets/svgs/logo.svg";
+import { Icon } from "astro-icon/components";
 
 const { locale, content } = await getSiteContext(Astro.url);
+const homeHref = getLocalizedRoute(locale, "/");
+const menuHref = getLocalizedRoute(locale, "/menu");
 ---
 
 <header id="cs-navigation">
 	<div class="cs-container">
-		<a href={getLocalizedRoute(locale, "/")} class="cs-logo" aria-label={content.common.backToHome}>
+		<a href={homeHref} class="cs-logo" aria-label={content.common.backToHome}>
 			<img src={logo.src} alt="Cafetería La Movie — La Movie del Sabor" />
 		</a>
 
-		<nav class="cs-nav" role="navigation">
-			<button
-				class="cs-toggle"
-				id="mobile-menu-toggle"
-				aria-expanded="false"
-				aria-controls="cs-expanded-ul"
-				aria-label={content.common.mobileMenuToggle}
-			>
-				<div class="cs-box" aria-hidden="true">
-					<span class="cs-line cs-line1" aria-hidden="true"></span>
-					<span class="cs-line cs-line2" aria-hidden="true"></span>
-					<span class="cs-line cs-line3" aria-hidden="true"></span>
-				</div>
-			</button>
+		<nav class="cs-nav" role="navigation" aria-label="Navegación principal">
+			<ul class="cs-ul">
+				{navData.map((entry: NavItem) => {
+					const entryUrl = entry.urls?.[locale] ?? entry.urls?.es ?? "/";
+					const entryLabel = entry.label?.[locale] ?? entry.label?.es ?? entry.key;
+					const href = getLocalizedRoute(locale, entryUrl);
+					const isActive = Astro.url.pathname === href;
 
-			<div class="cs-ul-wrapper">
-				<ul id="cs-expanded-ul" class="cs-ul">
-					{navData.map((entry: NavItem) => {
-						const entryUrl = entry.urls?.[locale] ?? entry.urls?.es ?? "/";
-						const entryLabel = entry.label?.[locale] ?? entry.label?.es ?? entry.key;
-						const href = getLocalizedRoute(locale, entryUrl);
-						const isActive = Astro.url.pathname === href;
-
-						return (
-							<li class="cs-li">
-								<a
-									href={href}
-									class:list={["cs-li-link", { "cs-active": isActive }]}
-									aria-current={isActive ? "page" : undefined}
-								>
-									{entryLabel}
-								</a>
-							</li>
-						);
-					})}
-				</ul>
-
-				<div class="cs-nav-cta">
-					<a class="cs-pedir" href={BUSINESS.whatsapp} target="_blank" rel="noopener">
-						Pedir por WhatsApp
-					</a>
-				</div>
-			</div>
+					return (
+						<li class="cs-li">
+							<a
+								href={href}
+								class:list={["cs-li-link", { "cs-active": isActive }]}
+								aria-current={isActive ? "page" : undefined}
+							>
+								{entryLabel}
+							</a>
+						</li>
+					);
+				})}
+			</ul>
 		</nav>
 
-		<div class="cs-desktop-cta">
+		<div class="cs-bar-cta">
 			<a class="cs-pedir" href={BUSINESS.whatsapp} target="_blank" rel="noopener">
-				Pedir por WhatsApp
+				<Icon name="fa6-brands:whatsapp" aria-hidden="true" /> Pedir por WhatsApp
 			</a>
 		</div>
+
+		<button
+			class="cs-toggle"
+			id="mobile-menu-toggle"
+			aria-expanded="false"
+			aria-controls="cs-mobile-overlay"
+			aria-label={content.common.mobileMenuToggle}
+		>
+			<div class="cs-box" aria-hidden="true">
+				<span class="cs-line cs-line1" aria-hidden="true"></span>
+				<span class="cs-line cs-line2" aria-hidden="true"></span>
+				<span class="cs-line cs-line3" aria-hidden="true"></span>
+			</div>
+		</button>
+	</div>
+
+	<!-- Full-screen mobile menu overlay (brand red, like the reference navbar) -->
+	<div class="cs-overlay" id="cs-mobile-overlay" aria-hidden="true">
+		<div class="cs-overlay-head">
+			<a href={homeHref} class="cs-overlay-logo" data-menu-close aria-label={content.common.backToHome}>
+				<img src={logo.src} alt="Cafetería La Movie — La Movie del Sabor" />
+			</a>
+			<button class="cs-overlay-close" id="mobile-menu-close" aria-label="Cerrar menú">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</button>
+		</div>
+
+		<nav class="cs-overlay-nav" role="navigation" aria-label="Menú móvil">
+			<ul class="cs-overlay-ul">
+				{navData.map((entry: NavItem) => {
+					const entryUrl = entry.urls?.[locale] ?? entry.urls?.es ?? "/";
+					const entryLabel = entry.label?.[locale] ?? entry.label?.es ?? entry.key;
+					const href = getLocalizedRoute(locale, entryUrl);
+					const isActive = Astro.url.pathname === href;
+
+					return (
+						<li class="cs-overlay-li">
+							<a
+								href={href}
+								data-menu-close
+								class:list={["cs-overlay-link", { "cs-active": isActive }]}
+								aria-current={isActive ? "page" : undefined}
+							>
+								{entryLabel}
+								<span class="cs-arrow" aria-hidden="true"></span>
+							</a>
+						</li>
+					);
+				})}
+			</ul>
+		</nav>
+
+		<div class="cs-overlay-ctas">
+			<a class="cs-overlay-pedir" href={BUSINESS.whatsapp} target="_blank" rel="noopener" data-menu-close>
+				<Icon name="fa6-brands:whatsapp" aria-hidden="true" /> Pedir por WhatsApp
+			</a>
+			<a class="cs-overlay-menu" href={menuHref} data-menu-close>Ver menú</a>
+		</div>
+
+		<p class="cs-overlay-hours">Mié–Dom · 6:45 PM – 12:00 AM</p>
 	</div>
 </header>
 
 <style lang="less">
+	/*-- -------------------------- -->
+	<---  Navbar — lacasadealofoke  -->
+	<---  style, adapted to our     -->
+	<---  brand: black bar, red    -->
+	<---  bottom line (#FE0500),   -->
+	<---  gold (#FDCC00) accents,  -->
+	<---  white WhatsApp pill,     -->
+	<---  full-screen red overlay  -->
+	<---  menu on mobile. Bar is  -->
+	<---  70px tall on all sizes:  -->
+	<---  8px pad + 52px logo +    -->
+	<---  8px pad + 2px border.    -->
+	<--- -------------------------- -*/
+
+	/* Shared: white pill CTA (bar + overlay) */
+	#cs-navigation {
+		.cs-pedir {
+			font-weight: 800;
+			line-height: 1.2em;
+			text-decoration: none;
+			white-space: nowrap;
+			color: #000;
+			background-color: #fff;
+			border-radius: 999px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: (7/16rem);
+			transition: background-color 0.3s;
+
+			svg {
+				width: (16/16rem);
+				height: (16/16rem);
+				flex: none;
+			}
+
+			&:hover {
+				background-color: #f0f0f0;
+			}
+		}
+	}
+
 	/*-- -------------------------- -->
 	<---     Mobile Navigation      -->
 	<--- -------------------------- -*/
@@ -85,67 +169,29 @@ const { locale, content } = await getSiteContext(Astro.url);
 			font-family: var(--font-primary);
 			width: 100%;
 			box-sizing: border-box;
-			padding: (12/16rem) (16/16rem);
+			padding: (8/16rem) (16/16rem);
 			background-color: #000;
-			border-bottom: 1px solid #1f1f1f;
+			border-bottom: 2px solid var(--primary);
 			position: fixed;
 			z-index: 10000;
-
-			&:before {
-				/* black blurred overlay */
-				content: "";
-				width: 0%;
-				height: 100vh;
-				background: rgba(0, 0, 0, 0.6);
-				opacity: 0;
-				display: block;
-				position: absolute;
-				top: 100%;
-				right: 0;
-				z-index: -11;
-				transition:
-					width 0.5s,
-					opacity 0.3s;
-				-webkit-backdrop-filter: blur(10px);
-				backdrop-filter: blur(10px);
-			}
-
-			&.cs-active {
-				&:before {
-					width: 100%;
-					opacity: 1;
-				}
-
-				.cs-ul-wrapper {
-					opacity: 1;
-					visibility: visible;
-					transform: scaleX(1);
-					transition-delay: 0.2s;
-				}
-
-				.cs-li {
-					opacity: 1;
-					transform: translateX(0);
-				}
-			}
 
 			.cs-container {
 				width: 100%;
 				display: flex;
-				justify-content: flex-end;
 				align-items: center;
+				gap: (12/16rem);
 			}
 
 			.cs-logo {
 				width: auto;
-				max-width: (176/16rem);
-				height: (56/16rem);
+				height: (52/16rem);
 				margin: 0 auto 0 0;
 				box-sizing: border-box;
 				padding: 0;
 				display: flex;
 				justify-content: flex-start;
 				align-items: center;
+				flex: none;
 				z-index: 10;
 
 				img {
@@ -158,17 +204,35 @@ const { locale, content } = await getSiteContext(Astro.url);
 				}
 			}
 
+			/* desktop links hidden on mobile — the overlay carries them */
+			.cs-nav {
+				display: none;
+			}
+
+			.cs-bar-cta {
+				display: flex;
+				align-items: center;
+				flex: none;
+			}
+
+			.cs-pedir {
+				font-size: (13/16rem);
+				padding: (11/16rem) (16/16rem);
+			}
+
 			.cs-toggle {
-				/* 44px - 48px */
+				/* 44px - 48px, circular, black fill + thin white outline */
 				width: clamp(2.75rem, 6vw, 3rem);
 				height: clamp(2.75rem, 6vw, 3rem);
-				margin: 0 0 0 auto;
-				background-color: transparent;
-				border: none;
-				border-radius: (4/16rem);
+				margin: 0;
+				background-color: #000;
+				border: 1px solid rgba(255, 255, 255, 0.75);
+				border-radius: 50%;
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				flex: none;
+				cursor: pointer;
 			}
 
 			.cs-active {
@@ -190,10 +254,9 @@ const { locale, content } = await getSiteContext(Astro.url);
 			}
 
 			.cs-box {
-				/* 24px - 28px */
-				width: clamp(1.5rem, 2vw, 1.75rem);
-				/* 14px - 16px */
-				height: clamp(0.875rem, 1.5vw, 1rem);
+				/* short lines: 20px wide, 14px tall stack */
+				width: (20/16rem);
+				height: (14/16rem);
 				position: relative;
 			}
 
@@ -240,120 +303,212 @@ const { locale, content } = await getSiteContext(Astro.url);
 					opacity 0.3s;
 			}
 
-			.cs-ul-wrapper {
-				height: 100vh;
-				background-color: #0a0a0a;
-				box-shadow: inset rgba(0, 0, 0, 0.2) 0px 8px 24px;
-				opacity: 0;
-				visibility: hidden;
-				position: absolute;
-				top: 100%;
-				right: 0;
-				left: auto;
-				z-index: -1;
-				overflow: hidden;
-				transform: scaleX(0);
-				transition:
-					transform 0.4s,
-					opacity 0.3s;
-				transform-origin: top right;
-				padding: (48/16rem) clamp(1.75rem, 3vw, 2.5rem) (32/16rem) (70/16rem);
-				display: grid;
-				gap: clamp(1.25rem, 2.6vw, 2.25rem);
-				align-content: start;
-			}
+			/*-- -------------------------- -->
+			<---  Full-screen red overlay  -->
+			<--- -------------------------- -*/
 
-			.cs-ul {
-				width: auto;
-				min-width: 40%;
-				margin: 0;
+			.cs-overlay {
+				position: fixed;
+				inset: 0;
+				height: 100vh;
+				height: 100dvh;
+				background-color: var(--primary);
+				z-index: 10001;
+				box-sizing: border-box;
+				padding: (8/16rem) (20/16rem) (24/16rem);
 				display: flex;
 				flex-direction: column;
-				justify-content: flex-start;
-				align-items: flex-end;
-				gap: (20/16rem);
-				overflow: scroll;
-			}
-
-			.cs-li {
-				text-align: right;
-				list-style: none;
-				width: 100%;
-				margin-right: 0;
+				overflow-y: auto;
 				opacity: 0;
-				transform: translateX(-40/16rem);
+				visibility: hidden;
+				transform: translateY(-12px);
 				transition:
-					transform 0.6s,
-					opacity 0.9s;
+					opacity 0.3s,
+					transform 0.3s,
+					visibility 0.3s;
+			}
 
-				&:nth-of-type(1) {
-					transition-delay: 0.05s;
-				}
-				&:nth-of-type(2) {
-					transition-delay: 0.1s;
-				}
-				&:nth-of-type(3) {
-					transition-delay: 0.15s;
-				}
-				&:nth-of-type(4) {
-					transition-delay: 0.2s;
+			&.cs-active {
+				.cs-overlay {
+					opacity: 1;
+					visibility: visible;
+					transform: translateY(0);
 				}
 			}
 
-			.cs-li-link {
-				/* 16px - 24px */
-				font-size: clamp(1rem, 2.5vw, 1.5rem);
-				color: #fff;
-				line-height: 1.2em;
-				text-decoration: none;
-				margin: 0;
-				display: inline-block;
-				position: relative;
+			.cs-overlay-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				height: (52/16rem);
+				flex: none;
+			}
 
-				&:before {
-					/* active state underline */
-					content: "";
-					width: 100%;
-					height: 1px;
-					background: var(--primary);
-					opacity: 1;
-					display: none;
-					position: absolute;
-					bottom: (-2/16rem);
-					left: 0;
+			.cs-overlay-logo {
+				height: (52/16rem);
+				display: flex;
+				align-items: center;
+				flex: none;
+
+				img {
+					width: auto;
+					height: 100%;
+					object-fit: contain;
+					object-position: left;
+					display: block;
 				}
+			}
 
-				&.cs-active {
-					color: var(--secondary);
-					&:before {
-						display: block;
+			.cs-overlay-close {
+				width: (44/16rem);
+				height: (44/16rem);
+				background-color: transparent;
+				border: 1.5px solid rgba(255, 255, 255, 0.85);
+				border-radius: 50%;
+				position: relative;
+				flex: none;
+				cursor: pointer;
+
+				span {
+					width: (18/16rem);
+					height: 2px;
+					background-color: #fff;
+					border-radius: 2px;
+					position: absolute;
+					top: 50%;
+					left: 50%;
+
+					&:nth-child(1) {
+						transform: translate(-50%, -50%) rotate(45deg);
+					}
+
+					&:nth-child(2) {
+						transform: translate(-50%, -50%) rotate(-45deg);
 					}
 				}
 			}
 
-			.cs-nav-cta {
-				display: flex;
-				flex-direction: column;
-				align-items: flex-end;
-				gap: (12/16rem);
-				border-top: 1px solid #1f1f1f;
-				padding-top: (20/16rem);
+			.cs-overlay-nav {
+				margin-top: (20/16rem);
+				flex: none;
 			}
 
-			.cs-pedir {
-				font-size: (15/16rem);
+			.cs-overlay-ul {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.cs-overlay-li {
+				& + & {
+					border-top: 1px solid rgba(255, 255, 255, 0.28);
+				}
+			}
+
+			.cs-overlay-link {
+				/* 28px - 32px */
+				font-size: clamp(1.75rem, 8vw, 2rem);
+				font-weight: 700;
+				line-height: 1.2em;
+				color: #fff;
+				text-decoration: none;
+				min-height: (70/16rem);
+				padding: (12/16rem) (4/16rem);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: (16/16rem);
+
+				&.cs-active {
+					color: var(--secondary);
+				}
+			}
+
+			.cs-arrow {
+				width: (12/16rem);
+				height: (12/16rem);
+				border-top: 3px solid var(--secondary);
+				border-right: 3px solid var(--secondary);
+				transform: rotate(45deg);
+				flex: none;
+			}
+
+			.cs-overlay-ctas {
+				margin-top: (28/16rem);
+				display: flex;
+				flex-direction: column;
+				gap: (12/16rem);
+				flex: none;
+			}
+
+			.cs-overlay-pedir,
+			.cs-overlay-menu {
+				font-size: (16/16rem);
 				font-weight: 800;
 				line-height: 1.2em;
 				text-decoration: none;
-				color: #fff;
-				background-color: var(--primary);
+				min-height: (56/16rem);
 				border-radius: 999px;
-				padding: (12/16rem) (20/16rem);
-				display: inline-block;
+				padding: (14/16rem) (20/16rem);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: (8/16rem);
 			}
 
-			.cs-desktop-cta {
-				display: none;
+			.cs-overlay-pedir {
+				color: #000;
+				background-color: #fff;
+
+				svg {
+					width: (18/16rem);
+					height: (18/16rem);
+					flex: none;
+				}
+			}
+
+			.cs-overlay-menu {
+				color: #fff;
+				background-color: transparent;
+				border: 2px solid rgba(255, 255, 255, 0.9);
+			}
+
+			.cs-overlay-hours {
+				margin: auto 0 0;
+				padding-top: (28/16rem);
+				font-size: (14/16rem);
+				font-weight: 600;
+				line-height: 1.4em;
+				letter-spacing: 0.02em;
+				color: rgba(255, 255, 255, 0.9);
+				text-align: center;
+			}
+		}
+	}
+
+	/* Very narrow phones (<=359px): shrink the bar CTA + logo so
+	   logo + pill + hamburger still fit on one row */
+	@media only screen and (max-width: 22.4375rem) {
+		#cs-navigation {
+			padding-left: (12/16rem);
+			padding-right: (12/16rem);
+
+			.cs-container {
+				gap: (8/16rem);
+			}
+
+			.cs-logo {
+				height: (44/16rem);
+			}
+
+			.cs-pedir {
+				font-size: (12/16rem);
+				padding: (10/16rem) (12/16rem);
+			}
+
+			.cs-toggle {
+				width: (44/16rem);
+				height: (44/16rem);
 			}
 		}
 	}
@@ -368,20 +523,26 @@ const { locale, content } = await getSiteContext(Astro.url);
 			font-family: var(--font-primary);
 			width: 100%;
 			box-sizing: border-box;
-			padding: (10/16rem) (16/16rem);
+			padding: (8/16rem) (16/16rem);
 			background-color: #000;
-			border-bottom: 1px solid #1f1f1f;
+			border-bottom: 2px solid var(--primary);
 			position: fixed;
 			z-index: 10000;
+
+			/* the mobile overlay never renders on desktop */
+			.cs-overlay {
+				display: none;
+			}
 
 			.cs-container {
 				width: 100%;
 				max-width: (1280/16rem);
 				margin: auto;
 				display: flex;
-				justify-content: flex-end;
 				align-items: center;
+				justify-content: space-between;
 				gap: (24/16rem);
+				position: relative;
 			}
 
 			.cs-toggle {
@@ -390,14 +551,13 @@ const { locale, content } = await getSiteContext(Astro.url);
 
 			.cs-logo {
 				width: auto;
-				max-width: (220/16rem);
-				// user-specified desktop logo height: exactly 5.3rem
-				height: 5.3rem;
-				margin: 0 auto 0 0;
+				height: (52/16rem);
+				margin: 0;
 				padding: 0;
 				display: flex;
 				justify-content: flex-start;
 				align-items: center;
+				flex: none;
 				z-index: 100;
 
 				img {
@@ -409,28 +569,38 @@ const { locale, content } = await getSiteContext(Astro.url);
 				}
 			}
 
+			/* centered links zone: absolutely centered on the bar, so the
+			   narrower logo and wider CTA can't pull it off-center */
+			.cs-nav {
+				position: absolute;
+				left: 50%;
+				transform: translateX(-50%);
+				display: flex;
+				justify-content: center;
+			}
+
 			.cs-ul {
 				width: 100%;
 				margin: 0;
 				padding: 0;
 				display: flex;
-				justify-content: flex-start;
+				justify-content: center;
 				align-items: center;
-				/* 20px - 36px */
-				gap: clamp(1.25rem, 2.6vw, 2.25rem);
+				/* 28px - 36px */
+				gap: clamp(1.75rem, 2.6vw, 2.25rem);
 			}
 
 			.cs-li {
 				list-style: none;
-				padding: (32/16rem) 0;
+				padding: 0;
 				/* prevent flexbox from squishing it */
 				flex: none;
 			}
 
 			.cs-li-link {
-				/* 14px - 16px */
-				font-size: clamp(0.875rem, 1vw, 1rem);
-				font-weight: 600;
+				/* 15px - 16px */
+				font-size: clamp(0.9375rem, 1vw, 1rem);
+				font-weight: 700;
 				line-height: 1.5em;
 				text-decoration: none;
 				margin: 0;
@@ -451,11 +621,11 @@ const { locale, content } = await getSiteContext(Astro.url);
 				}
 
 				&:before {
-					/* active state underline */
+					/* gold underline on hover / active */
 					content: "";
 					width: 0%;
 					height: 2px;
-					background: var(--primary);
+					background: var(--secondary);
 					opacity: 1;
 					display: block;
 					position: absolute;
@@ -465,33 +635,15 @@ const { locale, content } = await getSiteContext(Astro.url);
 				}
 			}
 
-			.cs-nav-cta {
-				display: none;
-			}
-
-			.cs-desktop-cta {
+			.cs-bar-cta {
 				display: flex;
 				align-items: center;
-				gap: (16/16rem);
 				flex: none;
 			}
 
 			.cs-pedir {
 				font-size: (14/16rem);
-				font-weight: 800;
-				line-height: 1.2em;
-				text-decoration: none;
-				white-space: nowrap;
-				color: #fff;
-				background-color: var(--primary);
-				border-radius: 999px;
-				padding: (11/16rem) (18/16rem);
-				display: inline-block;
-				transition: background-color 0.3s;
-
-				&:hover {
-					background-color: #d40400;
-				}
+				padding: (13/16rem) (20/16rem);
 			}
 		}
 	}
