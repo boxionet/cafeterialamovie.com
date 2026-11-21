@@ -211,6 +211,20 @@
 	}
 }
 
+// Fixed-header clearance — derived from #cs-navigation's real height in
+// src/components/Header/DynamicHeader.astro. Keep in sync if the header
+// padding, logo size, or nav padding ever changes:
+//   header height = vertical padding + tallest content + 1px border
+//   mobile (<=1023px): 12px pad + 56px logo + 12px pad + 1px = 81px
+//   desktop (>=1024px): 10px pad + 88px nav item (32px pad + 24px line)
+//     + 10px pad + 1px = 109px (the 5.3rem logo is 84.8px, shorter)
+// main padding-top = header height + 7px buffer, so the hero sticker
+// (rotated 9deg, its top corners sit ~11px above its top anchor) and the
+// braces (top edge ~5px below the hero top at 1440) clear the navbar
+// instead of sliding under it.
+@header-clear-mobile: (88/16rem);
+@header-clear-desktop: (116/16rem);
+
 /* Fonts and general styles */
 @media only screen and (min-width: 0em) {
 	body,
@@ -228,9 +242,9 @@
 		background-color: #000;
 	}
 
-	// Clear the fixed header
+	// Clear the fixed header — see @header-clear-mobile above
 	main {
-		padding-top: (72/16rem);
+		padding-top: @header-clear-mobile;
 		// Container for cqw units: the proposal sizes its hero, titles
 		// and braces in cqw against its 1440px frame; main is full
 		// viewport width, so cqw here matches the proposal exactly.
@@ -315,9 +329,9 @@
 		padding: 0;
 	}
 
-	// Taller fixed header on desktop
+	// Taller fixed header on desktop — see @header-clear-desktop above
 	main {
-		padding-top: (76/16rem);
+		padding-top: @header-clear-desktop;
 	}
 }
 

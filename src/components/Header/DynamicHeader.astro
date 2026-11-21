@@ -141,7 +141,7 @@ const { locale, content } = await getSiteContext(Astro.url);
 			.cs-logo {
 				width: auto;
 				max-width: (176/16rem);
-				height: (48/16rem);
+				height: (56/16rem);
 				margin: 0 auto 0 0;
 				box-sizing: border-box;
 				padding: 0;
@@ -401,7 +401,8 @@ const { locale, content } = await getSiteContext(Astro.url);
 			.cs-logo {
 				width: auto;
 				max-width: (220/16rem);
-				height: (56/16rem);
+				// user-specified desktop logo height: exactly 5.3rem
+				height: 5.3rem;
 				margin: 0 auto 0 0;
 				padding: 0;
 				display: flex;
