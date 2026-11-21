@@ -34,15 +34,86 @@
 		--sectionPadding: clamp(3.75rem, 7.82vw, 6.25rem) 1rem;
 	}
 
-	// Text styles - can be replaced using CodeStitch's "Content Flair" Stitches
+	// Section kicker — the proposal's .sec-kicker: orange, Nunito 900,
+	// wide letterspacing, uppercase. Used on every section head.
+	.sec-kicker,
 	.cs-topper {
-		font-size: var(--topperFontSize);
-		font-weight: 700;
+		font-size: (12.5/16rem);
+		font-weight: 900;
 		line-height: 1.2em;
 		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		color: var(--primaryLight);
+		letter-spacing: 0.26em;
+		color: var(--secondaryLight);
 		display: block;
+		margin: 0 0 (6/16rem);
+	}
+
+	// Section title — the proposal's .sec-title: Lilita One, huge,
+	// tight, uppercase, cream; .hl = yellow, .hl-r = red.
+	.sec-title {
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(2.1rem, 6cqw, 3.6rem);
+		line-height: 1em;
+		text-transform: uppercase;
+		color: #f5efe6;
+		margin: 0;
+
+		.hl {
+			color: var(--secondary);
+		}
+
+		.hl-r {
+			color: var(--primary);
+		}
+	}
+
+	// Section head row — the proposal's .sec-head.
+	.sec-head {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: (18/16rem);
+		flex-wrap: wrap;
+		margin-bottom: (30/16rem);
+	}
+
+	// Page hero (Menú / Conócenos / Contacto) — the proposal's .page-hero:
+	// huge uppercase Lilita One h1, "El" solid cream + "menú" yellow
+	// outline word (.stroke), red spans (.rd), dim intro paragraph.
+	.page-hero {
+		padding: (52/16rem) (16/16rem) (8/16rem);
+		text-align: center;
+		position: relative;
+		overflow: hidden;
+
+		h1 {
+			font-family: var(--font-display);
+			font-weight: 400;
+			font-size: clamp(3rem, 11cqw, 8.5rem);
+			line-height: 0.95em;
+			text-transform: uppercase;
+			color: #f5efe6;
+			margin: 0;
+
+			.stroke {
+				color: transparent;
+				-webkit-text-stroke: 2.5px var(--secondary);
+			}
+
+			.rd {
+				color: var(--primary);
+			}
+		}
+
+		p {
+			margin: (16/16rem) auto 0;
+			max-width: (560/16rem);
+			font-weight: 700;
+			color: #cfc8b8;
+			line-height: 1.55em;
+			font-size: (16.3/16rem);
+		}
 	}
 
 	.cs-title {
@@ -160,6 +231,10 @@
 	// Clear the fixed header
 	main {
 		padding-top: (72/16rem);
+		// Container for cqw units: the proposal sizes its hero, titles
+		// and braces in cqw against its 1440px frame; main is full
+		// viewport width, so cqw here matches the proposal exactly.
+		container-type: inline-size;
 	}
 
 	// Display font (Lilita One) for headings and hero

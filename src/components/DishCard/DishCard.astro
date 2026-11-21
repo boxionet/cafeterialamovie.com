@@ -247,22 +247,27 @@ const hasOptions = dish.options.length > 1;
 		}
 	}
 
+	// proposal .order-pill shape: Playfair serif, wide left padding,
+	// black arrow circle — kept RED per the user's round-1 rule (the
+	// card button matches the other buttons on the site)
 	.dish-order {
-		font-family: var(--font-primary);
-		font-size: (15/16rem);
-		font-weight: 800;
+		font-family: var(--font-serif);
+		font-weight: 600;
+		font-size: (17/16rem);
 		line-height: 1em;
 		color: #fff;
 		background-color: var(--primary);
 		border: none;
 		border-radius: 999px;
-		padding: (12/16rem) (8/16rem) (12/16rem) (18/16rem);
+		padding: (7/16rem) (8/16rem) (7/16rem) (22/16rem);
+		min-height: (52/16rem);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: (10/16rem);
+		gap: (12/16rem);
 		flex: 1;
 		cursor: pointer;
+		box-shadow: 0 (12/16rem) (26/16rem) rgba(254, 5, 0, 0.28);
 		transition: background-color 0.3s;
 
 		&:hover {
@@ -270,18 +275,19 @@ const hasOptions = dish.options.length > 1;
 		}
 
 		&.added {
-			background-color: #bf1313;
+			background-color: var(--green);
+			box-shadow: 0 (12/16rem) (26/16rem) rgba(95, 155, 10, 0.3);
 		}
 	}
 
 	.dish-order-arrow {
-		width: (28/16rem);
-		height: (28/16rem);
-		font-size: (15/16rem);
-		line-height: (28/16rem);
+		width: (38/16rem);
+		height: (38/16rem);
+		font-size: (17/16rem);
+		line-height: (38/16rem);
 		text-align: center;
 		color: #fff;
-		background-color: #000;
+		background-color: #101012;
 		border-radius: 50%;
 		flex: none;
 	}

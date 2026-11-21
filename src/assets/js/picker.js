@@ -149,10 +149,9 @@ function renderBar() {
 	const bar = document.querySelector("[data-order-bar]");
 	if (!bar) return;
 
-	const countEl = bar.querySelector("[data-order-count]");
-	const summaryEl = bar.querySelector("[data-order-summary]");
-	const linesEl = bar.querySelector("[data-order-lines]");
+	const countLabelEl = bar.querySelector("[data-order-count-label]");
 	const totalEl = bar.querySelector("[data-order-total]");
+	const linesEl = bar.querySelector("[data-order-lines]");
 	const sendEl = bar.querySelector("[data-order-send]");
 	const panel = bar.querySelector("[data-order-panel]");
 
@@ -163,10 +162,8 @@ function renderBar() {
 		return;
 	}
 
-	if (countEl) countEl.textContent = String(cartCount());
-	if (summaryEl) {
-		summaryEl.textContent = `Tu pedido · ${priceLabel(cartTotal())}`;
-	}
+	const count = cartCount();
+	if (countLabelEl) countLabelEl.textContent = `${count} ${count === 1 ? "plato" : "platos"}`;
 	if (totalEl) totalEl.textContent = priceLabel(cartTotal());
 
 	if (linesEl) {
@@ -178,7 +175,7 @@ function renderBar() {
 			const remove = document.createElement("button");
 			remove.type = "button";
 			remove.className = "order-line-remove";
-			remove.textContent = "Quitar";
+			remove.textContent = "×";
 			remove.setAttribute("aria-label", `Quitar ${line.name} del pedido`);
 			remove.addEventListener("click", () => {
 				cart.splice(index, 1);

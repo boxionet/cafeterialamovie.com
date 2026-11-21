@@ -10,12 +10,11 @@ import { CATEGORIES, DISHES } from "@data/menu";
 	title="Menú — Cafetería La Movie"
 	description="Menú completo de Cafetería La Movie: hamburguesas, mofongo, platos a la plancha, yaroa, patacón, chimi, sándwiches, tostadas y más. Arma tu pedido y envíalo por WhatsApp."
 >
-	<section class="menu-head">
-		<p class="cs-topper">Hecho al momento</p>
-		<h1 class="font-display">Nuestro menú</h1>
-		<p class="menu-intro">
-			Elige tu plato, elige el tamaño y agrega al pedido. Cuando termines, envíalo por
-			WhatsApp — pickup o delivery.
+	<section class="page-hero">
+		<h1>El <span class="stroke">menú</span></h1>
+		<p>
+			Elige tu plato, escoge la opción y agrégalo a tu pedido. Al final, lo envías por
+			WhatsApp y lo preparamos al momento.
 		</p>
 	</section>
 
@@ -33,11 +32,14 @@ import { CATEGORIES, DISHES } from "@data/menu";
 	</div>
 
 	{
-		CATEGORIES.map((cat) => {
+		CATEGORIES.map((cat, i) => {
 			const dishes = DISHES.filter((d) => d.category === cat.id);
 			return (
 				<section class="menu-category" data-category-section={cat.id} id={cat.id}>
-					<h2 class="font-display">{cat.label}</h2>
+					<h2 class="font-display">
+						<span class="n">{String(i + 1).padStart(2, "0")}</span>
+						{cat.label}
+					</h2>
 					<div class="menu-grid">
 						{dishes.map((dish) => (
 							<DishCard dish={dish} mode="menu" />
@@ -53,24 +55,24 @@ import { CATEGORIES, DISHES } from "@data/menu";
 </BaseLayout>
 
 <style lang="less">
-	.menu-head {
-		text-align: center;
-		max-width: (720/16rem);
+	.menu-category {
+		max-width: (1280/16rem);
 		margin: auto;
-		padding: (48/16rem) (16/16rem) (8/16rem);
+		padding: (40/16rem) (16/16rem) (16/16rem);
 
-		h1 {
-			font-size: clamp(2.75rem, 8vw, 4.5rem);
-			color: #fff;
-			margin-bottom: (16/16rem);
+		// proposal .menu-section h2: Lilita One uppercase with a red number
+		h2 {
+			font-size: clamp(1.8rem, 5cqw, 2.7rem);
+			text-transform: uppercase;
+			line-height: 1em;
+			color: #f5efe6;
+			margin-bottom: (8/16rem);
+
+			.n {
+				color: var(--primary);
+				margin-right: 0.18em;
+			}
 		}
-	}
-
-	.menu-intro {
-		font-size: (17/16rem);
-		line-height: 1.7em;
-		color: #d4d4d4;
-		margin-bottom: 0;
 	}
 
 	.filters {
@@ -90,14 +92,15 @@ import { CATEGORIES, DISHES } from "@data/menu";
 
 	.filter-pill {
 		font-family: var(--font-primary);
-		font-size: (14/16rem);
-		font-weight: 800;
+		font-size: (15.2/16rem);
+		font-weight: 900;
 		line-height: 1.2em;
-		color: #fff;
-		background-color: #1e1e1e;
-		border: 1px solid #333;
+		color: #f5efe6;
+		background-color: #0b120c;
+		border: 2px solid #22301f;
 		border-radius: 999px;
-		padding: (11/16rem) (18/16rem);
+		padding: (10/16rem) (20/16rem);
+		min-height: (46/16rem);
 		cursor: pointer;
 		transition:
 			background-color 0.3s,
@@ -109,21 +112,9 @@ import { CATEGORIES, DISHES } from "@data/menu";
 		}
 
 		&.is-active {
-			color: #000;
+			color: #141414;
 			background-color: var(--secondary);
 			border-color: var(--secondary);
-		}
-	}
-
-	.menu-category {
-		max-width: (1280/16rem);
-		margin: auto;
-		padding: (40/16rem) (16/16rem) (16/16rem);
-
-		h2 {
-			font-size: clamp(1.75rem, 4vw, 2.5rem);
-			color: #fff;
-			margin-bottom: (8/16rem);
 		}
 	}
 

@@ -35,49 +35,24 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	<!--                    Hero                      -->
 	<!-- ============================================ -->
 	<section class="hero">
-		<svg
-			class="hero-frame-brace hero-frame-brace--left"
-			viewBox="0 0 40 400"
-			preserveAspectRatio="none"
-			aria-hidden="true"
-		>
-			<path
-				d="M32 8 C 20 42, 12 72, 12 122 C 12 162, 20 182, 30 200 C 20 218, 12 238, 12 278 C 12 328, 20 358, 32 392"
-				vector-effect="non-scaling-stroke"
-			/>
-		</svg>
-		<svg
-			class="hero-frame-brace hero-frame-brace--right"
-			viewBox="0 0 40 400"
-			preserveAspectRatio="none"
-			aria-hidden="true"
-		>
-			<path
-				d="M32 8 C 20 42, 12 72, 12 122 C 12 162, 20 182, 30 200 C 20 218, 12 238, 12 278 C 12 328, 20 358, 32 392"
-				vector-effect="non-scaling-stroke"
-			/>
-		</svg>
-		<span class="hero-sticker">
-			<span>Abierto hasta</span>
-			<span>las 12:00 AM</span>
-		</span>
+		<span class="brace brace-l" aria-hidden="true">{"{"}</span>
+		<span class="brace brace-r" aria-hidden="true">{"}"}</span>
+		<div class="hero-sticker" aria-hidden="true">Abierto hasta<small>las 12:00 AM</small></div>
 		<p class="hero-eyebrow">
 			<span class="hero-eyebrow-dash" aria-hidden="true"></span>La Movie del Sabor<span
 				class="hero-eyebrow-dash"
 				aria-hidden="true"></span>
 		</p>
 		<h1 class="hero-title font-display">
-			<span class="hero-line"
-				><span class="hero-mark">¿</span>ANTOJO<Image
-					src={heroPhoto}
-					alt="Chimi de pierna"
-					width={840}
-					height={340}
-					loading="eager"
-					decoding="async"
-					class="hero-photo"
-				/><span class="hero-mark">?</span></span
-			>
+			<span class="hero-mark">¿</span>ANTOJO<Image
+				src={heroPhoto}
+				alt="Chimi de pierna"
+				width={840}
+				height={340}
+				loading="eager"
+				decoding="async"
+				class="hero-photo"
+			/><span class="hero-mark">?</span>
 			<span class="sr-only">¿Antojo?</span>
 		</h1>
 		<p class="hero-sub">
@@ -95,26 +70,34 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 				>Mié–Dom · 6:45 PM – 12:00 AM</span
 			><span class="hero-info-dot" aria-hidden="true">•</span><span>Lun y Mar cerrado</span>
 		</p>
-	</section>
 
-	<!-- ============================================ -->
-	<!--                  Marquee                     -->
-	<!-- ============================================ -->
-	<div class="marquee" aria-hidden="true">
-		<div class="marquee-track">
-			<span>
-				CHIMIS • MOFONGO • YAROA • PLÁTANOS • ABIERTO TARDE • PICKUP O DELIVERY •&nbsp;
-			</span>
-			<span>
-				CHIMIS • MOFONGO • YAROA • PLÁTANOS • ABIERTO TARDE • PICKUP O DELIVERY •&nbsp;
-			</span>
+		<!-- ============================================ -->
+		<!--                  Marquee                     -->
+		<!-- ============================================ -->
+		<div class="marquee" aria-hidden="true">
+			<div class="marquee-track">
+				<span>
+					CHIMIS <b>•</b> MOFONGO <b>•</b> YAROA <b>•</b> PLÁTANOS FRITOS <b>•</b> ABIERTO
+					TARDE <b>•</b> PICKUP O DELIVERY <b>•</b> LA MOVIE DEL SABOR <b>•</b>&nbsp;
+				</span>
+				<span>
+					CHIMIS <b>•</b> MOFONGO <b>•</b> YAROA <b>•</b> PLÁTANOS FRITOS <b>•</b> ABIERTO
+					TARDE <b>•</b> PICKUP O DELIVERY <b>•</b> LA MOVIE DEL SABOR <b>•</b>&nbsp;
+				</span>
+			</div>
 		</div>
-	</div>
+	</section>
 
 	<!-- ============================================ -->
 	<!--                 Categorías                   -->
 	<!-- ============================================ -->
 	<section class="categories">
+		<div class="sec-head">
+			<div>
+				<p class="sec-kicker">Explora el menú</p>
+				<h2 class="sec-title">¿Qué se te <span class="hl">antoja</span> hoy?</h2>
+			</div>
+		</div>
 		<div class="categories-panel">
 			<Image
 				src={frontPhoto}
@@ -127,8 +110,7 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 			/>
 			<div class="categories-overlay"></div>
 			<div class="categories-content">
-				<p class="cs-topper">¿Qué se te antoja?</p>
-				<h2 class="font-display">Elige tu antojo</h2>
+				<h2>Elige tu antojo</h2>
 				<div class="categories-chips">
 					{
 						CATEGORIES.map((cat) => (
@@ -146,10 +128,10 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	<!--               Los más pedidos                -->
 	<!-- ============================================ -->
 	<section class="favorites">
-		<div class="section-head">
+		<div class="sec-head">
 			<div>
-				<p class="cs-topper">Los favoritos de la casa</p>
-				<h2 class="font-display">Los más pedidos</h2>
+				<p class="sec-kicker">Los más pedidos</p>
+				<h2 class="sec-title">Los favoritos <span class="hl-r">de la noche</span></h2>
 			</div>
 			<div class="fav-arrows">
 				<button type="button" data-fav-prev aria-label="Ver anteriores">←</button>
@@ -197,8 +179,12 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	<!--                  Galería                     -->
 	<!-- ============================================ -->
 	<section class="gallery">
-		<p class="cs-topper">De la plancha a tu mesa</p>
-		<h2 class="font-display">Un festín para los ojos</h2>
+		<div class="sec-head">
+			<div>
+				<p class="sec-kicker">La galería</p>
+				<h2 class="sec-title">Un festín <span class="hl">para los ojos</span></h2>
+			</div>
+		</div>
 		<div class="gallery-grid">
 			{
 				gallery.map((item) => (
@@ -220,21 +206,25 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	<!--                Cómo pedir                    -->
 	<!-- ============================================ -->
 	<section class="how">
-		<p class="cs-topper">Así de fácil</p>
-		<h2 class="font-display">Cómo pedir</h2>
+		<div class="sec-head">
+			<div>
+				<p class="sec-kicker">Así de fácil</p>
+				<h2 class="sec-title">Cómo <span class="hl-r">pedir</span></h2>
+			</div>
+		</div>
 		<ol class="how-steps">
 			<li>
-				<span class="how-num font-display">01</span>
+				<span class="how-num font-display">1</span>
 				<h3>Elige tus platos</h3>
 				<p>Explora el menú y agrega lo que se te antoje.</p>
 			</li>
 			<li>
-				<span class="how-num font-display">02</span>
+				<span class="how-num font-display">2</span>
 				<h3>Arma tu pedido</h3>
 				<p>Elige tamaño, cantidad y revisa tu pedido abajo.</p>
 			</li>
 			<li>
-				<span class="how-num font-display">03</span>
+				<span class="how-num font-display">3</span>
 				<h3>Envía por WhatsApp</h3>
 				<p>Tu pedido llega listo al chat — dinos pickup o delivery.</p>
 			</li>
@@ -255,8 +245,8 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 			class="about-teaser-photo"
 		/>
 		<div class="about-teaser-text">
-			<p class="cs-topper">Conócenos</p>
-			<h2 class="font-display">Una cafetería de barrio, de noche</h2>
+			<p class="sec-kicker">Conócenos</p>
+			<h2 class="sec-title">Una cafetería de barrio, de noche</h2>
 			<p>
 				En Los Mina, Katanga, servimos comida dominicana hecha al momento, de noche.
 				Sin formalidades: pides por WhatsApp, recoges o te lo llevamos.
@@ -272,7 +262,8 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	<!--                 Cierre                       -->
 	<!-- ============================================ -->
 	<section class="close">
-		<h2 class="font-display">PIDE <span>AHORA</span></h2>
+		<h2 class="font-display">Pide <span class="stroke">ahora</span></h2>
+		<p>Tu antojo no espera. Escríbenos y lo preparamos al momento.</p>
 		<a href={BUSINESS.whatsapp} target="_blank" rel="noopener" class="cs-button-solid">
 			Pedir por WhatsApp
 		</a>
@@ -287,78 +278,65 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	<--- -------------------------- -*/
 	.hero {
 		text-align: center;
-		padding: (48/16rem) (16/16rem) (64/16rem);
+		padding: (54/16rem) (16/16rem) 0;
 		overflow: hidden;
 		position: relative;
 	}
 
-	// thin green outline braces framing the whole hero (desktop only)
-	.hero-frame-brace {
-		display: none;
+	// The proposal's braces: Lilita One TEXT glyphs, transparent fill
+	// with a faint green stroke — not solid outlines, not SVGs.
+	.brace {
 		position: absolute;
-		top: (12/16rem);
-		bottom: (12/16rem);
-		width: clamp(40px, 7vw, 110px);
-		height: auto;
-		color: var(--green);
-		opacity: 0.9;
+		top: 46%;
+		transform: translateY(-54%);
+		font-family: var(--font-display);
+		font-size: 34cqw;
+		line-height: 1;
+		color: transparent;
+		-webkit-text-stroke: 2px rgba(95, 155, 10, 0.4);
 		pointer-events: none;
-
-		path {
-			fill: none;
-			stroke: currentColor;
-			stroke-width: 2;
-			stroke-linecap: round;
-			stroke-linejoin: round;
-		}
+		user-select: none;
 	}
 
-	.hero-frame-brace--left {
-		left: (10/16rem);
+	.brace-l {
+		left: -4cqw;
 	}
 
-	.hero-frame-brace--right {
-		right: (10/16rem);
-		transform: scaleX(-1);
+	.brace-r {
+		right: -4cqw;
 	}
 
 	.hero-eyebrow {
-		font-size: (13/16rem);
-		font-weight: 800;
-		letter-spacing: 0.18em;
+		display: inline-flex;
+		align-items: center;
+		gap: (10/16rem);
+		font-size: clamp(0.72rem, 1.6cqw, 0.95rem);
+		font-weight: 900;
+		letter-spacing: 0.34em;
 		text-transform: uppercase;
 		color: var(--secondary);
-		margin-bottom: (28/16rem);
+		margin: 0 0 (10/16rem);
 	}
 
 	.hero-eyebrow-dash {
 		display: inline-block;
-		width: (36/16rem);
+		width: (34/16rem);
 		height: 2px;
 		background-color: var(--primary);
-		vertical-align: middle;
-		margin: 0 (14/16rem);
 	}
 
 	.hero-title {
-		// Lilita One's glyphs paint well above the line box at display sizes;
-		// the padding keeps the title clear of the eyebrow above it
-		padding-top: (48/16rem);
-		line-height: 1.05em;
-		color: #fff8e7;
-		margin-bottom: (24/16rem);
-	}
-
-	.hero-line {
+		margin: 0;
+		text-transform: uppercase;
+		line-height: 0.92em;
+		letter-spacing: 0.005em;
+		font-size: clamp(56px, 12.2cqw, 178px);
+		color: #f5efe6;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		flex-wrap: wrap;
-		gap: 0.08em;
-		// 11.5vw keeps the whole "¿ANTOJO [photo] ?" line on one row
-		// even on a 360px phone; desktop is capped by the 11rem max
-		font-size: clamp(2.75rem, 11.5vw, 11rem);
-		letter-spacing: 0;
+		flex-wrap: nowrap;
+		text-shadow: 0 6px 0 rgba(0, 0, 0, 0.35);
 	}
 
 	.hero-mark {
@@ -366,26 +344,29 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	}
 
 	.hero-photo {
-		width: 1.7em;
-		height: 0.78em;
-		border: (4/16rem) solid var(--secondary);
+		flex: none;
+		width: 1.9em;
+		height: 0.74em;
+		margin: 0 0.06em;
+		border: 0.045em solid var(--secondary);
 		border-radius: 999px;
+		overflow: hidden;
 		object-fit: cover;
 		display: block;
-		flex: none;
-		transform: rotate(-2deg);
+		transform: rotate(-4deg);
+		box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
 	}
 
 	.hero-sub {
-		font-size: clamp(1rem, 2.5vw, 1.25rem);
-		line-height: 1.6em;
-		max-width: (880/16rem);
-		margin: 0 auto (32/16rem);
-		color: #d4d4d4;
+		max-width: (620/16rem);
+		margin: (26/16rem) auto 0;
+		font-size: clamp(1rem, 2.2cqw, 1.22rem);
+		font-weight: 700;
+		color: #cfc8b8;
+		line-height: 1.55em;
 
 		strong {
-			color: #fff;
-			font-weight: 800;
+			color: #f5efe6;
 		}
 	}
 
@@ -394,7 +375,8 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 		flex-wrap: wrap;
 		justify-content: center;
 		align-items: center;
-		gap: (12/16rem);
+		gap: (14/16rem);
+		margin-top: (30/16rem);
 
 		// proposal hero buttons are mixed case (not uppercase) and a touch
 		// larger, with a soft red glow on the solid one
@@ -424,11 +406,11 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	}
 
 	.hero-info {
-		margin-top: (28/16rem);
+		margin-top: (20/16rem);
 		font-size: (15/16rem);
-		font-weight: 700;
+		font-weight: 800;
 		line-height: 1.6em;
-		color: #f5efe6;
+		color: #cfc8b8;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
@@ -441,50 +423,74 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 		font-size: (12/16rem);
 	}
 
-	// yellow tilted sticker with a dashed border; in flow (centered) on
-	// mobile, pinned to the hero's top-right corner on desktop
+	// The proposal's sticker: yellow, dashed dark border + solid yellow
+	// outline, 9° tilt, Lilita One line + Nunito 900 small line.
 	.hero-sticker {
-		display: inline-block;
+		position: absolute;
+		top: (24/16rem);
+		right: 4cqw;
+		transform: rotate(9deg);
+		z-index: 5;
 		font-family: var(--font-display);
-		color: #000;
-		background-color: var(--secondary);
-		border: 2px dashed #b98a00;
-		border-radius: (14/16rem);
-		padding: (10/16rem) (18/16rem);
-		margin-bottom: (24/16rem);
-		transform: rotate(6deg);
-		text-align: center;
+		font-size: clamp(0.85rem, 2cqw, 1.15rem);
 		line-height: 1.15em;
+		color: #131313;
+		background-color: var(--secondary);
+		border: 2px dashed rgba(0, 0, 0, 0.35);
+		outline: 3px solid var(--secondary);
+		border-radius: (14/16rem);
+		padding: (12/16rem) (16/16rem) (10/16rem);
+		text-align: center;
+		box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
 
-		span {
+		small {
 			display: block;
-		}
-
-		span:first-child {
-			font-size: (20/16rem);
-		}
-
-		span:last-child {
-			font-size: (16/16rem);
+			font-family: var(--font-primary);
+			font-weight: 900;
+			font-size: 0.68em;
+			letter-spacing: 0.08em;
 		}
 	}
 
-	@media only screen and (min-width: 64rem) {
-		.hero-frame-brace {
-			display: block;
+	@media only screen and (max-width: 1080px) {
+		.brace {
+			font-size: 44cqw;
+		}
+	}
+
+	@media only screen and (max-width: 860px) {
+		.hero-sticker {
+			top: (12/16rem);
+			right: (12/16rem);
+		}
+	}
+
+	@media only screen and (max-width: 640px) {
+		.hero {
+			padding-top: (38/16rem);
 		}
 
-		.hero-sticker {
-			position: absolute;
-			top: (28/16rem);
-			right: (36/16rem);
-			margin-bottom: 0;
-			transform: rotate(10deg);
+		.hero-title {
+			font-size: clamp(40px, 12.4cqw, 110px);
 		}
 
 		.hero-photo {
-			width: 2.4em;
-			height: 0.92em;
+			width: 1.7em;
+			height: 0.68em;
+		}
+
+		// in flow, right-aligned, slight tilt — as in the proposal
+		.hero-sticker {
+			position: relative;
+			top: auto;
+			right: auto;
+			width: fit-content;
+			margin: 0 4px (16/16rem) auto;
+			transform: rotate(6deg);
+		}
+
+		.brace {
+			display: none;
 		}
 	}
 
@@ -493,24 +499,30 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	<--- -------------------------- -*/
 	.marquee {
 		background-color: var(--secondary);
-		color: #000;
+		color: #141414;
 		overflow: hidden;
-		padding: (12/16rem) 0;
-		transform: rotate(-1deg);
-		width: 104%;
-		margin-left: -2%;
+		margin-top: (58/16rem);
+		transform: rotate(-1.1deg) scale(1.02);
+		border-top: 3px solid #141414;
+		border-bottom: 3px solid #141414;
 	}
 
 	.marquee-track {
 		display: flex;
 		width: max-content;
-		animation: marquee 24s linear infinite;
+		animation: marquee 26s linear infinite;
 
 		span {
 			font-family: var(--font-display);
-			font-size: (20/16rem);
-			letter-spacing: 0.04em;
+			font-size: clamp(1.05rem, 2.6cqw, 1.6rem);
+			padding: (12/16rem) 0;
 			white-space: nowrap;
+		}
+
+		b {
+			color: var(--accent);
+			font-weight: 400;
+			padding: 0 0.35em;
 		}
 	}
 
@@ -528,6 +540,12 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	<--- -------------------------- -*/
 	.categories {
 		padding: (64/16rem) (16/16rem) 0;
+
+		// the sec-head above the panel aligns with the 1280px panel
+		.sec-head {
+			max-width: (1280/16rem);
+			margin: 0 auto (30/16rem);
+		}
 	}
 
 	.categories-panel {
@@ -560,10 +578,15 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 		padding: (32/16rem) (24/16rem);
 		width: 100%;
 
+		// proposal .cat-inner h3: Lilita One, uppercase, tight
 		h2 {
-			font-size: clamp(2rem, 5vw, 3rem);
+			margin: 0 0 (8/16rem);
+			font-family: var(--font-display);
+			font-weight: 400;
+			font-size: clamp(1.7rem, 4.4cqw, 2.6rem);
+			text-transform: uppercase;
+			line-height: 1.02em;
 			color: #fff;
-			margin-bottom: (20/16rem);
 		}
 	}
 
@@ -598,20 +621,6 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 		max-width: (1280/16rem);
 		margin: auto;
 		padding: (80/16rem) (16/16rem) (32/16rem);
-	}
-
-	.section-head {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-end;
-		gap: (16/16rem);
-		margin-bottom: (8/16rem);
-
-		h2 {
-			font-size: clamp(2rem, 5vw, 3rem);
-			color: #fff;
-			margin-bottom: 0;
-		}
 	}
 
 	.fav-arrows {
@@ -723,12 +732,6 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 		max-width: (1280/16rem);
 		margin: auto;
 		padding: (48/16rem) (16/16rem);
-
-		h2 {
-			font-size: clamp(2rem, 5vw, 3rem);
-			color: #fff;
-			margin-bottom: (24/16rem);
-		}
 	}
 
 	.gallery-grid {
@@ -759,12 +762,6 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 		max-width: (1280/16rem);
 		margin: auto;
 		padding: (48/16rem) (16/16rem);
-
-		h2 {
-			font-size: clamp(2rem, 5vw, 3rem);
-			color: #fff;
-			margin-bottom: (32/16rem);
-		}
 	}
 
 	.how-steps {
@@ -793,10 +790,12 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 		}
 	}
 
+	// proposal .step .num: big Lilita One number, yellow outline
 	.how-num {
-		font-size: (40/16rem);
+		font-size: (51/16rem);
 		line-height: 1em;
-		color: var(--secondary);
+		color: transparent;
+		-webkit-text-stroke: 2px var(--secondary);
 		display: block;
 		margin-bottom: (12/16rem);
 	}
@@ -829,13 +828,11 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	}
 
 	.about-teaser-text {
-		h2 {
-			font-size: clamp(1.75rem, 4vw, 2.5rem);
-			color: #fff;
-			margin-bottom: (16/16rem);
+		.sec-title {
+			margin-bottom: (14/16rem);
 		}
 
-		p:not(.cs-topper) {
+		p:not(.sec-kicker) {
 			font-size: (17/16rem);
 			line-height: 1.7em;
 			color: #d4d4d4;
@@ -855,17 +852,29 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	<--- -------------------------- -*/
 	.close {
 		text-align: center;
-		padding: (64/16rem) (16/16rem) (96/16rem);
+		padding: (90/16rem) (16/16rem) (84/16rem);
 
+		// proposal .bigclose: "Pide" solid cream + "ahora" yellow outline
 		h2 {
-			font-size: clamp(3.5rem, 13vw, 8rem);
+			margin: 0 0 (10/16rem);
+			font-size: clamp(3rem, 11.5cqw, 10.5rem);
 			line-height: 0.95em;
-			color: #fff;
-			margin-bottom: (32/16rem);
+			text-transform: uppercase;
+			color: #f5efe6;
 
-			span {
-				color: var(--secondary);
+			.stroke {
+				color: transparent;
+				-webkit-text-stroke: 2.5px var(--secondary);
 			}
+		}
+
+		p {
+			margin: 0 auto (28/16rem);
+			max-width: (520/16rem);
+			font-weight: 700;
+			color: #cfc8b8;
+			font-size: (17/16rem);
+			line-height: 1.55em;
 		}
 	}
 </style>
