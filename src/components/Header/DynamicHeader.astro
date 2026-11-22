@@ -119,10 +119,16 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 	<---  gold (#FDCC00) accents,  -->
 	<---  white WhatsApp pill,     -->
 	<---  full-screen red overlay  -->
-	<---  menu on mobile. Bar is  -->
-	<---  70px tall on all sizes:  -->
-	<---  8px pad + 52px logo +    -->
-	<---  8px pad + 2px border.    -->
+	<---  menu on mobile. Bar is   -->
+	<---  106px tall on desktop    -->
+	<---  (8px pad + 88px logo +   -->
+	<---  8px pad + 2px border)    -->
+	<---  and 98px on mobile /     -->
+	<---  tablet (8px pad + 80px   -->
+	<---  logo + 8px pad + 2px).   -->
+	<---  The logo SVG is nearly   -->
+	<---  square (804.9x669.7),    -->
+	<---  so it sizes by height.   -->
 	<--- -------------------------- -*/
 
 	/* Shared: white pill CTA (bar + overlay) */
@@ -184,7 +190,7 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 
 			.cs-logo {
 				width: auto;
-				height: (52/16rem);
+				height: (80/16rem);
 				margin: 0 auto 0 0;
 				box-sizing: border-box;
 				padding: 0;
@@ -340,12 +346,12 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				height: (52/16rem);
+				height: (80/16rem);
 				flex: none;
 			}
 
 			.cs-overlay-logo {
-				height: (52/16rem);
+				height: (80/16rem);
 				display: flex;
 				align-items: center;
 				flex: none;
@@ -498,7 +504,7 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 			}
 
 			.cs-logo {
-				height: (44/16rem);
+				height: (64/16rem);
 			}
 
 			.cs-pedir {
@@ -551,7 +557,7 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 
 			.cs-logo {
 				width: auto;
-				height: (52/16rem);
+				height: (88/16rem);
 				margin: 0;
 				padding: 0;
 				display: flex;

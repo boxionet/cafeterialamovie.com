@@ -215,13 +215,14 @@
 // src/components/Header/DynamicHeader.astro. Keep in sync if the header
 // padding, logo size, or border ever changes:
 //   header height = vertical padding + tallest content + 2px red border
-//   mobile + desktop: 8px pad + 52px logo + 8px pad + 2px = 70px
+//   desktop: 8px pad + 88px logo + 8px pad + 2px = 106px
+//   mobile:  8px pad + 80px logo + 8px pad + 2px = 98px
 // main padding-top = header height + 7px buffer, so the hero sticker
 // (rotated 9deg, its top corners sit ~11px above its top anchor) and the
 // braces (top edge ~5px below the hero top at 1440) clear the navbar
 // instead of sliding under it.
-@header-clear-mobile: (77/16rem);
-@header-clear-desktop: (77/16rem);
+@header-clear-mobile: (105/16rem);
+@header-clear-desktop: (113/16rem);
 
 /* Fonts and general styles */
 @media only screen and (min-width: 0em) {
