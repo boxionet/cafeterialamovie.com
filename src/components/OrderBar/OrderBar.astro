@@ -23,7 +23,9 @@ import { BUSINESS } from "@data/client";
 			target="_blank"
 			rel="noopener"
 		>
-			Enviar por WhatsApp
+			<svg class="order-send-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.1 14.9l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 0 1 12 4zm-3.6 4.6c-.2 0-.5.1-.7.3-.2.2-.8.8-.8 1.9s.8 2.2 1 2.4c.1.2 1.7 2.7 4.2 3.7 2.1.9 2.5.7 2.9.7.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.7-.3l-1.9-.9c-.3-.2-.6-.1-.8.1l-.7.8c-.1.2-.3.2-.6.1a7.6 7.6 0 0 1-2.2-1.4 8.3 8.3 0 0 1-1.5-1.9c-.2-.3 0-.5.1-.6l.5-.6c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.1c-.2-.5-.4-.5-.6-.5z"/></svg>
+			<span class="order-send-full">Enviar por WhatsApp</span>
+			<span class="order-send-short">Enviar</span>
 		</a>
 	</div>
 
@@ -112,11 +114,45 @@ import { BUSINESS } from "@data/client";
 		min-height: (42/16rem);
 		display: inline-flex;
 		align-items: center;
+		gap: (7/16rem);
 		flex: none;
 		transition: background-color 0.3s;
 
 		&:hover {
 			background-color: #1b8a4b;
+		}
+	}
+
+	// Mobile: the full "Enviar por WhatsApp" button is so wide it leaves
+	// no room for the total, which then truncates to "RD$4...". On phones
+	// the button shortens to the WhatsApp icon + "Enviar", freeing ~90px
+	// so the full total always fits. Desktop keeps the full text.
+	.order-send-icon {
+		display: none;
+		width: (18/16rem);
+		height: (18/16rem);
+		flex: none;
+	}
+
+	.order-send-short {
+		display: none;
+	}
+
+	@media (max-width: 640px) {
+		.order-send {
+			padding: (9/16rem) (16/16rem);
+		}
+
+		.order-send-full {
+			display: none;
+		}
+
+		.order-send-icon {
+			display: block;
+		}
+
+		.order-send-short {
+			display: inline;
 		}
 	}
 
