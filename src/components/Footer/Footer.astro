@@ -76,6 +76,12 @@ const currentYear = getCurrentYear();
 		<span>
 			{content.common.footer.credit} {currentYear} · Santo Domingo Este, República Dominicana
 		</span>
+		<span class="credit-boxionet">
+			Sitio web creado y mantenido por{" "}
+			<a href="https://boxionet.com" target="_blank" rel="noopener">
+				Boxionet
+			</a>
+		</span>
 	</section>
 </footer>
 
@@ -206,6 +212,20 @@ const currentYear = getCurrentYear();
 				margin: auto;
 				margin-top: (64/16rem);
 				color: #a8a8a8;
+
+				.credit-boxionet {
+					display: block;
+					margin-top: (8/16rem);
+
+					a {
+						color: var(--secondary);
+						text-decoration: none;
+
+						&:hover {
+							text-decoration: underline;
+						}
+					}
+				}
 			}
 		}
 	}
