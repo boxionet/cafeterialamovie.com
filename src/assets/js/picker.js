@@ -10,6 +10,37 @@ const priceLabel = (price) => `RD$${price}`;
 let cart = [];
 let toastTimer = null;
 
+// Favorites live in the browser's local storage, so a saved dish is still
+// there when the visitor comes back on the same device. No account, no
+// database — the heart just remembers on this browser.
+const FAVORITES_KEY = "lamovie-favoritos";
+let currentMenuFilter = "todos";
+let reapplyMenuFilter = null;
+
+function loadFavorites() {
+	try {
+		return new Set(JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]"));
+	} catch {
+		return new Set();
+	}
+}
+
+function saveFavorites(favorites) {
+	try {
+		localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favorites]));
+	} catch {
+		// storage unavailable — the heart still toggles for this visit
+	}
+}
+
+function syncHearts() {
+	const favorites = loadFavorites();
+	document.querySelectorAll("[data-heart]").forEach((btn) => {
+		const card = btn.closest("[data-dish-card]");
+		if (card) btn.setAttribute("aria-pressed", String(favorites.has(card.dataset.dishId)));
+	});
+}
+
 document.addEventListener("astro:page-load", () => {
 	initPicker();
 });
@@ -36,6 +67,7 @@ function initPicker() {
 		wireFilters(filters);
 	}
 
+	syncHearts();
 	renderBar();
 }
 
@@ -67,8 +99,18 @@ function wireCard(card) {
 
 	if (heartBtn) {
 		heartBtn.addEventListener("click", () => {
-			const pressed = heartBtn.getAttribute("aria-pressed") === "true";
-			heartBtn.setAttribute("aria-pressed", String(!pressed));
+			const id = card.dataset.dishId;
+			if (!id) return;
+			const favorites = loadFavorites();
+			if (favorites.has(id)) {
+				favorites.delete(id);
+			} else {
+				favorites.add(id);
+			}
+			saveFavorites(favorites);
+			heartBtn.setAttribute("aria-pressed", String(favorites.has(id)));
+			// If the Favoritos filter is on, refresh it so the card appears/disappears
+			if (currentMenuFilter === "favoritos") reapplyMenuFilter?.("favoritos");
 		});
 	}
 
@@ -134,7 +176,6 @@ function buildMessage() {
 		"Hola Cafetería La Movie, quiero hacer un pedido:",
 		...lines,
 		`Total: ${priceLabel(cartTotal())}`,
-		"¿Pickup o delivery?",
 	].join("\n");
 }
 
@@ -156,7 +197,7 @@ function renderBar() {
 	}
 
 	const count = cartCount();
-	if (countLabelEl) countLabelEl.textContent = `${count} ${count === 1 ? "plato" : "platos"}`;
+	if (countLabelEl) countLabelEl.textContent = `${count} ${count === 1 ? "pedido" : "pedidos"}`;
 	if (totalEl) totalEl.textContent = priceLabel(cartTotal());
 
 	if (linesEl) {
@@ -168,7 +209,8 @@ function renderBar() {
 			const remove = document.createElement("button");
 			remove.type = "button";
 			remove.className = "order-line-remove";
-			remove.textContent = "×";
+			remove.innerHTML =
+				'<svg viewBox="0 0 448 512" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2C296.3 0 307.4 6.8 312.8 17.7L320 32H416C433.7 32 448 46.3 448 64S433.7 96 416 96H32C14.3 96 0 81.7 0 64S14.3 32 32 32H128L135.2 17.7zM394.6 466.1C393.2 492.3 372.3 512 346 512H102C75.7 512 54.8 492.3 53.4 466.1L31.6 128H416.4L394.6 466.1z"/></svg>';
 			remove.setAttribute("aria-label", `Quitar ${line.name} del pedido`);
 			remove.addEventListener("click", () => {
 				cart.splice(index, 1);
@@ -212,13 +254,19 @@ function wireFilters(filters) {
 	const initial = params.get("categoria") || "todos";
 
 	const applyFilter = (category) => {
+		currentMenuFilter = category;
+		reapplyMenuFilter = applyFilter;
+		const favorites = loadFavorites();
 		buttons.forEach((btn) => {
 			const active = btn.dataset.filter === category;
 			btn.classList.toggle("is-active", active);
 			btn.setAttribute("aria-pressed", String(active));
 		});
 		cards.forEach((card) => {
-			const visible = category === "todos" || card.dataset.category === category;
+			const visible =
+				category === "todos" ||
+				(category === "favoritos" && favorites.has(card.dataset.dishId)) ||
+				card.dataset.category === category;
 			card.style.display = visible ? "" : "none";
 		});
 		// Hide empty category sections
@@ -228,6 +276,9 @@ function wireFilters(filters) {
 			);
 			section.style.display = anyVisible ? "" : "none";
 		});
+		// Empty state when the Favoritos filter has nothing saved yet
+		const empty = document.querySelector("[data-favorites-empty]");
+		if (empty) empty.hidden = !(category === "favoritos" && favorites.size === 0);
 		// Keep the URL in sync without reloading
 		const url = new URL(window.location.href);
 		if (category === "todos") {

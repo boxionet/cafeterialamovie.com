@@ -30,7 +30,7 @@ import { BUSINESS } from "@data/client";
 	<div id="order-panel" class="order-panel" data-order-panel hidden>
 		<ul class="order-lines" data-order-lines></ul>
 		<div class="order-panel-foot">
-			<button type="button" class="order-clear" data-order-clear>Vaciar pedido</button>
+			<button type="button" class="order-clear" data-order-clear>Limpiar pedido</button>
 		</div>
 	</div>
 </div>
@@ -137,7 +137,9 @@ import { BUSINESS } from "@data/client";
 		gap: (8/16rem);
 	}
 
-	.order-lines li {
+	// The lines and their remove buttons are created by JS, so they never
+	// get Astro's scope attribute — the selectors must be global on that part.
+	.order-lines :global(li) {
 		font-size: (15.2/16rem);
 		font-weight: 800;
 		line-height: 1.4em;
@@ -148,23 +150,23 @@ import { BUSINESS } from "@data/client";
 		gap: (12/16rem);
 	}
 
-	// proposal .order-items .rm: round 36px remove button
-	.order-lines .order-line-remove {
+	// proposal .order-items .rm: round 36px remove button, red trash icon
+	.order-lines :global(.order-line-remove) {
 		flex: none;
 		width: (36/16rem);
 		height: (36/16rem);
-		font-size: (17/16rem);
-		font-weight: 700;
-		line-height: 1em;
-		color: #f5efe6;
+		color: var(--primary);
 		background: transparent;
 		border: 1px solid #22301f;
 		border-radius: 50%;
 		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
 		&:hover {
 			border-color: var(--primary);
-			color: var(--primary);
+			background-color: rgba(254, 5, 0, 0.12);
 		}
 	}
 
