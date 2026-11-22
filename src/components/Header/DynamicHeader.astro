@@ -478,9 +478,11 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 					flex: none;
 				}
 
+				// The overlay is brand red, so a red hover would make the
+				// button disappear into the background — hover to gold instead.
 				&:hover {
-					background-color: var(--primary);
-					color: #fff;
+					background-color: var(--secondary);
+					color: #000;
 				}
 			}
 
