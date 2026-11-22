@@ -17,7 +17,7 @@ export default defineConfig({
 	integrations: [
 		icon(),
 		sitemap({
-			filter: (page) => !page.includes("/admin") && !page.includes("/preview"),
+			filter: (page) => !page.includes("/admin"),
 			i18n: {
 				defaultLocale: "es",
 				locales: { es: "es-DO" },
