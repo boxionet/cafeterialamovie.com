@@ -36,13 +36,6 @@ function initPicker() {
 		wireFilters(filters);
 	}
 
-	// Favorites carousel arrows
-	const track = document.querySelector("[data-fav-track]");
-	if (track && !track.dataset.wired) {
-		track.dataset.wired = "true";
-		wireFavArrows(track);
-	}
-
 	renderBar();
 }
 
@@ -250,19 +243,6 @@ function wireFilters(filters) {
 	});
 
 	applyFilter(initial);
-}
-
-function wireFavArrows(track) {
-	const prev = document.querySelector("[data-fav-prev]");
-	const next = document.querySelector("[data-fav-next]");
-	if (!prev || !next) return;
-
-	const step = () => {
-		const card = track.querySelector("[data-dish-card]");
-		return card ? card.getBoundingClientRect().width + 24 : 320;
-	};
-	prev.addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
-	next.addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
 }
 
 function showToast(message) {

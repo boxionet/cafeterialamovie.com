@@ -11,8 +11,9 @@ import { BUSINESS } from "@data/client";
 import { CATEGORIES, FAVORITES, getDish, dishImage } from "@data/menu";
 
 const heroPhoto = dishImage("23-chimi-de-pierna.webp");
-const frontPhoto = dishImage("28-frente.webp");
-const interiorPhoto = dishImage("25-interior.webp");
+const frontPhoto = dishImage("storefront-night.webp");
+const interiorPhoto = dishImage("interior-night.webp");
+const deliveryPhoto = dishImage("chimi-de-pierna-black-plate.jpg");
 
 const gallery = [
 	{ file: "chuleta-a-la-plancha-black-plate.jpg", alt: "Chuleta a la plancha con papas" },
@@ -40,7 +41,7 @@ const orderWays = [
 		solid: true,
 	},
 	{
-		photo: heroPhoto,
+		photo: deliveryPhoto,
 		photoAlt: "Chimi de pierna",
 		title: "Delivery",
 		desc: "Te lo llevamos a la puerta.",
@@ -49,8 +50,8 @@ const orderWays = [
 		solid: false,
 	},
 	{
-		photo: dishImage("alitas-fritas-black-plate.jpg"),
-		photoAlt: "Alitas fritas",
+		photo: dishImage("mofongo-con-longaniza-black-plate.jpg"),
+		photoAlt: "Mofongo con longaniza",
 		title: "Para la mesa",
 		desc: "Yaroas grandes, alitas y más para compartir.",
 		cta: "Armar pedido",
@@ -189,10 +190,6 @@ const picks = [
 			<div>
 				<p class="sec-kicker">Los más pedidos</p>
 				<h2 class="sec-title">Los favoritos <span class="hl-r">de la noche</span></h2>
-			</div>
-			<div class="fav-arrows">
-				<button type="button" data-fav-prev aria-label="Ver anteriores">←</button>
-				<button type="button" data-fav-next aria-label="Ver siguientes">→</button>
 			</div>
 		</div>
 
@@ -771,28 +768,8 @@ const picks = [
 		padding: (80/16rem) (16/16rem) (32/16rem);
 	}
 
-	.fav-arrows {
-		display: none;
-		gap: (8/16rem);
-
-		button {
-			font-size: (18/16rem);
-			line-height: 1em;
-			width: (44/16rem);
-			height: (44/16rem);
-			color: #fff;
-			background-color: #1e1e1e;
-			border: 1px solid #333;
-			border-radius: 50%;
-			cursor: pointer;
-			transition: background-color 0.3s;
-
-			&:hover {
-				background-color: var(--primary);
-			}
-		}
-	}
-
+	// 4 cards, always filling the row — no carousel, no arrows, no
+	// blank space left over at the end of the track.
 	.fav-track {
 		display: grid;
 		grid-template-columns: 1fr;
@@ -806,25 +783,8 @@ const picks = [
 	}
 
 	@media only screen and (min-width: 64rem) {
-		.fav-arrows {
-			display: flex;
-		}
-
 		.fav-track {
-			display: flex;
-			overflow-x: auto;
-			scroll-snap-type: x mandatory;
-			scrollbar-width: none;
-			padding-bottom: (8/16rem);
-
-			&::-webkit-scrollbar {
-				display: none;
-			}
-
-			:global(.dish-card) {
-				flex: 0 0 calc(25% - (18/16rem));
-				scroll-snap-align: start;
-			}
+			grid-template-columns: repeat(4, 1fr);
 		}
 	}
 

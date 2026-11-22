@@ -86,7 +86,6 @@ const hasOptions = dish.options.length > 1;
 		}
 		<button class="dish-order" type="button" data-add>
 			<span>{mode === "menu" ? "Agregar" : "Pedir ahora"}</span>
-			<span class="dish-order-arrow" aria-hidden="true">↗</span>
 		</button>
 	</div>
 </article>
@@ -263,9 +262,9 @@ const hasOptions = dish.options.length > 1;
 		}
 	}
 
-	// proposal .order-pill shape: Playfair serif, wide left padding,
-	// black arrow circle — kept RED per the user's round-1 rule (the
-	// card button matches the other buttons on the site)
+	// proposal .order-pill shape: Playfair serif, red pill (kept RED per
+	// the user's round-1 rule — the card button matches the other
+	// buttons on the site). No arrow: the label alone is the button.
 	.dish-order {
 		font-family: var(--font-serif);
 		font-weight: 600;
@@ -275,12 +274,11 @@ const hasOptions = dish.options.length > 1;
 		background-color: var(--primary);
 		border: none;
 		border-radius: 999px;
-		padding: (7/16rem) (8/16rem) (7/16rem) (22/16rem);
+		padding: (7/16rem) (22/16rem);
 		min-height: (52/16rem);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: (12/16rem);
 		flex: 1;
 		cursor: pointer;
 		box-shadow: 0 (12/16rem) (26/16rem) rgba(254, 5, 0, 0.28);
@@ -294,17 +292,5 @@ const hasOptions = dish.options.length > 1;
 			background-color: var(--green);
 			box-shadow: 0 (12/16rem) (26/16rem) rgba(95, 155, 10, 0.3);
 		}
-	}
-
-	.dish-order-arrow {
-		width: (38/16rem);
-		height: (38/16rem);
-		font-size: (17/16rem);
-		line-height: (38/16rem);
-		text-align: center;
-		color: #fff;
-		background-color: #101012;
-		border-radius: 50%;
-		flex: none;
 	}
 </style>

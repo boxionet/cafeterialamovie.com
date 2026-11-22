@@ -15,7 +15,6 @@ import { BUSINESS } from "@data/client";
 				<span data-order-count-label>0 platos</span>
 				<span class="order-total" data-order-total>RD$0</span>
 			</span>
-			<span class="order-chevron" aria-hidden="true">▲</span>
 		</button>
 		<a
 			class="order-send"
@@ -96,16 +95,6 @@ import { BUSINESS } from "@data/client";
 		color: var(--secondary);
 		font-size: (22.4/16rem);
 		margin-left: (8/16rem);
-	}
-
-	.order-chevron {
-		font-size: (11/16rem);
-		color: var(--secondary);
-		transition: transform 0.3s;
-	}
-
-	.order-toggle[aria-expanded="true"] .order-chevron {
-		transform: rotate(180deg);
 	}
 
 	// proposal .btn-wa: green WhatsApp send button
