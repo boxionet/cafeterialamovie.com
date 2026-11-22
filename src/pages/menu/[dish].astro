@@ -36,8 +36,9 @@ const more = [
 ---
 
 <BaseLayout
-	title={`${dish.name} — Cafetería La Movie`}
-	description={`${dish.name}: ${dish.desc} Pide por WhatsApp — pickup o delivery en Santo Domingo Este.`}
+	title={`${dish.name} — ${hasOptions ? "desde " : ""}${formatPrice(minPrice)} · Cafetería La Movie`}
+	description={`${dish.name}: ${dish.desc} ${hasOptions ? `Desde ${formatPrice(minPrice)}` : formatPrice(minPrice)}. Pide por WhatsApp — pickup o delivery en Santo Domingo Este.`}
+	heroImage={photo}
 >
 	<section class="detail">
 		<a href="/menu/" class="detail-back">&lt; El menú</a>

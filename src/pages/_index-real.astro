@@ -11,6 +11,11 @@ import Faq from "@components/Faq/Faq.astro";
 import { BUSINESS } from "@data/client";
 import { FAVORITES, getDish, dishImage } from "@data/menu";
 
+// Rendered directly as the homepage (/) and via /preview/ while the
+// coming-soon cover is live — the preview passes noindex so Google never
+// indexes the duplicate.
+const { noindex = false } = Astro.props as { noindex?: boolean };
+
 const heroPhoto = dishImage("hero-spread.webp");
 const interiorPhoto = dishImage("interior-night.webp");
 
@@ -59,8 +64,9 @@ const orderWays = [
 ---
 
 <BaseLayout
-	title="Cafetería La Movie — Chimis, mofongo y yaroa en Santo Domingo Este"
-	description="Cafetería La Movie: chimis, mofongo, yaroa y plátanos hechos al momento, de miércoles a domingo de 6:45 PM a 12 AM. Pide por WhatsApp — pickup o delivery en Santo Domingo Este."
+	title="Cafetería La Movie — Comida dominicana de noche en Los Mina"
+	description="Cafetería dominicana de noche en Los Mina, Santo Domingo Este. Chimis, mofongo, yaroa y más, hechos al momento. Pide por WhatsApp — pickup o delivery."
+	noindex={noindex}
 >
 	<!-- ============================================ -->
 	<!--                    Hero                      -->
