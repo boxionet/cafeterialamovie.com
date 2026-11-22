@@ -58,6 +58,10 @@ const currentYear = getCurrentYear();
 					</li>
 
 					<li>
+						<a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a>
+					</li>
+
+					<li>
 						<a href={BUSINESS.address.mapLink} target="_blank" rel="noopener">
 							{BUSINESS.address.lineOne}
 							<br />
@@ -112,7 +116,7 @@ const currentYear = getCurrentYear();
 					line-height: 27/14;
 					text-align: center;
 					width: 100%;
-					max-width: 307/14rem;
+					max-width: (307/14rem);
 					margin: auto;
 					margin-bottom: (24/16rem);
 					color: #d4d4d4;
