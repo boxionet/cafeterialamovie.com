@@ -6,6 +6,7 @@ import DishCard from "@components/DishCard/DishCard.astro";
 import OrderBar from "@components/OrderBar/OrderBar.astro";
 import AlsoHave from "@components/AlsoHave/AlsoHave.astro";
 import VisitInfo from "@components/VisitInfo/VisitInfo.astro";
+import Faq from "@components/Faq/Faq.astro";
 import { BUSINESS } from "@data/client";
 import { CATEGORIES, FAVORITES, getDish, dishImage } from "@data/menu";
 
@@ -25,6 +26,62 @@ const gallery = [
 ];
 
 const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) }));
+
+const waText = (msg: string) => `${BUSINESS.whatsapp}?text=${encodeURIComponent(msg)}`;
+
+const orderWays = [
+	{
+		photo: frontPhoto,
+		photoAlt: "Frente de Cafetería La Movie",
+		title: "Recoger",
+		desc: "Pide por WhatsApp y pasa a recogerlo.",
+		cta: "Pedir para recoger",
+		href: waText("Hola! Quiero hacer un pedido para recoger."),
+		solid: true,
+	},
+	{
+		photo: heroPhoto,
+		photoAlt: "Chimi de pierna",
+		title: "Delivery",
+		desc: "Te lo llevamos a la puerta.",
+		cta: "Pedir delivery",
+		href: waText("Hola! Quiero hacer un pedido para delivery."),
+		solid: false,
+	},
+	{
+		photo: dishImage("alitas-fritas-black-plate.jpg"),
+		photoAlt: "Alitas fritas",
+		title: "Para la mesa",
+		desc: "Yaroas grandes, alitas y más para compartir.",
+		cta: "Armar pedido",
+		href: waText("Hola! Quiero armar un pedido para la mesa."),
+		solid: false,
+	},
+];
+
+const picks = [
+	{
+		dish: getDish("hamburguesa"),
+		tag: "La clásica",
+		name: "Hamburguesa con papas",
+		desc: "Carne, queso y papas fritas.",
+		price: "RD$400",
+	},
+	{
+		dish: getDish("chimi"),
+		tag: "El de siempre",
+		name: "Chimi de pierna",
+		desc: "Solo RD$250 · Con papas RD$350",
+		price: "RD$250",
+	},
+	{
+		dish: getDish("yaroa"),
+		tag: "Para compartir",
+		name: "Yaroa de res grande",
+		desc: "Res, queso y salsas.",
+		price: "RD$450",
+	},
+];
 ---
 
 <BaseLayout
@@ -155,6 +212,46 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	</section>
 
 	<!-- ============================================ -->
+	<!--              Pide a tu manera                -->
+	<!-- ============================================ -->
+	<section class="order-ways">
+		<div class="sec-head">
+			<div>
+				<p class="sec-kicker">Pide como quieras</p>
+				<h2 class="sec-title">Pide a <span class="hl">tu manera.</span></h2>
+			</div>
+		</div>
+		<p class="order-ways-sub">Recógelo caliente, te lo llevamos, o pide para toda la mesa.</p>
+		<div class="order-ways-grid">
+			{
+				orderWays.map((w) => (
+					<article class="order-way">
+						<Image
+							src={w.photo}
+							alt={w.photoAlt}
+							width={800}
+							height={500}
+							loading="lazy"
+							decoding="async"
+							class="order-way-photo"
+						/>
+						<h3 class="font-display">{w.title}</h3>
+						<p>{w.desc}</p>
+						<a
+							href={w.href}
+							target="_blank"
+							rel="noopener"
+							class={w.solid ? "order-btn" : "order-btn-ghost"}
+						>
+							{w.cta}
+						</a>
+					</article>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- ============================================ -->
 	<!--                 Features                     -->
 	<!-- ============================================ -->
 	<section class="features">
@@ -203,6 +300,49 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 	</section>
 
 	<!-- ============================================ -->
+	<!--              ¿Cuál es para ti?               -->
+	<!-- ============================================ -->
+	<section class="picks">
+		<div class="sec-head">
+			<div>
+				<p class="sec-kicker">Los tres de siempre</p>
+				<h2 class="sec-title">¿Cuál es <span class="hl">para ti?</span></h2>
+			</div>
+		</div>
+		<div class="picks-grid">
+			{
+				picks.map((p) => (
+					<article class="pick-card">
+						<a
+							href={`/menu/${p.dish.id}/`}
+							class="pick-photo"
+							aria-label={`Ver ${p.name}`}
+						>
+							<Image
+								src={dishImage(p.dish.platePhoto ?? p.dish.photo)}
+								alt={p.name}
+								width={800}
+								height={600}
+								loading="lazy"
+								decoding="async"
+							/>
+						</a>
+						<span class="pick-tag">{p.tag}</span>
+						<h3 class="font-serif">
+							<a href={`/menu/${p.dish.id}/`}>{p.name}</a>
+						</h3>
+						<p class="pick-desc">{p.desc}</p>
+						<p class="pick-price">{p.price}</p>
+						<a href={`/menu/${p.dish.id}/`} class="order-btn">
+							Pedir este
+						</a>
+					</article>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- ============================================ -->
 	<!--                Cómo pedir                    -->
 	<!-- ============================================ -->
 	<section class="how">
@@ -230,6 +370,8 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 			</li>
 		</ol>
 	</section>
+
+	<Faq />
 
 	<!-- ============================================ -->
 	<!--              Conócenos teaser                -->
@@ -881,6 +1023,218 @@ const favorites = FAVORITES.map((fav) => ({ ...fav, dish: getDish(fav.dishId) })
 			color: #cfc8b8;
 			font-size: (17/16rem);
 			line-height: 1.55em;
+		}
+	}
+
+	/*-- -------------------------- -->
+	<---      Pide a tu manera      -->
+	<--- -------------------------- -*/
+	.order-ways {
+		padding: (64/16rem) (16/16rem) 0;
+
+		.sec-head {
+			max-width: (1280/16rem);
+			margin: 0 auto (12/16rem);
+		}
+	}
+
+	.order-ways-sub {
+		max-width: (1280/16rem);
+		margin: 0 auto (30/16rem);
+		font-size: clamp(1rem, 2.2cqw, 1.22rem);
+		font-weight: 700;
+		color: #cfc8b8;
+		line-height: 1.55em;
+	}
+
+	.order-ways-grid {
+		max-width: (1280/16rem);
+		margin: auto;
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: (16/16rem);
+	}
+
+	.order-way {
+		background-color: #141414;
+		border: 1px solid #232323;
+		border-radius: (20/16rem);
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		padding-bottom: (24/16rem);
+
+		h3 {
+			font-size: clamp(1.6rem, 3.5cqw, 2.1rem);
+			line-height: 1em;
+			text-transform: uppercase;
+			color: #f5efe6;
+			margin: (20/16rem) (20/16rem) (8/16rem);
+		}
+
+		p {
+			font-size: (15/16rem);
+			line-height: 1.55em;
+			color: #cfc8b8;
+			margin: 0 (20/16rem) (20/16rem);
+			flex: 1;
+		}
+
+		.order-btn,
+		.order-btn-ghost {
+			margin: 0 (20/16rem);
+			align-self: flex-start;
+		}
+	}
+
+	.order-way-photo {
+		width: 100%;
+		height: (200/16rem);
+		object-fit: cover;
+		display: block;
+	}
+
+	// Yellow pill buttons — the approved proposal's buttons for the new
+	// sections (the site's solid buttons are red; these stay yellow).
+	.order-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-family: var(--font-serif);
+		font-weight: 600;
+		font-size: (17/16rem);
+		line-height: 1em;
+		color: #141414;
+		background-color: var(--secondary);
+		border-radius: 999px;
+		padding: (15/16rem) (26/16rem);
+		min-height: (50/16rem);
+		text-decoration: none;
+		transition: background-color 0.3s;
+
+		&:hover {
+			background-color: #e6b800;
+		}
+	}
+
+	.order-btn-ghost {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-family: var(--font-serif);
+		font-weight: 600;
+		font-size: (17/16rem);
+		line-height: 1em;
+		color: var(--secondary);
+		background-color: transparent;
+		border: 2px solid var(--secondary);
+		border-radius: 999px;
+		padding: (13/16rem) (24/16rem);
+		min-height: (50/16rem);
+		text-decoration: none;
+		transition:
+			background-color 0.3s,
+			color 0.3s;
+
+		&:hover {
+			background-color: var(--secondary);
+			color: #141414;
+		}
+	}
+
+	/*-- -------------------------- -->
+	<---      ¿Cuál es para ti?     -->
+	<--- -------------------------- -*/
+	.picks {
+		padding: (64/16rem) (16/16rem) 0;
+
+		.sec-head {
+			max-width: (1280/16rem);
+			margin: 0 auto (30/16rem);
+		}
+	}
+
+	.picks-grid {
+		max-width: (1280/16rem);
+		margin: auto;
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: (16/16rem);
+	}
+
+	.pick-card {
+		background-color: #141414;
+		border: 1px solid #232323;
+		border-radius: (20/16rem);
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		padding-bottom: (24/16rem);
+	}
+
+	.pick-photo {
+		display: block;
+		width: 100%;
+
+		img {
+			width: 100%;
+			height: (220/16rem);
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	.pick-tag {
+		display: inline-block;
+		font-size: (12.5/16rem);
+		font-weight: 900;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: #141414;
+		background-color: var(--secondary);
+		border-radius: 999px;
+		padding: (6/16rem) (14/16rem);
+		margin: (20/16rem) (20/16rem) (12/16rem);
+	}
+
+	.pick-card h3 {
+		font-size: (24/16rem);
+		line-height: 1.15em;
+		color: #fff;
+		margin: 0 (20/16rem) (8/16rem);
+
+		a {
+			color: inherit;
+			text-decoration: none;
+
+			&:hover {
+				color: var(--secondary);
+			}
+		}
+	}
+
+	.pick-desc {
+		font-size: (14/16rem);
+		line-height: 1.5em;
+		color: #a8a8a8;
+		margin: 0 (20/16rem) (12/16rem);
+		flex: 1;
+	}
+
+	.pick-price {
+		font-family: var(--font-serif);
+		font-size: (26/16rem);
+		line-height: 1em;
+		color: var(--secondary);
+		margin: 0 0 (18/16rem);
+	}
+
+	@media only screen and (min-width: 48em) {
+		.order-ways-grid,
+		.picks-grid {
+			grid-template-columns: repeat(3, 1fr);
 		}
 	}
 </style>
