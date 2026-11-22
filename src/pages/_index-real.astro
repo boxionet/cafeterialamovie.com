@@ -6,9 +6,10 @@ import DishCard from "@components/DishCard/DishCard.astro";
 import OrderBar from "@components/OrderBar/OrderBar.astro";
 import AlsoHave from "@components/AlsoHave/AlsoHave.astro";
 import VisitInfo from "@components/VisitInfo/VisitInfo.astro";
+import Reviews from "@components/Reviews/Reviews.astro";
 import Faq from "@components/Faq/Faq.astro";
 import { BUSINESS } from "@data/client";
-import { CATEGORIES, FAVORITES, getDish, dishImage } from "@data/menu";
+import { FAVORITES, getDish, dishImage } from "@data/menu";
 
 const heroPhoto = dishImage("hero-spread.webp");
 const frontPhoto = dishImage("storefront-night.webp");
@@ -146,41 +147,6 @@ const picks = [
 		</div>
 	</section>
 
-	<!-- ============================================ -->
-	<!--                 Categorías                   -->
-	<!-- ============================================ -->
-	<section class="categories">
-		<div class="sec-head">
-			<div>
-				<p class="sec-kicker">Explora el menú</p>
-				<h2 class="sec-title">¿Qué se te <span class="hl">antoja</span> hoy?</h2>
-			</div>
-		</div>
-		<div class="categories-panel">
-			<Image
-				src={frontPhoto}
-				alt="Frente de Cafetería La Movie"
-				width={1600}
-				height={700}
-				loading="lazy"
-				decoding="async"
-				class="categories-bg"
-			/>
-			<div class="categories-overlay"></div>
-			<div class="categories-content">
-				<h2>Elige tu antojo</h2>
-				<div class="categories-chips">
-					{
-						CATEGORIES.map((cat) => (
-							<a href={`/menu/?categoria=${cat.id}`} class="categories-chip">
-								{cat.label}
-							</a>
-						))
-					}
-				</div>
-			</div>
-		</div>
-	</section>
 
 	<!-- ============================================ -->
 	<!--               Los más pedidos                -->
@@ -367,6 +333,8 @@ const picks = [
 			</li>
 		</ol>
 	</section>
+
+	<Reviews />
 
 	<Faq />
 
@@ -677,85 +645,6 @@ const picks = [
 		}
 		to {
 			transform: translateX(-50%);
-		}
-	}
-
-	/*-- -------------------------- -->
-	<---       Categorías           -->
-	<--- -------------------------- -*/
-	.categories {
-		padding: (64/16rem) (16/16rem) 0;
-
-		// the sec-head above the panel aligns with the 1280px panel
-		.sec-head {
-			max-width: (1280/16rem);
-			margin: 0 auto (30/16rem);
-		}
-	}
-
-	.categories-panel {
-		max-width: (1280/16rem);
-		margin: auto;
-		border-radius: (20/16rem);
-		overflow: hidden;
-		position: relative;
-		min-height: (420/16rem);
-		display: flex;
-		align-items: flex-end;
-	}
-
-	.categories-bg {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	.categories-overlay {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.45) 55%, rgba(0, 0, 0, 0.25) 100%);
-	}
-
-	.categories-content {
-		position: relative;
-		padding: (32/16rem) (24/16rem);
-		width: 100%;
-
-		// proposal .cat-inner h3: Lilita One, uppercase, tight
-		h2 {
-			margin: 0 0 (8/16rem);
-			font-family: var(--font-display);
-			font-weight: 400;
-			font-size: clamp(1.7rem, 4.4cqw, 2.6rem);
-			text-transform: uppercase;
-			line-height: 1.02em;
-			color: #fff;
-		}
-	}
-
-	.categories-chips {
-		display: flex;
-		flex-wrap: wrap;
-		gap: (10/16rem);
-	}
-
-	.categories-chip {
-		font-size: (14/16rem);
-		font-weight: 800;
-		line-height: 1.2em;
-		text-decoration: none;
-		color: #000;
-		background-color: #fff;
-		border-radius: 999px;
-		padding: (11/16rem) (18/16rem);
-		transition:
-			background-color 0.3s,
-			color 0.3s;
-
-		&:hover {
-			background-color: var(--secondary);
 		}
 	}
 

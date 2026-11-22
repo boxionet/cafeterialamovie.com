@@ -76,8 +76,8 @@ import { CATEGORIES, DISHES } from "@data/menu";
 	}
 
 	// Single swipeable row on mobile: the pills were wrapping into
-	// ragged rows. Sticky top matches the taller navbar (98px mobile /
-	// 106px desktop) so the row sits just under the bar, never under it.
+	// ragged rows. Sticky top matches the taller navbar (97px mobile /
+	// 105px desktop) so the row sits just under the bar, never under it.
 	.filters {
 		max-width: (1280/16rem);
 		margin: auto;
@@ -89,7 +89,7 @@ import { CATEGORIES, DISHES } from "@data/menu";
 		overflow-x: auto;
 		scrollbar-width: none;
 		position: sticky;
-		top: (98/16rem);
+		top: (97/16rem);
 		z-index: 100;
 		background-color: rgba(0, 0, 0, 0.9);
 		backdrop-filter: blur(8px);
@@ -142,7 +142,7 @@ import { CATEGORIES, DISHES } from "@data/menu";
 
 	@media only screen and (min-width: 64rem) {
 		.filters {
-			top: (106/16rem);
+			top: (105/16rem);
 		}
 
 		.menu-grid {
