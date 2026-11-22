@@ -12,9 +12,7 @@ import { BUSINESS } from "@data/client";
 import { FAVORITES, getDish, dishImage } from "@data/menu";
 
 const heroPhoto = dishImage("hero-spread.webp");
-const frontPhoto = dishImage("storefront-night.webp");
 const interiorPhoto = dishImage("interior-night.webp");
-const deliveryPhoto = dishImage("chimi-de-pierna-black-plate.jpg");
 
 const gallery = [
 	{ file: "chuleta-a-la-plancha-black-plate.jpg", alt: "Chuleta a la plancha con papas" },
@@ -33,8 +31,7 @@ const waText = (msg: string) => `${BUSINESS.whatsapp}?text=${encodeURIComponent(
 
 const orderWays = [
 	{
-		photo: frontPhoto,
-		photoAlt: "Frente de Cafetería La Movie",
+		icon: "fa6-solid:store",
 		title: "Recoger",
 		desc: "Pide por WhatsApp y pasa a recogerlo.",
 		cta: "Pedir para recoger",
@@ -42,8 +39,7 @@ const orderWays = [
 		solid: true,
 	},
 	{
-		photo: deliveryPhoto,
-		photoAlt: "Chimi de pierna",
+		icon: "fa6-solid:bag-shopping",
 		title: "Delivery",
 		desc: "Te lo llevamos a la puerta.",
 		cta: "Pedir delivery",
@@ -51,8 +47,7 @@ const orderWays = [
 		solid: false,
 	},
 	{
-		photo: dishImage("mofongo-con-longaniza-black-plate.jpg"),
-		photoAlt: "Mofongo con longaniza",
+		icon: "fa6-solid:users",
 		title: "Para la mesa",
 		desc: "Yaroas grandes, alitas y más para compartir.",
 		cta: "Armar pedido",
@@ -193,15 +188,9 @@ const orderWays = [
 			{
 				orderWays.map((w) => (
 					<article class="order-way">
-						<Image
-							src={w.photo}
-							alt={w.photoAlt}
-							width={800}
-							height={500}
-							loading="lazy"
-							decoding="async"
-							class="order-way-photo"
-						/>
+						<span class="order-way-icon" aria-hidden="true">
+							<Icon name={w.icon} />
+						</span>
 						<h3 class="font-display">{w.title}</h3>
 						<p>{w.desc}</p>
 						<a
@@ -783,36 +772,42 @@ const orderWays = [
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
-		padding-bottom: (24/16rem);
+		align-items: center;
+		text-align: center;
+		padding: (28/16rem) (20/16rem) (24/16rem);
 
 		h3 {
 			font-size: clamp(1.6rem, 3.5cqw, 2.1rem);
 			line-height: 1em;
 			text-transform: uppercase;
 			color: #f5efe6;
-			margin: (20/16rem) (20/16rem) (8/16rem);
+			margin: 0 0 (8/16rem);
 		}
 
 		p {
 			font-size: (15/16rem);
 			line-height: 1.55em;
 			color: #cfc8b8;
-			margin: 0 (20/16rem) (20/16rem);
+			margin: 0 0 (20/16rem);
 			flex: 1;
 		}
 
 		.order-btn,
 		.order-btn-ghost {
-			margin: 0 (20/16rem);
-			align-self: flex-start;
+			margin: 0;
+			align-self: center;
 		}
 	}
 
-	.order-way-photo {
-		width: 100%;
-		height: (200/16rem);
-		object-fit: cover;
-		display: block;
+	.order-way-icon {
+		color: var(--secondary);
+		margin-bottom: (18/16rem);
+
+		svg {
+			width: (56/16rem);
+			height: (56/16rem);
+			display: block;
+		}
 	}
 
 	// Yellow pill buttons — the approved proposal's buttons for the new
