@@ -13,7 +13,6 @@ export function getLocalBusinessSchema(origin, locale) {
 		url: SITE.url,
 		logo: origin + BUSINESS.logo,
 		image: origin + BUSINESS.logo,
-		email: BUSINESS.email,
 		telephone: BUSINESS.phoneForTel,
 		openingHours: ["We-Su 18:45-24:00"],
 		servesCuisine: "Dominican",

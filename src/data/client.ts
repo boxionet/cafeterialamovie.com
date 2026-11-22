@@ -3,7 +3,6 @@ export const BUSINESS = {
 	phoneForTel: "18292755220",
 	phoneFormatted: "829-275-5220",
 	whatsapp: "https://wa.me/18292755220",
-	email: "cafeterialamovie@gmail.com",
 	logo: "/assets/logo.svg",
 	address: {
 		lineOne: "S1 Los Mina Katanga #53",

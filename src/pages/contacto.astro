@@ -50,21 +50,6 @@ import { BUSINESS } from "@data/client";
 				{BUSINESS.hours.closed}
 			</p>
 		</div>
-
-		<div class="contact-card">
-			<p class="contact-card-label">Correo electrónico</p>
-			<p class="contact-card-text contact-card-text--big">
-				<a class="contact-card-email" href={`mailto:${BUSINESS.email}`}>
-					{BUSINESS.email}
-				</a>
-			</p>
-			<p class="contact-card-text">
-				Para pedidos especiales, sugerencias o comentarios.
-			</p>
-			<a href={`mailto:${BUSINESS.email}`} class="cs-button-transparent">
-				Escribir un correo
-			</a>
-		</div>
 	</section>
 
 	<VisitInfo />
@@ -125,16 +110,6 @@ import { BUSINESS } from "@data/client";
 		color: #fff;
 	}
 
-	.contact-card-email {
-		color: #fff;
-		text-decoration: none;
-		overflow-wrap: anywhere;
-		transition: color 0.3s;
-		&:hover {
-			color: var(--primary);
-		}
-	}
-
 	.contact-card .cs-button-solid,
 	.contact-card .cs-button-transparent {
 		margin-top: (8/16rem);
@@ -142,7 +117,7 @@ import { BUSINESS } from "@data/client";
 
 	@media only screen and (min-width: 64rem) {
 		.contact-cards {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(3, 1fr);
 		}
 	}
 </style>
