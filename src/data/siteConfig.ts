@@ -8,7 +8,4 @@ export const SITE = {
 
 export const OG = {
 	image: "/og-image.jpg",
-	title: "Cafetería La Movie — La Movie del Sabor",
-	description:
-		"Chimis, mofongo y yaroa recién hechos en Los Mina, de noche. Pide por WhatsApp — pickup o delivery.",
 };

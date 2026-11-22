@@ -8,7 +8,7 @@ import { CATEGORIES, DISHES } from "@data/menu";
 
 <BaseLayout
 	title="Menú — Cafetería La Movie"
-	description="Menú completo de Cafetería La Movie: hamburguesas, mofongo, platos a la plancha, yaroa, patacón, chimi, sándwiches, tostadas y más. Arma tu pedido y envíalo por WhatsApp."
+	description="Menú completo de Cafetería La Movie: hamburguesas, mofongo, yaroa, chimi, sándwiches y más. Arma tu pedido y envíalo por WhatsApp."
 >
 	<section class="page-hero">
 		<h1>El <span class="stroke">menú</span></h1>
@@ -58,7 +58,7 @@ import { CATEGORIES, DISHES } from "@data/menu";
 	.menu-category {
 		max-width: (1280/16rem);
 		margin: auto;
-		padding: (40/16rem) (16/16rem) (16/16rem);
+		padding: var(--sectionPadding);
 
 		// proposal .menu-section h2: Lilita One uppercase with a red number
 		h2 {
@@ -75,19 +75,28 @@ import { CATEGORIES, DISHES } from "@data/menu";
 		}
 	}
 
+	// Single swipeable row on mobile: the pills were wrapping into
+	// ragged rows. Sticky top matches the taller navbar (97px mobile /
+	// 105px desktop) so the row sits just under the bar, never under it.
 	.filters {
 		max-width: (1280/16rem);
 		margin: auto;
 		padding: (32/16rem) (16/16rem) (8/16rem);
 		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
+		flex-wrap: nowrap;
+		justify-content: flex-start;
 		gap: (10/16rem);
+		overflow-x: auto;
+		scrollbar-width: none;
 		position: sticky;
-		top: (72/16rem);
+		top: (97/16rem);
 		z-index: 100;
 		background-color: rgba(0, 0, 0, 0.9);
 		backdrop-filter: blur(8px);
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
 	}
 
 	.filter-pill {
@@ -101,6 +110,7 @@ import { CATEGORIES, DISHES } from "@data/menu";
 		border-radius: 999px;
 		padding: (10/16rem) (20/16rem);
 		min-height: (46/16rem);
+		flex: none;
 		cursor: pointer;
 		transition:
 			background-color 0.3s,
@@ -132,7 +142,7 @@ import { CATEGORIES, DISHES } from "@data/menu";
 
 	@media only screen and (min-width: 64rem) {
 		.filters {
-			top: (76/16rem);
+			top: (105/16rem);
 		}
 
 		.menu-grid {

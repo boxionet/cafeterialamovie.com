@@ -13,8 +13,15 @@ export function getLocalBusinessSchema(origin, locale) {
 		url: SITE.url,
 		logo: origin + BUSINESS.logo,
 		image: origin + BUSINESS.logo,
-		email: BUSINESS.email,
 		telephone: BUSINESS.phoneForTel,
+		openingHours: ["We-Su 18:45-24:00"],
+		servesCuisine: "Dominican",
+		priceRange: "RD$60 - RD$600",
+		geo: {
+			"@type": "GeoCoordinates",
+			latitude: BUSINESS.geo.latitude,
+			longitude: BUSINESS.geo.longitude,
+		},
 		address: {
 			"@type": "PostalAddress",
 			streetAddress: `${BUSINESS.address.lineOne}, ${BUSINESS.address.lineTwo}`,

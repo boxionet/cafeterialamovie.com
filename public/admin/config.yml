@@ -1,109 +1,100 @@
-# Use DecapBridge auth (required)
-# REPLACE WITH YOUR OWN CREDENTIALS - See README.md for tutorial
+# Decap CMS — Cafetería La Movie (cafeterialamovie.com)
+# Login: https://cafeterialamovie.com/admin (GitHub account, via DecapBridge)
+#
+# SETUP (one time — see README "Setting Up Decap CMS with DecapBridge"):
+# 1. Create a free account at decapbridge.com and a site for this repo
+#    (GitHub repo: boxionet/cafeterialamovie.com, CMS URL:
+#    https://cafeterialamovie.com/admin).
+# 2. Create a fine-grained GitHub token (Contents + Pull requests,
+#    read and write) and paste it into DecapBridge.
+# 3. DecapBridge gives you a backend snippet — replace the
+#    YOUR-DECAPBRIDGE-SITE-ID placeholders below with your site id
+#    (or paste the whole snippet over the backend block).
+# Until step 3 is done, /admin will show a login error — that is expected.
 backend:
-    name: git-gateway
-    repo: CodeStitchOfficial/Advanced-Astro-i18n
-    branch: main
-    auth_type: pkce
-    base_url: https://auth.decapbridge.com
-    auth_endpoint: /sites/e1004ade-7b8d-4155-be79-243e5bb39f2d/pkce
-    auth_token_endpoint: /sites/e1004ade-7b8d-4155-be79-243e5bb39f2d/token
-    gateway_url: https://gateway.decapbridge.com
+  name: git-gateway
+  repo: boxionet/cafeterialamovie.com
+  branch: main
+  auth_type: pkce
+  base_url: https://auth.decapbridge.com
+  auth_endpoint: /sites/YOUR-DECAPBRIDGE-SITE-ID/pkce
+  auth_token_endpoint: /sites/YOUR-DECAPBRIDGE-SITE-ID/token
+  gateway_url: https://gateway.decapbridge.com
+  commit_messages:
+    create: 'Create Menú via Decap CMS'
+    update: 'Update Menú via Decap CMS'
+    delete: 'Delete Menú via Decap CMS'
+    uploadMedia: 'Upload "{{path}}" via Decap CMS'
+    deleteMedia: 'Delete "{{path}}" via Decap CMS'
+    openAuthoring: 'Message {{message}} via Decap CMS'
 
-    # See who did what (optional)
-    commit_messages:
-        create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
-        update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
-        delete: Delete {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
-        uploadMedia: Upload “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
-        deleteMedia: Delete “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
-        openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
+site_url: https://cafeterialamovie.com
+logo_url: https://cafeterialamovie.com/assets/logo.svg
 
-# Enable PKCE fields (optional, recommended)
-auth:
-    email_claim: email
-    first_name_claim: first_name
-    last_name_claim: last_name
-    avatar_url_claim: avatar_url
-
-# Better Decap + Bridge logo (optional)
-logo_url: https://decapbridge.com/decapcms-with-bridge.svg
-
-# Add site links in Decap CMS (optional)
-site_url: https://advanced-astro-kit-i18n.netlify.app
-
-media_folder: src/assets/images/blog # Location where files will be stored in the repo - we store them in src so that Astro can optimize them.
-public_folder: "@assets/images/blog" # Same folder as above, but using a path alias for easier referencing in the markdown files.
-
-i18n:
-    structure: multiple_folders
-    locales: [en, fr]
-    default_locale: en
+# Dish photos live here; any future image upload lands in the same folder.
+media_folder: src/assets/images/dishes
+public_folder: /assets/images/dishes
 
 collections:
-    - name: "blog"
-      label: "Blog"
-      folder: "src/content/blog"
-      create: true
-      i18n: true
-      fields:
-          - { label: "Title", name: "title", widget: "string", i18n: true }
-          - {
-                label: "Permalink",
-                name: "permalink",
-                widget: "string",
-                i18n: true,
-                required: true,
-                hint: "The URL slug for this post. Use lowercase letters, numbers, and hyphens only — no spaces or special characters. Example: my-post-title. Once published, avoid changing this or existing links will break.",
-            }
-          - {
-                label: "Description",
-                name: "description",
-                widget: "string",
-                i18n: true,
-                required: true,
-            }
-          - {
-                label: "Author",
-                name: "author",
-                widget: "string",
-                i18n: duplicate,
-                required: true,
-            }
-          - {
-                label: "Date",
-                name: "date",
-                widget: "datetime",
-                i18n: duplicate,
-                required: true,
-            }
-          - {
-                label: "Cover Image",
-                name: "image",
-                widget: "image",
-                i18n: duplicate,
-                required: true,
-            }
-          - {
-                label: "Image Alt",
-                name: "imageAlt",
-                widget: "string",
-                i18n: true,
-                required: true,
-            }
-          - {
-                label: "Featured",
-                name: "featured",
-                widget: "boolean",
-                default: false,
-                i18n: duplicate,
-            }
-          - {
-                label: "Mapping Key",
-                name: "mappingKey",
-                widget: "string",
-                i18n: duplicate,
-                required: true,
-                hint: "URL-friendly identifier. Used to 'link' translated blog posts for SEO purposes",
-            }
-          - { label: "Body", name: "body", widget: "markdown", i18n: true }
+  - name: "menu"
+    label: "Menú"
+    file: "src/data/menu.json"
+    description: "Platos, categorías y precios. Al guardar, el cambio se publica solo."
+    fields:
+      - name: "categories"
+        label: "Categorías"
+        widget: "list"
+        fields:
+          - label: "ID"
+            name: "id"
+            widget: "string"
+            hint: "No cambiar — es el identificador interno de la categoría."
+          - label: "Nombre"
+            name: "label"
+            widget: "string"
+      - name: "dishes"
+        label: "Platos"
+        widget: "list"
+        fields:
+          - label: "ID"
+            name: "id"
+            widget: "string"
+            hint: "No cambiar — es la dirección de la página del plato (/menu/…/)."
+          - label: "Nombre"
+            name: "name"
+            widget: "string"
+          - label: "Descripción"
+            name: "desc"
+            widget: "text"
+            required: false
+          - label: "Categoría"
+            name: "category"
+            widget: "select"
+            options:
+              - { label: "Hamburguesas y Hot Dogs", value: "hamburguesas" }
+              - { label: "Mofongo", value: "mofongo" }
+              - { label: "Pollo, Cerdo y Res a la Plancha", value: "plancha" }
+              - { label: "Yaroa, Patacón, Chimi y Burritos", value: "yaroa" }
+              - { label: "Sándwiches y Tostadas", value: "sandwiches" }
+              - { label: "Papas, Fritos y Extras", value: "extras" }
+          - label: "Foto"
+            name: "photo"
+            widget: "string"
+            hint: "Nombre del archivo en src/assets/images/dishes/ (ej. 23-chimi-de-pierna.webp)."
+          - label: "Foto plato negro"
+            name: "platePhoto"
+            widget: "string"
+            required: false
+            hint: "Nombre del archivo de la foto recreada en plato negro (ej. chimi-de-pierna-black-plate.jpg)."
+          - name: "options"
+            label: "Opciones y precios"
+            widget: "list"
+            fields:
+              - label: "Opción"
+                name: "label"
+                widget: "string"
+              - label: "Precio (RD$)"
+                name: "price"
+                widget: "number"
+                value_type: "int"
+                min: 0

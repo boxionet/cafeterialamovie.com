@@ -36,8 +36,9 @@ const more = [
 ---
 
 <BaseLayout
-	title={`${dish.name} — Cafetería La Movie`}
-	description={`${dish.name}: ${dish.desc} Pide por WhatsApp — pickup o delivery en Santo Domingo Este.`}
+	title={`${dish.name} — ${hasOptions ? "desde " : ""}${formatPrice(minPrice)} · Cafetería La Movie`}
+	description={`${dish.name}: ${dish.desc} ${hasOptions ? `Desde ${formatPrice(minPrice)}` : formatPrice(minPrice)}. Pide por WhatsApp — pickup o delivery en Santo Domingo Este.`}
+	heroImage={photo}
 >
 	<section class="detail">
 		<a href="/menu/" class="detail-back">&lt; El menú</a>
@@ -322,10 +323,15 @@ const more = [
 
 <script>
 	// Keep the price and the WhatsApp message in sync with the option picker.
-	const select = document.querySelector<HTMLSelectElement>("[data-option-select]");
-	const price = document.querySelector("[data-price]");
-	const orderLink = document.querySelector<HTMLAnchorElement>("[data-order-link]");
-	if (select && price && orderLink) {
+	// Bound on astro:page-load (initial load + every view transition) and
+	// immediately for a plain load; bound once (data-picker-bound).
+	function bindPicker() {
+		const select = document.querySelector<HTMLSelectElement>("[data-option-select]");
+		if (!select || select.dataset.pickerBound) return;
+		select.dataset.pickerBound = "true";
+		const price = document.querySelector("[data-price]");
+		const orderLink = document.querySelector<HTMLAnchorElement>("[data-order-link]");
+		if (!price || !orderLink) return;
 		const options = JSON.parse(orderLink.dataset.options || "[]") as {
 			label: string;
 			price: number;
@@ -341,4 +347,6 @@ const more = [
 			)}`;
 		});
 	}
+	bindPicker();
+	document.addEventListener("astro:page-load", bindPicker);
 </script>

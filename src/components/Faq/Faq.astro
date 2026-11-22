@@ -44,7 +44,11 @@ const FAQS = [
 				{
 					FAQS.map((item, i) => (
 						<li class={`cs-faq-item${i === 0 ? " active" : ""}`}>
-							<button class="cs-button" aria-expanded={i === 0 ? "true" : "false"}>
+							<button
+								type="button"
+								class="cs-button"
+								aria-expanded={i === 0 ? "true" : "false"}
+							>
 								{item.q}
 							</button>
 							<p class="cs-item-p">{item.a}</p>
@@ -292,7 +296,7 @@ const FAQS = [
 				top: 0;
 				left: 0;
 				z-index: -1;
-				border-radius: (4/16rem);
+				border-radius: 999px;
 				transition: width 0.3s;
 			}
 
@@ -337,18 +341,27 @@ const FAQS = [
 
 <script>
 	// CodeStitch 254 toggle, scoped to this section.
-	const faqItems = Array.from(document.querySelectorAll("#faq-254 .cs-faq-item"));
-	for (const item of faqItems) {
-		const button = item.querySelector(".cs-button");
-		const onClick = () => {
-			item.classList.toggle("active");
-			if (button) {
-				button.setAttribute(
-					"aria-expanded",
-					item.classList.contains("active") ? "true" : "false",
-				);
-			}
-		};
-		item.addEventListener("click", onClick);
+	// Bound on astro:page-load (initial load + every view transition) and
+	// immediately for a plain load. Each item is bound once (data-faq-bound),
+	// so re-binding after a navigation never double-toggles.
+	function bindFaq() {
+		const faqItems = Array.from(document.querySelectorAll("#faq-254 .cs-faq-item"));
+		for (const item of faqItems) {
+			if (item.dataset.faqBound) continue;
+			item.dataset.faqBound = "true";
+			const button = item.querySelector(".cs-button");
+			const onClick = () => {
+				item.classList.toggle("active");
+				if (button) {
+					button.setAttribute(
+						"aria-expanded",
+						item.classList.contains("active") ? "true" : "false",
+					);
+				}
+			};
+			item.addEventListener("click", onClick);
+		}
 	}
+	bindFaq();
+	document.addEventListener("astro:page-load", bindFaq);
 </script>

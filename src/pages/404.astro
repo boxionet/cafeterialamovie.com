@@ -8,7 +8,11 @@ const { locale, content } = await getSiteContext(Astro.url);
 const title = content.common.notFound.pageNotFound;
 ---
 
-<BaseLayout title={title} description={title}>
+<BaseLayout
+	title={title}
+	description="La página que buscas no existe o el enlace cambió. Vuelve al inicio o explora el menú de Cafetería La Movie."
+	noindex
+>
 	<section id="int-hero">
 		<p class="cs-topper">Cafetería La Movie</p>
 		<h1 class="font-display">{title}</h1>

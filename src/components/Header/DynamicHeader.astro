@@ -114,18 +114,18 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 	/*-- -------------------------- -->
 	<---  Navbar — lacasadealofoke  -->
 	<---  style, adapted to our     -->
-	<---  brand: black bar, red    -->
-	<---  bottom line (#FE0500),   -->
+	<---  brand: black bar, 1px    -->
+	<---  #424141 bottom line,     -->
 	<---  gold (#FDCC00) accents,  -->
 	<---  white WhatsApp pill,     -->
 	<---  full-screen red overlay  -->
 	<---  menu on mobile. Bar is   -->
-	<---  106px tall on desktop    -->
+	<---  105px tall on desktop    -->
 	<---  (8px pad + 88px logo +   -->
-	<---  8px pad + 2px border)    -->
-	<---  and 98px on mobile /     -->
+	<---  8px pad + 1px border)    -->
+	<---  and 97px on mobile /     -->
 	<---  tablet (8px pad + 80px   -->
-	<---  logo + 8px pad + 2px).   -->
+	<---  logo + 8px pad + 1px).   -->
 	<---  The logo SVG is nearly   -->
 	<---  square (804.9x669.7),    -->
 	<---  so it sizes by height.   -->
@@ -145,7 +145,9 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 			align-items: center;
 			justify-content: center;
 			gap: (7/16rem);
-			transition: background-color 0.3s;
+			transition:
+				background-color 0.3s,
+				color 0.3s;
 
 			svg {
 				width: (16/16rem);
@@ -154,7 +156,8 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 			}
 
 			&:hover {
-				background-color: #f0f0f0;
+				background-color: var(--primary);
+				color: #fff;
 			}
 		}
 	}
@@ -177,7 +180,7 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 			box-sizing: border-box;
 			padding: (8/16rem) (16/16rem);
 			background-color: #000;
-			border-bottom: 2px solid var(--primary);
+			border-bottom: 1px solid #424141;
 			position: fixed;
 			z-index: 10000;
 
@@ -465,11 +468,19 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 			.cs-overlay-pedir {
 				color: #000;
 				background-color: #fff;
+				transition:
+					background-color 0.3s,
+					color 0.3s;
 
 				svg {
 					width: (18/16rem);
 					height: (18/16rem);
 					flex: none;
+				}
+
+				&:hover {
+					background-color: var(--primary);
+					color: #fff;
 				}
 			}
 
@@ -531,7 +542,7 @@ const menuHref = getLocalizedRoute(locale, "/menu");
 			box-sizing: border-box;
 			padding: (8/16rem) (16/16rem);
 			background-color: #000;
-			border-bottom: 2px solid var(--primary);
+			border-bottom: 1px solid #424141;
 			position: fixed;
 			z-index: 10000;
 

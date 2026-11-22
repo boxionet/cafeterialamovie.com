@@ -1,0 +1,345 @@
+---
+import { Icon } from "astro-icon/components";
+import { REVIEWS } from "@data/reviews";
+---
+
+<section class="reviews" id="resenas">
+	<div class="sec-head">
+		<div>
+			<p class="sec-kicker">Reseñas</p>
+			<h2 class="sec-title">Lo que dicen <span class="hl">nuestros clientes</span></h2>
+		</div>
+	</div>
+
+	<div class="reviews-grid">
+		{
+			REVIEWS.map((r, i) => (
+				<article class="review-card">
+					<header class="review-head">
+						<span
+							class="review-avatar"
+							style={`background-color: ${r.color}; color: ${r.ink};`}
+							aria-hidden="true"
+						>
+							{r.initial}
+						</span>
+						<span class="review-who">
+							<span class="review-name">{r.name}</span>
+							<span class="review-date">{r.date}</span>
+						</span>
+						<span class="review-g" title="Reseña de Google" aria-label="Reseña de Google">
+							<svg viewBox="0 0 24 24" aria-hidden="true">
+								<path
+									fill="#4285F4"
+									d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"
+								/>
+								<path
+									fill="#34A853"
+									d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"
+								/>
+								<path
+									fill="#FBBC05"
+									d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z"
+								/>
+								<path
+									fill="#EA4335"
+									d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09C6.22 6.86 8.87 4.75 12 4.75z"
+								/>
+							</svg>
+						</span>
+					</header>
+					<div class="review-stars" aria-label="5 de 5 estrellas">
+						{Array.from({ length: 5 }).map(() => (
+							<Icon name="fa6-solid:star" aria-hidden="true" />
+						))}
+					</div>
+					{r.text && (
+						<>
+							<p class="review-text">{r.text}</p>
+							<button type="button" class="review-more" data-review={i}>
+								Leer reseña completa
+							</button>
+						</>
+					)}
+				</article>
+			))
+		}
+	</div>
+
+	<div class="review-modal" id="review-modal" hidden>
+		<div class="review-modal-backdrop" data-close></div>
+		<div class="review-modal-card" role="dialog" aria-modal="true" aria-labelledby="review-modal-name">
+			<button type="button" class="review-modal-x" data-close aria-label="Cerrar">
+				<Icon name="fa6-solid:xmark" aria-hidden="true" />
+			</button>
+			<header class="review-head">
+				<span class="review-avatar" id="review-modal-avatar" aria-hidden="true">A</span>
+				<span class="review-who">
+					<span class="review-name" id="review-modal-name">—</span>
+					<span class="review-date" id="review-modal-date">—</span>
+				</span>
+			</header>
+			<div class="review-stars" aria-label="5 de 5 estrellas">
+				{Array.from({ length: 5 }).map(() => (
+					<Icon name="fa6-solid:star" aria-hidden="true" />
+				))}
+			</div>
+			<p class="review-modal-text" id="review-modal-text"></p>
+		</div>
+	</div>
+</section>
+
+<script define:vars={{ reviews: REVIEWS }}>
+	// Review modal. Bound on astro:page-load (initial load + every view
+	// transition) and immediately for a plain load; each modal is bound
+	// once (data-reviews-bound). openReview/closeReview look the modal up
+	// fresh so they never hold a stale element after a navigation.
+	let lastFocus = null;
+
+	function getModal() {
+		return document.getElementById("review-modal");
+	}
+
+	function openReview(i) {
+		const modal = getModal();
+		if (!modal) return;
+		const r = reviews[i];
+		if (!r || !r.text) return;
+		document.getElementById("review-modal-avatar").textContent = r.initial;
+		document.getElementById("review-modal-avatar").style.backgroundColor = r.color;
+		document.getElementById("review-modal-avatar").style.color = r.ink;
+		document.getElementById("review-modal-name").textContent = r.name;
+		document.getElementById("review-modal-date").textContent = r.date;
+		document.getElementById("review-modal-text").textContent = r.text;
+		lastFocus = document.activeElement;
+		modal.hidden = false;
+		document.body.style.overflow = "hidden";
+		modal.querySelector(".review-modal-x").focus();
+	}
+
+	function closeReview() {
+		const modal = getModal();
+		if (!modal) return;
+		modal.hidden = true;
+		document.body.style.overflow = "";
+		if (lastFocus) lastFocus.focus();
+	}
+
+	function bindReviews() {
+		const modal = getModal();
+		if (!modal || modal.dataset.reviewsBound) return;
+		modal.dataset.reviewsBound = "true";
+		document.querySelectorAll("[data-review]").forEach((btn) => {
+			btn.addEventListener("click", () => openReview(Number(btn.dataset.review)));
+		});
+		modal.querySelectorAll("[data-close]").forEach((el) => {
+			el.addEventListener("click", closeReview);
+		});
+	}
+
+	document.addEventListener("keydown", (e) => {
+		const modal = getModal();
+		if (e.key === "Escape" && modal && !modal.hidden) closeReview();
+	});
+
+	bindReviews();
+	document.addEventListener("astro:page-load", bindReviews);
+</script>
+
+<style lang="less">
+	.reviews {
+		max-width: (1280/16rem);
+		margin: auto;
+		padding: var(--sectionPadding);
+	}
+
+	.reviews-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: (16/16rem);
+	}
+
+	@media only screen and (min-width: 40rem) {
+		.reviews-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.reviews-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	.review-card {
+		background-color: #141414;
+		border: 1px solid #232323;
+		color: #fff;
+		border-radius: (16/16rem);
+		padding: (24/16rem);
+		display: flex;
+		flex-direction: column;
+	}
+
+	.review-head {
+		display: flex;
+		align-items: center;
+		gap: (12/16rem);
+		margin-bottom: (16/16rem);
+	}
+
+	.review-avatar {
+		width: (48/16rem);
+		height: (48/16rem);
+		flex: none;
+		border-radius: 50%;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-family: var(--font-display);
+		font-size: (22/16rem);
+		text-transform: uppercase;
+	}
+
+	.review-who {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+	}
+
+	.review-name {
+		font-weight: 800;
+		font-size: (16/16rem);
+		line-height: 1.25em;
+		overflow-wrap: anywhere;
+	}
+
+	.review-date {
+		font-size: (14/16rem);
+		color: #a8a8a8;
+		margin-top: (2/16rem);
+	}
+
+	.review-g {
+		margin-left: auto;
+		flex: none;
+		width: (22/16rem);
+		height: (22/16rem);
+
+		svg {
+			width: 100%;
+			height: 100%;
+			display: block;
+		}
+	}
+
+	.review-stars {
+		display: flex;
+		gap: (4/16rem);
+		color: var(--secondary);
+		margin-bottom: (14/16rem);
+
+		svg {
+			width: (20/16rem);
+			height: (20/16rem);
+		}
+	}
+
+	.review-text {
+		font-size: (16/16rem);
+		line-height: 1.65em;
+		color: #d4d4d4;
+		margin: 0 0 (16/16rem);
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.review-more {
+		margin-top: auto;
+		align-self: flex-start;
+		background: none;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+		font-family: var(--font-primary);
+		font-size: (16/16rem);
+		font-weight: 800;
+		line-height: 1.4em;
+		color: #fff;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+
+		&:hover {
+			color: var(--secondary);
+		}
+	}
+
+	/*-- -------------------------- -->
+	<---      Review modal        -->
+	<--- -------------------------- -*/
+	.review-modal {
+		position: fixed;
+		inset: 0;
+		z-index: 20000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: (16/16rem);
+	}
+
+	.review-modal[hidden] {
+		display: none;
+	}
+
+	.review-modal-backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.65);
+	}
+
+	.review-modal-card {
+		position: relative;
+		width: 100%;
+		max-width: (560/16rem);
+		background-color: #141414;
+		border: 1px solid #232323;
+		color: #fff;
+		border-radius: (20/16rem);
+		padding: (28/16rem) (24/16rem);
+		box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+	}
+
+	.review-modal-x {
+		position: absolute;
+		top: (10/16rem);
+		right: (10/16rem);
+		width: (40/16rem);
+		height: (40/16rem);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+		color: #a8a8a8;
+
+		svg {
+			width: (22/16rem);
+			height: (22/16rem);
+		}
+
+		&:hover {
+			color: #fff;
+		}
+	}
+
+	.review-modal-text {
+		font-size: (17/16rem);
+		line-height: 1.65em;
+		color: #d4d4d4;
+		margin: 0;
+	}
+</style>

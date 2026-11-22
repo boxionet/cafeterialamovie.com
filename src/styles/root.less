@@ -152,11 +152,14 @@
 		display: inline-block;
 		position: relative;
 		z-index: 1;
-		transition: color 0.3s;
+		transition:
+			color 0.3s,
+			box-shadow 0.3s;
 		transition-delay: 0.1s;
 
 		&:hover {
 			color: #fff;
+			box-shadow: 0 (8/16rem) (28/16rem) rgba(254, 5, 0, 0.6);
 			&:before {
 				width: 100%;
 			}
@@ -168,7 +171,7 @@
 			//Transition properties
 			width: 0;
 			height: 100%;
-			background-color: #000;
+			background-color: #bf1313;
 			border-radius: 999px;
 			opacity: 1;
 			display: block;
@@ -214,9 +217,9 @@
 // Fixed-header clearance — derived from #cs-navigation's real height in
 // src/components/Header/DynamicHeader.astro. Keep in sync if the header
 // padding, logo size, or border ever changes:
-//   header height = vertical padding + tallest content + 2px red border
-//   desktop: 8px pad + 88px logo + 8px pad + 2px = 106px
-//   mobile:  8px pad + 80px logo + 8px pad + 2px = 98px
+//   header height = vertical padding + tallest content + 1px #424141 border
+//   desktop: 8px pad + 88px logo + 8px pad + 1px = 105px
+//   mobile:  8px pad + 80px logo + 8px pad + 1px = 97px
 // main padding-top = header height + 7px buffer, so the hero sticker
 // (rotated 9deg, its top corners sit ~11px above its top anchor) and the
 // braces (top edge ~5px below the hero top at 1440) clear the navbar

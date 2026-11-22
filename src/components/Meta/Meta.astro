@@ -9,6 +9,7 @@ interface Props {
 	title?: string;
 	description?: string;
 	heroImage?: ImageMetadata;
+	noindex?: boolean;
 	locale: string;
 	currentHreflang: string;
 	ogLocale: string;
@@ -22,6 +23,7 @@ const {
 	title = SITE.title,
 	description = SITE.description,
 	heroImage,
+	noindex = false,
 	locale,
 	currentHreflang,
 	ogLocale,
@@ -32,18 +34,18 @@ const localBusinessSchema = getLocalBusinessSchema(Astro.url.origin, locale);
 const canonical = Astro.url.href;
 const [defaultAlternate] = alternates;
 
-// Detect landing pages (home page for any locale: "/" or "/fr/", etc.)
-
-const isLandingPage = Astro.url.pathname === "/" || Astro.url.pathname === `/${locale}/`;
-
-const pageTitle = isLandingPage
-	? `${title} | ${BUSINESS.name} | ${BUSINESS.address.city}, ${BUSINESS.address.state}`
-	: `${title} | ${BUSINESS.name}`;
+// Page titles already carry the business name (e.g. "Menú — Cafetería La
+// Movie"), so only append it when it is missing — never repeat it, and
+// never tack the city on again. The home title leads with the business,
+// not with dish names.
+const pageTitle = title.includes(BUSINESS.name) ? title : `${title} | ${BUSINESS.name}`;
 
 const ogType = "website";
 
-const ogTitle = OG.title ?? pageTitle;
-const ogDescription = OG.description ?? description;
+// Social sharing uses this page's own title and description, not the
+// site-wide fallback — so a shared dish link shows the dish.
+const ogTitle = pageTitle;
+const ogDescription = description;
 
 let socialImage: string;
 
@@ -64,6 +66,7 @@ if (heroImage) {
 <!-- Standard Meta Tags -->
 <meta charset="utf-8" />
 <meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex" />}
 <meta name="web_author" content={SITE.author} />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
