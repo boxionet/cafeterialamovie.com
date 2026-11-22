@@ -9,3 +9,6 @@ export const SITE = {
 export const OG = {
 	image: "/og-image.jpg",
 };
+
+// Google Analytics 4 — property "Cafetería La Movie" (account boxionet.tech@gmail.com).
+export const GA_MEASUREMENT_ID = "G-4XH8LSZBQF";

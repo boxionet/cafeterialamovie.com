@@ -7,6 +7,7 @@ import { getSiteContext } from "@js/getSiteContext";
 import Meta from "@components/Meta/Meta.astro";
 import DynamicHeader from "@components/Header/DynamicHeader.astro";
 import Footer from "@components/Footer/Footer.astro";
+import { GA_MEASUREMENT_ID } from "@data/siteConfig";
 import "@styles/root.less";
 
 interface Props {
@@ -45,6 +46,18 @@ const { content, lang, alternates, locale, currentHreflang, ogLocale } = await g
 
 		<!-- View Transitions support -->
 		<ClientRouter />
+
+		<!-- Google Analytics (GA4) -->
+		<script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+		></script>
+		<script is:inline define:vars={{ gaId: GA_MEASUREMENT_ID }}>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag("js", new Date());
+			gtag("config", gaId);
+		</script>
 
 		<!-- Sitewide Scripts -->
 		<script src="@assets/js/nav.js"></script>
