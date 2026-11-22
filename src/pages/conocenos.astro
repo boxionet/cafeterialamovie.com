@@ -77,6 +77,13 @@ const frontPhoto = dishImage("storefront-night.webp");
 	<!--                   El local                   -->
 	<!-- ============================================ -->
 	<section class="place">
+		<div class="place-text">
+			<p class="sec-kicker">Nuestro local</p>
+			<h2 class="font-display">Te esperamos en Los Mina</h2>
+			<p class="place-info">
+				{BUSINESS.address.lineOne}, {BUSINESS.address.lineTwo} · {BUSINESS.hours.short}
+			</p>
+		</div>
 		<div class="place-photo-wrap">
 			<Image
 				src={frontPhoto}
@@ -87,13 +94,6 @@ const frontPhoto = dishImage("storefront-night.webp");
 				decoding="async"
 				class="place-photo"
 			/>
-			<div class="place-overlay">
-				<p class="sec-kicker">Nuestro local</p>
-				<h2 class="font-display">Te esperamos en Los Mina</h2>
-				<p class="place-info">
-					{BUSINESS.address.lineOne}, {BUSINESS.address.lineTwo} · {BUSINESS.hours.short}
-				</p>
-			</div>
 		</div>
 	</section>
 
@@ -236,27 +236,9 @@ const frontPhoto = dishImage("storefront-night.webp");
 		padding: var(--sectionPadding);
 	}
 
-	.place-photo-wrap {
-		position: relative;
-		border-radius: (20/16rem);
-		overflow: hidden;
-	}
-
-	.place-photo {
-		width: 100%;
-		height: clamp(240px, 45vw, 520px);
-		object-fit: cover;
-		display: block;
-	}
-
-	.place-overlay {
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		padding: (56/16rem) (28/16rem) (24/16rem);
-		background: linear-gradient(to top, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0));
+	.place-text {
 		text-align: left;
+		margin-bottom: (28/16rem);
 
 		.sec-kicker {
 			margin-bottom: (6/16rem);
@@ -269,6 +251,19 @@ const frontPhoto = dishImage("storefront-night.webp");
 			color: #fff;
 			margin: 0 0 (8/16rem);
 		}
+	}
+
+	.place-photo-wrap {
+		position: relative;
+		border-radius: (20/16rem);
+		overflow: hidden;
+	}
+
+	.place-photo {
+		width: 100%;
+		height: clamp(240px, 45vw, 520px);
+		object-fit: cover;
+		display: block;
 	}
 
 	.place-info {

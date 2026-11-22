@@ -90,44 +90,60 @@ import { REVIEWS } from "@data/reviews";
 </section>
 
 <script define:vars={{ reviews: REVIEWS }}>
-	const modal = document.getElementById("review-modal");
-	const modalAvatar = document.getElementById("review-modal-avatar");
-	const modalName = document.getElementById("review-modal-name");
-	const modalDate = document.getElementById("review-modal-date");
-	const modalText = document.getElementById("review-modal-text");
-	const closeBtn = modal.querySelector(".review-modal-x");
+	// Review modal. Bound on astro:page-load (initial load + every view
+	// transition) and immediately for a plain load; each modal is bound
+	// once (data-reviews-bound). openReview/closeReview look the modal up
+	// fresh so they never hold a stale element after a navigation.
 	let lastFocus = null;
 
+	function getModal() {
+		return document.getElementById("review-modal");
+	}
+
 	function openReview(i) {
+		const modal = getModal();
+		if (!modal) return;
 		const r = reviews[i];
 		if (!r || !r.text) return;
-		modalAvatar.textContent = r.initial;
-		modalAvatar.style.backgroundColor = r.color;
-		modalAvatar.style.color = r.ink;
-		modalName.textContent = r.name;
-		modalDate.textContent = r.date;
-		modalText.textContent = r.text;
+		document.getElementById("review-modal-avatar").textContent = r.initial;
+		document.getElementById("review-modal-avatar").style.backgroundColor = r.color;
+		document.getElementById("review-modal-avatar").style.color = r.ink;
+		document.getElementById("review-modal-name").textContent = r.name;
+		document.getElementById("review-modal-date").textContent = r.date;
+		document.getElementById("review-modal-text").textContent = r.text;
 		lastFocus = document.activeElement;
 		modal.hidden = false;
 		document.body.style.overflow = "hidden";
-		closeBtn.focus();
+		modal.querySelector(".review-modal-x").focus();
 	}
 
 	function closeReview() {
+		const modal = getModal();
+		if (!modal) return;
 		modal.hidden = true;
 		document.body.style.overflow = "";
 		if (lastFocus) lastFocus.focus();
 	}
 
-	document.querySelectorAll("[data-review]").forEach((btn) => {
-		btn.addEventListener("click", () => openReview(Number(btn.dataset.review)));
-	});
-	modal.querySelectorAll("[data-close]").forEach((el) => {
-		el.addEventListener("click", closeReview);
-	});
+	function bindReviews() {
+		const modal = getModal();
+		if (!modal || modal.dataset.reviewsBound) return;
+		modal.dataset.reviewsBound = "true";
+		document.querySelectorAll("[data-review]").forEach((btn) => {
+			btn.addEventListener("click", () => openReview(Number(btn.dataset.review)));
+		});
+		modal.querySelectorAll("[data-close]").forEach((el) => {
+			el.addEventListener("click", closeReview);
+		});
+	}
+
 	document.addEventListener("keydown", (e) => {
-		if (e.key === "Escape" && !modal.hidden) closeReview();
+		const modal = getModal();
+		if (e.key === "Escape" && modal && !modal.hidden) closeReview();
 	});
+
+	bindReviews();
+	document.addEventListener("astro:page-load", bindReviews);
 </script>
 
 <style lang="less">
