@@ -61,29 +61,6 @@ const orderWays = [
 	},
 ];
 
-const picks = [
-	{
-		dish: getDish("hamburguesa"),
-		tag: "La clásica",
-		name: "Hamburguesa con papas",
-		desc: "Carne, queso y papas fritas.",
-		price: "RD$400",
-	},
-	{
-		dish: getDish("chimi"),
-		tag: "El de siempre",
-		name: "Chimi de pierna",
-		desc: "Solo RD$250 · Con papas RD$350",
-		price: "RD$250",
-	},
-	{
-		dish: getDish("yaroa"),
-		tag: "Para compartir",
-		name: "Yaroa de res grande",
-		desc: "Res, queso y salsas.",
-		price: "RD$450",
-	},
-];
 ---
 
 <BaseLayout
@@ -175,6 +152,33 @@ const picks = [
 	</section>
 
 	<!-- ============================================ -->
+	<!--                  Galería                     -->
+	<!-- ============================================ -->
+	<section class="gallery">
+		<div class="sec-head">
+			<div>
+				<p class="sec-kicker">La galería</p>
+				<h2 class="sec-title">Un festín <span class="hl">para los ojos</span></h2>
+			</div>
+		</div>
+		<div class="gallery-grid">
+			{
+				gallery.map((item) => (
+					<Image
+						src={dishImage(item.file)}
+						alt={item.alt}
+						width={600}
+						height={600}
+						loading="lazy"
+						decoding="async"
+						class="gallery-photo"
+					/>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- ============================================ -->
 	<!--              Pide a tu manera                -->
 	<!-- ============================================ -->
 	<section class="order-ways">
@@ -214,96 +218,8 @@ const picks = [
 		</div>
 	</section>
 
-	<!-- ============================================ -->
-	<!--                 Features                     -->
-	<!-- ============================================ -->
-	<section class="features">
-		<div class="feature">
-			<Icon name="fa6-solid:fire-flame-curved" aria-hidden="true" />
-			<h3 class="font-display">Hecho al momento</h3>
-			<p>Todo se prepara cuando pides. Nada de ayer.</p>
-		</div>
-		<div class="feature">
-			<Icon name="fa6-solid:bag-shopping" aria-hidden="true" />
-			<h3 class="font-display">Para llevar o delivery</h3>
-			<p>Recoge en el local o te lo llevamos a tu casa.</p>
-		</div>
-		<div class="feature">
-			<Icon name="fa6-solid:moon" aria-hidden="true" />
-			<h3 class="font-display">Abierto de noche</h3>
-			<p>Miércoles a domingo, de 6:45 PM a 12 AM.</p>
-		</div>
-	</section>
 
-	<!-- ============================================ -->
-	<!--                  Galería                     -->
-	<!-- ============================================ -->
-	<section class="gallery">
-		<div class="sec-head">
-			<div>
-				<p class="sec-kicker">La galería</p>
-				<h2 class="sec-title">Un festín <span class="hl">para los ojos</span></h2>
-			</div>
-		</div>
-		<div class="gallery-grid">
-			{
-				gallery.map((item) => (
-					<Image
-						src={dishImage(item.file)}
-						alt={item.alt}
-						width={600}
-						height={600}
-						loading="lazy"
-						decoding="async"
-						class="gallery-photo"
-					/>
-				))
-			}
-		</div>
-	</section>
 
-	<!-- ============================================ -->
-	<!--              ¿Cuál es para ti?               -->
-	<!-- ============================================ -->
-	<section class="picks">
-		<div class="sec-head">
-			<div>
-				<p class="sec-kicker">Los tres de siempre</p>
-				<h2 class="sec-title">¿Cuál es <span class="hl">para ti?</span></h2>
-			</div>
-		</div>
-		<div class="picks-grid">
-			{
-				picks.map((p) => (
-					<article class="pick-card">
-						<a
-							href={`/menu/${p.dish.id}/`}
-							class="pick-photo"
-							aria-label={`Ver ${p.name}`}
-						>
-							<Image
-								src={dishImage(p.dish.platePhoto ?? p.dish.photo)}
-								alt={p.name}
-								width={800}
-								height={600}
-								loading="lazy"
-								decoding="async"
-							/>
-						</a>
-						<span class="pick-tag">{p.tag}</span>
-						<h3 class="font-serif">
-							<a href={`/menu/${p.dish.id}/`}>{p.name}</a>
-						</h3>
-						<p class="pick-desc">{p.desc}</p>
-						<p class="pick-price">{p.price}</p>
-						<a href={`/menu/${p.dish.id}/`} class="order-btn">
-							Pedir este
-						</a>
-					</article>
-				))
-			}
-		</div>
-	</section>
 
 	<!-- ============================================ -->
 	<!--                Cómo pedir                    -->
@@ -338,6 +254,9 @@ const picks = [
 
 	<Faq />
 
+
+	<VisitInfo />
+
 	<!-- ============================================ -->
 	<!--              Conócenos teaser                -->
 	<!-- ============================================ -->
@@ -361,8 +280,6 @@ const picks = [
 			<a href="/conocenos/" class="cs-button-solid">Conócenos</a>
 		</div>
 	</section>
-
-	<VisitInfo />
 	<AlsoHave />
 
 	<!-- ============================================ -->
@@ -678,51 +595,6 @@ const picks = [
 	}
 
 	/*-- -------------------------- -->
-	<---        Features            -->
-	<--- -------------------------- -*/
-	.features {
-		max-width: (1280/16rem);
-		margin: auto;
-		padding: (48/16rem) (16/16rem);
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: (16/16rem);
-	}
-
-	.feature {
-		text-align: center;
-		background-color: #141414;
-		border: 1px solid #232323;
-		border-radius: (20/16rem);
-		padding: (32/16rem) (24/16rem);
-
-		svg {
-			width: (40/16rem);
-			height: (40/16rem);
-			color: var(--secondary);
-			margin-bottom: (16/16rem);
-		}
-
-		h3 {
-			font-size: (22/16rem);
-			color: #fff;
-			margin-bottom: (8/16rem);
-		}
-
-		p {
-			font-size: (15/16rem);
-			color: #a8a8a8;
-			margin-bottom: 0;
-		}
-	}
-
-	@media only screen and (min-width: 64rem) {
-		.features {
-			grid-template-columns: repeat(3, 1fr);
-		}
-	}
-
-	/*-- -------------------------- -->
 	<---         Galería            -->
 	<--- -------------------------- -*/
 	.gallery {
@@ -991,98 +863,8 @@ const picks = [
 		}
 	}
 
-	/*-- -------------------------- -->
-	<---      ¿Cuál es para ti?     -->
-	<--- -------------------------- -*/
-	.picks {
-		padding: (64/16rem) (16/16rem) 0;
-
-		.sec-head {
-			max-width: (1280/16rem);
-			margin: 0 auto (30/16rem);
-		}
-	}
-
-	.picks-grid {
-		max-width: (1280/16rem);
-		margin: auto;
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: (16/16rem);
-	}
-
-	.pick-card {
-		background-color: #141414;
-		border: 1px solid #232323;
-		border-radius: (20/16rem);
-		overflow: hidden;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		text-align: center;
-		padding-bottom: (24/16rem);
-	}
-
-	.pick-photo {
-		display: block;
-		width: 100%;
-
-		img {
-			width: 100%;
-			height: (220/16rem);
-			object-fit: cover;
-			display: block;
-		}
-	}
-
-	.pick-tag {
-		display: inline-block;
-		font-size: (12.5/16rem);
-		font-weight: 900;
-		letter-spacing: 0.18em;
-		text-transform: uppercase;
-		color: #141414;
-		background-color: var(--secondary);
-		border-radius: 999px;
-		padding: (6/16rem) (14/16rem);
-		margin: (20/16rem) (20/16rem) (12/16rem);
-	}
-
-	.pick-card h3 {
-		font-size: (24/16rem);
-		line-height: 1.15em;
-		color: #fff;
-		margin: 0 (20/16rem) (8/16rem);
-
-		a {
-			color: inherit;
-			text-decoration: none;
-
-			&:hover {
-				color: var(--secondary);
-			}
-		}
-	}
-
-	.pick-desc {
-		font-size: (14/16rem);
-		line-height: 1.5em;
-		color: #a8a8a8;
-		margin: 0 (20/16rem) (12/16rem);
-		flex: 1;
-	}
-
-	.pick-price {
-		font-family: var(--font-serif);
-		font-size: (26/16rem);
-		line-height: 1em;
-		color: var(--secondary);
-		margin: 0 0 (18/16rem);
-	}
-
 	@media only screen and (min-width: 48em) {
-		.order-ways-grid,
-		.picks-grid {
+		.order-ways-grid {
 			grid-template-columns: repeat(3, 1fr);
 		}
 	}
