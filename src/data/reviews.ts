@@ -22,8 +22,8 @@ export const REVIEWS: Review[] = [
 		text: "Buen servicio, calidad e higiene",
 	},
 	{
-		name: "robert santana",
-		initial: "r",
+		name: "Robert Santana",
+		initial: "R",
 		color: "#FE0500",
 		ink: "#fff",
 		date: "hace 4 años",
@@ -38,7 +38,7 @@ export const REVIEWS: Review[] = [
 		text: "Muy buen servicio y buenos platos y muy buena",
 	},
 	{
-		name: "Deivi One TVcatanga siri",
+		name: "Deivi One TVcatanga Siri",
 		initial: "D",
 		color: "#FDCC00",
 		ink: "#000",
@@ -46,8 +46,8 @@ export const REVIEWS: Review[] = [
 		text: "👍🏻👍🏻👍🏻👍🏻",
 	},
 	{
-		name: "maria victoria jimenez hernandez",
-		initial: "m",
+		name: "Maria Victoria Jimenez Hernandez",
+		initial: "M",
 		color: "#5F9B0A",
 		ink: "#fff",
 		date: "hace 3 años",
@@ -59,14 +59,6 @@ export const REVIEWS: Review[] = [
 		color: "#FE0500",
 		ink: "#fff",
 		date: "hace 4 años",
-		text: null,
-	},
-	{
-		name: "Frank carlos Peña guzman",
-		initial: "F",
-		color: "#D87F2A",
-		ink: "#fff",
-		date: "hace 5 años",
 		text: null,
 	},
 ];
