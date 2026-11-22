@@ -77,15 +77,24 @@ const frontPhoto = dishImage("storefront-night.webp");
 	<!--                   El local                   -->
 	<!-- ============================================ -->
 	<section class="place">
-		<Image
-			src={frontPhoto}
-			alt="Frente de Cafetería La Movie de noche"
-			width={1600}
-			height={800}
-			loading="lazy"
-			decoding="async"
-			class="place-photo"
-		/>
+		<div class="place-photo-wrap">
+			<Image
+				src={frontPhoto}
+				alt="Frente de Cafetería La Movie de noche"
+				width={1600}
+				height={800}
+				loading="lazy"
+				decoding="async"
+				class="place-photo"
+			/>
+			<div class="place-overlay">
+				<p class="sec-kicker">Nuestro local</p>
+				<h2 class="font-display">Te esperamos en Los Mina</h2>
+				<p class="place-info">
+					{BUSINESS.address.lineOne}, {BUSINESS.address.lineTwo} · {BUSINESS.hours.short}
+				</p>
+			</div>
+		</div>
 	</section>
 
 	<section class="about-blocks">
@@ -227,12 +236,47 @@ const frontPhoto = dishImage("storefront-night.webp");
 		padding: var(--sectionPadding);
 	}
 
+	.place-photo-wrap {
+		position: relative;
+		border-radius: (20/16rem);
+		overflow: hidden;
+	}
+
 	.place-photo {
 		width: 100%;
 		height: clamp(240px, 45vw, 520px);
 		object-fit: cover;
-		border-radius: (20/16rem);
 		display: block;
+	}
+
+	.place-overlay {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		padding: (56/16rem) (28/16rem) (24/16rem);
+		background: linear-gradient(to top, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0));
+		text-align: left;
+
+		.sec-kicker {
+			margin-bottom: (6/16rem);
+		}
+
+		h2 {
+			font-size: clamp(1.7rem, 4.5cqw, 2.6rem);
+			line-height: 1em;
+			text-transform: uppercase;
+			color: #fff;
+			margin: 0 0 (8/16rem);
+		}
+	}
+
+	.place-info {
+		font-size: (15/16rem);
+		font-weight: 700;
+		line-height: 1.5em;
+		color: #e8e0d0;
+		margin: 0;
 	}
 
 	.about-blocks {
