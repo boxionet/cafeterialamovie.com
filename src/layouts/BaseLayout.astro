@@ -52,9 +52,16 @@ const { content, lang, alternates, locale, currentHreflang, ogLocale } = await g
 		></script>
 		<script is:inline define:vars={{ gaId: GA_MEASUREMENT_ID }}>
 			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
+			// define:vars wraps this script in an IIFE, so a plain
+			// `function gtag(){}` would be scoped inside it and
+			// window.gtag would stay undefined (custom events could
+			// not call gtag). Assign it to window so it is global.
+			// (gtag.js itself never defines window.gtag — the stub is
+			// the standard pattern; gtag.js processes the dataLayer
+			// pushes, including events sent through this stub.)
+			window.gtag = function () {
+				window.dataLayer.push(arguments);
+			};
 			gtag("js", new Date());
 			gtag("config", gaId);
 		</script>
