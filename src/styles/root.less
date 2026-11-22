@@ -155,11 +155,15 @@
 		// Clip the ::before fill to the button: without this the sweep
 		// (and any rounding mismatch) reads as if it sits on the outer div.
 		overflow: hidden;
-		transition: color 0.3s;
+		transition:
+			color 0.3s,
+			box-shadow 0.3s;
 		transition-delay: 0.1s;
 
 		&:hover {
 			color: #fff;
+			// The red glow is a hover effect only — never permanent.
+			box-shadow: 0 (8/16rem) (28/16rem) rgba(254, 5, 0, 0.6);
 			&:before {
 				width: 100%;
 			}

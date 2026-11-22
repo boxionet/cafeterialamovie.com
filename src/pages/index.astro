@@ -394,7 +394,8 @@ const orderWays = [
 		margin-top: (30/16rem);
 
 		// proposal hero buttons are mixed case (not uppercase) and a touch
-		// larger, with a soft red glow on the solid one.
+		// larger. The solid one's red glow comes from the base rule, on
+		// hover only — it must not be permanent here.
 		// Center the label with flex: the old line-height:(56/16em) trick
 		// computed to 3.5em × 18px = 63px inside a 56px button, so the
 		// text sat ~3.5px below center.
@@ -407,10 +408,6 @@ const orderWays = [
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
-		}
-
-		.cs-button-solid {
-			box-shadow: 0 (8/16rem) (24/16rem) rgba(254, 5, 0, 0.45);
 		}
 
 		.cs-button-transparent {
