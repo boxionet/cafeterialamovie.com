@@ -5,8 +5,8 @@ export const i18nEnabled = features.i18n;
 
 export function getContent(locale?: string) {
 	if (i18nEnabled) {
-		return loadTranslations(locale ?? "en");
+		return loadTranslations(locale ?? "es");
 	}
 
-	return loadTranslations("en");
+	return loadTranslations("es");
 }

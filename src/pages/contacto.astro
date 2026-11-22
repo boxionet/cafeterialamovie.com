@@ -1,0 +1,123 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import OrderBar from "@components/OrderBar/OrderBar.astro";
+import AlsoHave from "@components/AlsoHave/AlsoHave.astro";
+import VisitInfo from "@components/VisitInfo/VisitInfo.astro";
+import { BUSINESS } from "@data/client";
+---
+
+<BaseLayout
+	title="Contacto — Cafetería La Movie"
+	description="Contacta a Cafetería La Movie por WhatsApp al 829-275-5220. Estamos en S1 Los Mina Katanga #53, Santo Domingo Este. Miércoles a domingo, 6:45 PM a 12 AM."
+>
+	<section class="page-hero">
+		<h1>Contác<span class="rd">tanos</span></h1>
+		<p>
+			La forma más rápida de pedir: WhatsApp. También nos encuentras en el local, en Los
+			Mina.
+		</p>
+	</section>
+
+	<section class="contact-cards">
+		<div class="contact-card contact-card--whatsapp">
+			<p class="contact-card-label">WhatsApp</p>
+			<p class="contact-card-number font-display">{BUSINESS.phoneFormatted}</p>
+			<p class="contact-card-text">
+				Arma tu pedido en el menú y envíalo, o escríbenos directo.
+			</p>
+			<a href={BUSINESS.whatsapp} target="_blank" rel="noopener" class="cs-button-solid">
+				Escribir por WhatsApp
+			</a>
+		</div>
+
+		<div class="contact-card">
+			<p class="contact-card-label">Dirección</p>
+			<p class="contact-card-text contact-card-text--big">
+				{BUSINESS.address.lineOne}
+				<br />
+				{BUSINESS.address.lineTwo}
+			</p>
+			<a href={BUSINESS.address.mapLink} target="_blank" rel="noopener" class="cs-button-transparent">
+				Cómo llegar
+			</a>
+		</div>
+
+		<div class="contact-card">
+			<p class="contact-card-label">Horario</p>
+			<p class="contact-card-text contact-card-text--big">
+				{BUSINESS.hours.open}
+				<br />
+				{BUSINESS.hours.closed}
+			</p>
+		</div>
+	</section>
+
+	<VisitInfo />
+	<AlsoHave />
+	<OrderBar />
+</BaseLayout>
+
+<style lang="less">
+	.contact-cards {
+		max-width: (1280/16rem);
+		margin: auto;
+		padding: 0 (16/16rem) (48/16rem);
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: (16/16rem);
+	}
+
+	.contact-card {
+		background-color: #141414;
+		border: 1px solid #232323;
+		border-radius: (20/16rem);
+		padding: (32/16rem) (24/16rem);
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: (12/16rem);
+	}
+
+	.contact-card--whatsapp {
+		border-color: var(--primary);
+	}
+
+	.contact-card-label {
+		font-size: (13/16rem);
+		font-weight: 800;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--secondary);
+		margin-bottom: 0;
+	}
+
+	.contact-card-number {
+		font-size: clamp(2rem, 6vw, 2.75rem);
+		line-height: 1.1em;
+		color: #fff;
+		margin-bottom: 0;
+	}
+
+	.contact-card-text {
+		font-size: (16/16rem);
+		line-height: 1.6em;
+		color: #d4d4d4;
+		margin-bottom: 0;
+	}
+
+	.contact-card-text--big {
+		font-size: (18/16rem);
+		color: #fff;
+	}
+
+	.contact-card .cs-button-solid,
+	.contact-card .cs-button-transparent {
+		margin-top: (8/16rem);
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.contact-cards {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+</style>

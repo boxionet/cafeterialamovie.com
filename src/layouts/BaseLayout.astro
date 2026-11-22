@@ -36,37 +36,14 @@ const { content, lang, alternates, locale, currentHreflang, ogLocale } = await g
 
 		<!-- Astro custom Font API -->
 		<Font cssVariable="--font-primary" preload />
+		<Font cssVariable="--font-display" preload />
 
 		<!-- View Transitions support -->
 		<ClientRouter />
 
 		<!-- Sitewide Scripts -->
 		<script src="@assets/js/nav.js"></script>
-		<!-- FOUC prevention: applies dark-mode class before first paint -->
-		<script is:inline>
-			(function () {
-				const stored = localStorage.getItem("cs-theme");
-				let isDark;
-				if (stored === "dark") {
-					isDark = true;
-				} else if (stored === "light") {
-					isDark = false;
-				} else if (stored === null) {
-					const legacy = localStorage.getItem("theme");
-					if (legacy === "dark") {
-						isDark = true;
-					} else if (legacy === "light") {
-						isDark = false;
-					} else {
-						isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-					}
-				} else {
-					// "" (auto) or any other unexpected value — follow system preference directly
-					isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-				}
-				if (isDark) document.body?.classList.add("dark-mode");
-			})();
-		</script>
+		<script src="@assets/js/picker.js"></script>
 	</head>
 	<body>
 		<!-- Screen reader skip main nav -->
@@ -81,29 +58,3 @@ const { content, lang, alternates, locale, currentHreflang, ogLocale } = await g
 		<Footer />
 	</body>
 </html>
-
-<!-- Re-apply theme after each View Transition page swap -->
-<script is:inline>
-	document.addEventListener("astro:after-swap", function () {
-		const stored = localStorage.getItem("cs-theme");
-		let isDark;
-		if (stored === "dark") {
-			isDark = true;
-		} else if (stored === "light") {
-			isDark = false;
-		} else if (stored === null) {
-			const legacy = localStorage.getItem("theme");
-			if (legacy === "dark") {
-				isDark = true;
-			} else if (legacy === "light") {
-				isDark = false;
-			} else {
-				isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-			}
-		} else {
-			// "" (auto) or any other unexpected value — follow system preference directly
-			isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-		}
-		isDark ? document.body.classList.add("dark-mode") : document.body.classList.remove("dark-mode");
-	});
-</script>

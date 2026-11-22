@@ -2,16 +2,44 @@ document.addEventListener("astro:page-load", () => {
 	const CSbody = document.querySelector("body");
 	const CSnavbarMenu = document.getElementById("cs-navigation");
 	const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+	const mobileMenuClose = document.getElementById("mobile-menu-close");
+	const mobileOverlay = document.getElementById("cs-mobile-overlay");
+
+	function isOpen() {
+		return CSnavbarMenu.classList.contains("cs-active");
+	}
 
 	function toggleMenu() {
-		mobileMenuToggle.classList.toggle("cs-active");
-		CSnavbarMenu.classList.toggle("cs-active");
-		CSbody.classList.toggle("cs-open");
+		const open = !isOpen();
+		mobileMenuToggle.classList.toggle("cs-active", open);
+		CSnavbarMenu.classList.toggle("cs-active", open);
+		CSbody.classList.toggle("cs-open", open);
+		mobileMenuToggle.setAttribute("aria-expanded", String(open));
+		if (mobileOverlay) mobileOverlay.setAttribute("aria-hidden", String(!open));
 	}
 
 	mobileMenuToggle.addEventListener("click", () => {
 		toggleMenu();
-		ariaExpanded(mobileMenuToggle);
+	});
+
+	// Overlay's own X button
+	if (mobileMenuClose) {
+		mobileMenuClose.addEventListener("click", () => {
+			if (isOpen()) toggleMenu();
+		});
+	}
+
+	// Any link/button inside the overlay closes the menu (navigation
+	// happens via view transitions, so the menu would otherwise stay open)
+	document.querySelectorAll("[data-menu-close]").forEach((el) => {
+		el.addEventListener("click", () => {
+			if (isOpen()) toggleMenu();
+		});
+	});
+
+	// Escape closes the overlay menu
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape" && isOpen()) toggleMenu();
 	});
 
 	function ariaExpanded(element) {

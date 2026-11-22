@@ -1,0 +1,223 @@
+---
+import { BUSINESS } from "@data/client";
+---
+
+<div id="order-bar" class="order-bar" data-order-bar hidden>
+	<div class="order-bar-main">
+		<button
+			type="button"
+			class="order-toggle"
+			data-order-toggle
+			aria-expanded="false"
+			aria-controls="order-panel"
+		>
+			<span class="order-summary">
+				<span data-order-count-label>0 platos</span>
+				<span class="order-total" data-order-total>RD$0</span>
+			</span>
+			<span class="order-chevron" aria-hidden="true">▲</span>
+		</button>
+		<a
+			class="order-send"
+			data-order-send
+			href={BUSINESS.whatsapp}
+			target="_blank"
+			rel="noopener"
+		>
+			Enviar por WhatsApp
+		</a>
+	</div>
+
+	<div id="order-panel" class="order-panel" data-order-panel hidden>
+		<ul class="order-lines" data-order-lines></ul>
+		<div class="order-panel-foot">
+			<button type="button" class="order-clear" data-order-clear>Vaciar pedido</button>
+		</div>
+	</div>
+</div>
+
+<div id="order-toast" class="order-toast" role="status" data-order-toast hidden></div>
+
+<style lang="less">
+	// The proposal's sticky order bar: dark green panel, 2px green
+	// border, pinned to the viewport bottom while scrolling. (The
+	// proposal uses position: sticky, but the bar is the last child of
+	// <main> here so sticky has no room to travel — fixed gives the
+	// same pinned-to-the-bottom behaviour.)
+	.order-bar {
+		position: fixed;
+		bottom: (14/16rem);
+		left: (16/16rem);
+		right: (16/16rem);
+		z-index: 9000;
+		background-color: #0e1a0d;
+		border: 2px solid var(--green);
+		border-radius: (20/16rem);
+		padding: (14/16rem) (18/16rem);
+		box-shadow: 0 (22/16rem) (50/16rem) rgba(0, 0, 0, 0.55);
+	}
+
+	.order-bar-main {
+		display: flex;
+		align-items: center;
+		gap: (14/16rem);
+		flex-wrap: wrap;
+	}
+
+	.order-toggle {
+		font-family: var(--font-primary);
+		font-size: (15/16rem);
+		font-weight: 700;
+		color: #fff;
+		background: transparent;
+		border: none;
+		display: flex;
+		align-items: center;
+		gap: (14/16rem);
+		flex: 1;
+		min-width: 0;
+		cursor: pointer;
+		text-align: left;
+	}
+
+	// proposal .orderbar .summary: 900 weight + big yellow Lilita total
+	.order-summary {
+		font-weight: 900;
+		font-size: (16/16rem);
+		color: #f5efe6;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.order-total {
+		font-family: var(--font-display);
+		font-weight: 400;
+		color: var(--secondary);
+		font-size: (22.4/16rem);
+		margin-left: (8/16rem);
+	}
+
+	.order-chevron {
+		font-size: (11/16rem);
+		color: var(--secondary);
+		transition: transform 0.3s;
+	}
+
+	.order-toggle[aria-expanded="true"] .order-chevron {
+		transform: rotate(180deg);
+	}
+
+	// proposal .btn-wa: green WhatsApp send button
+	.order-send {
+		font-size: (14.7/16rem);
+		font-weight: 900;
+		line-height: 1.2em;
+		text-align: center;
+		text-decoration: none;
+		white-space: nowrap;
+		color: #fff;
+		background-color: #22a95c;
+		border-radius: 999px;
+		padding: (9/16rem) (18/16rem);
+		min-height: (42/16rem);
+		display: inline-flex;
+		align-items: center;
+		flex: none;
+		transition: background-color 0.3s;
+
+		&:hover {
+			background-color: #1b8a4b;
+		}
+	}
+
+	.order-panel {
+		border-top: 1px dashed rgba(245, 239, 230, 0.2);
+		max-height: (280/16rem);
+		overflow-y: auto;
+		margin: (12/16rem) 0 (2/16rem);
+		padding: (12/16rem) 0 0;
+	}
+
+	.order-lines {
+		list-style: none;
+		margin: 0 0 (12/16rem);
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: (8/16rem);
+	}
+
+	.order-lines li {
+		font-size: (15.2/16rem);
+		font-weight: 800;
+		line-height: 1.4em;
+		color: #f5efe6;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: (12/16rem);
+	}
+
+	// proposal .order-items .rm: round 36px remove button
+	.order-lines .order-line-remove {
+		flex: none;
+		width: (36/16rem);
+		height: (36/16rem);
+		font-size: (17/16rem);
+		font-weight: 700;
+		line-height: 1em;
+		color: #f5efe6;
+		background: transparent;
+		border: 1px solid #22301f;
+		border-radius: 50%;
+		cursor: pointer;
+
+		&:hover {
+			border-color: var(--primary);
+			color: var(--primary);
+		}
+	}
+
+	.order-panel-foot {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		font-size: (15/16rem);
+		color: #fff;
+	}
+
+	.order-clear {
+		font-family: var(--font-primary);
+		font-size: (13/16rem);
+		font-weight: 700;
+		color: #a8a8a8;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+
+		&:hover {
+			color: #fff;
+		}
+	}
+
+	.order-toast {
+		font-size: (14/16rem);
+		font-weight: 700;
+		text-align: center;
+		color: #000;
+		background-color: var(--secondary);
+		border-radius: 999px;
+		box-shadow: 0 (8/16rem) (24/16rem) rgba(0, 0, 0, 0.5);
+		padding: (10/16rem) (20/16rem);
+		position: fixed;
+		bottom: (88/16rem);
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 9500;
+		white-space: nowrap;
+		max-width: 92%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+</style>

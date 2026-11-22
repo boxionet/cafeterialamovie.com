@@ -1,0 +1,113 @@
+---
+import logo from "@assets/svgs/logo.svg";
+import { BUSINESS } from "@data/client";
+---
+
+<section class="cover">
+	<img
+		src={logo.src}
+		alt="Cafetería La Movie — La Movie del Sabor"
+		width="805"
+		height="670"
+		loading="eager"
+		decoding="async"
+		class="cover-logo"
+	/>
+	<div class="cover-mid">
+		<h1 class="cover-title font-display">Próximamente</h1>
+		<p class="cover-sub">La cocina de la noche está por abrir sus puertas</p>
+	</div>
+	<a href={BUSINESS.whatsapp} target="_blank" rel="noopener" class="cover-cta">
+		Escríbenos por WhatsApp
+	</a>
+	<p class="cover-foot">Mié–Dom · 6:45 PM – 12:00 AM · Los Mina, Santo Domingo Este</p>
+	<a href="/preview/" class="cover-preview">Ver avance del sitio →</a>
+</section>
+
+<style lang="less">
+	.cover {
+		min-height: 100dvh;
+		background-color: #000;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		padding: (32/16rem) (20/16rem) (28/16rem);
+	}
+
+	.cover-logo {
+		width: min(78vw, (460/16rem));
+		height: auto;
+		display: block;
+		margin-top: clamp((8/16rem), 4vh, (48/16rem));
+	}
+
+	.cover-mid {
+		margin-top: auto;
+		margin-bottom: auto;
+		padding: (40/16rem) 0 (36/16rem);
+	}
+
+	.cover-title {
+		margin: 0;
+		text-transform: uppercase;
+		line-height: 1em;
+		letter-spacing: 0.01em;
+		font-size: clamp((44/16rem), 12.5vw, (88/16rem));
+		color: #fff;
+	}
+
+	.cover-sub {
+		max-width: (560/16rem);
+		margin: (18/16rem) auto 0;
+		font-size: clamp(1rem, 2.6vw, (20/16rem));
+		font-weight: 700;
+		line-height: 1.55em;
+		color: #cfc8b8;
+	}
+
+	.cover-cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-size: (18/16rem);
+		font-weight: 800;
+		line-height: 1.2em;
+		text-decoration: none;
+		color: #000;
+		background-color: #fdcc00;
+		border-radius: 999px;
+		padding: (16/16rem) (32/16rem);
+		transition:
+			background-color 0.3s,
+			transform 0.3s;
+
+		&:hover {
+			background-color: #e5b800;
+			transform: translateY(-2px);
+		}
+	}
+
+	.cover-foot {
+		margin: auto 0 0;
+		padding-top: (56/16rem);
+		font-size: (14/16rem);
+		font-weight: 700;
+		line-height: 1.6em;
+		color: #cfc8b8;
+	}
+
+	.cover-preview {
+		margin-top: (14/16rem);
+		font-size: (12/16rem);
+		font-weight: 600;
+		line-height: 1.4em;
+		color: #6f6a5e;
+		text-decoration: none;
+
+		&:hover {
+			color: #cfc8b8;
+			text-decoration: underline;
+		}
+	}
+</style>
