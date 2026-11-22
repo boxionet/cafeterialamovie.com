@@ -295,16 +295,22 @@ const hasOptions = dish.options.length > 1;
 		justify-content: center;
 		flex: 1;
 		cursor: pointer;
-		box-shadow: 0 (12/16rem) (26/16rem) rgba(254, 5, 0, 0.28);
-		transition: background-color 0.3s;
+		// The glow is a hover effect only — never permanent.
+		transition:
+			background-color 0.3s,
+			box-shadow 0.3s;
 
 		&:hover {
 			background-color: #bf1313;
+			box-shadow: 0 (12/16rem) (26/16rem) rgba(254, 5, 0, 0.28);
 		}
 
 		&.added {
 			background-color: var(--green);
-			box-shadow: 0 (12/16rem) (26/16rem) rgba(95, 155, 10, 0.3);
+
+			&:hover {
+				box-shadow: 0 (12/16rem) (26/16rem) rgba(95, 155, 10, 0.3);
+			}
 		}
 	}
 </style>
