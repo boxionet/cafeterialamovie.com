@@ -66,7 +66,12 @@ const hasOptions = dish.options.length > 1;
 			aria-pressed="false"
 			aria-label={`Guardar ${displayName} como favorito`}
 		>
-			<Icon name="fa6-regular:heart" aria-hidden="true" />
+			<span class="heart-outline" aria-hidden="true">
+				<Icon name="fa6-regular:heart" />
+			</span>
+			<span class="heart-solid" aria-hidden="true">
+				<Icon name="fa6-solid:heart" />
+			</span>
 		</button>
 	</div>
 
@@ -209,15 +214,24 @@ const hasOptions = dish.options.length > 1;
 			fill: currentColor;
 		}
 
+		.heart-solid {
+			display: none;
+		}
+
 		&:hover {
 			background-color: #1e1e1e;
 		}
 
+		// Saved: the heart is a solid red heart, not just a red outline.
 		&[aria-pressed="true"] {
 			color: var(--primary);
 
-			svg {
-				fill: var(--primary);
+			.heart-outline {
+				display: none;
+			}
+
+			.heart-solid {
+				display: flex;
 			}
 		}
 	}
@@ -281,16 +295,22 @@ const hasOptions = dish.options.length > 1;
 		justify-content: center;
 		flex: 1;
 		cursor: pointer;
-		box-shadow: 0 (12/16rem) (26/16rem) rgba(254, 5, 0, 0.28);
-		transition: background-color 0.3s;
+		// The glow is a hover effect only — never permanent.
+		transition:
+			background-color 0.3s,
+			box-shadow 0.3s;
 
 		&:hover {
 			background-color: #bf1313;
+			box-shadow: 0 (12/16rem) (26/16rem) rgba(254, 5, 0, 0.28);
 		}
 
 		&.added {
 			background-color: var(--green);
-			box-shadow: 0 (12/16rem) (26/16rem) rgba(95, 155, 10, 0.3);
+
+			&:hover {
+				box-shadow: 0 (12/16rem) (26/16rem) rgba(95, 155, 10, 0.3);
+			}
 		}
 	}
 </style>

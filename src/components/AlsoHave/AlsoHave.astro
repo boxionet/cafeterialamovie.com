@@ -2,9 +2,17 @@
 ---
 
 <section class="also-have">
-	<p class="also-have-label font-display">También tenemos</p>
-	<p class="also-have-items">Batidas · Jugos naturales · Bebidas · Tacos · Bizcocho</p>
-	<p class="also-have-note">Pregunta por el precio del día</p>
+	<p class="also-have-kicker">También tenemos</p>
+	<h2 class="also-have-title font-display">Hay <span>mucho más</span></h2>
+	<ul class="also-have-pills">
+		<li>Batidas</li>
+		<li>Jugos naturales</li>
+		<li>Bebidas</li>
+		<li>Tacos</li>
+		<li>Bizcocho</li>
+	</ul>
+	<p class="also-have-note">Pregunta por el precio del día.</p>
+	<a href="/menu/" class="cs-button-solid">Ver el menú completo</a>
 </section>
 
 <style lang="less">
@@ -14,22 +22,64 @@
 		border-top: 1px solid #1f1f1f;
 	}
 
-	.also-have-label {
-		font-size: (28/16rem);
-		color: #f5efe6;
-		margin-bottom: (8/16rem);
+	.also-have-kicker {
+		margin: 0 0 (12/16rem);
+		font-size: (13/16rem);
+		font-weight: 800;
+		letter-spacing: 0.28em;
+		text-transform: uppercase;
+		color: var(--secondary);
 	}
 
-	.also-have-items {
-		font-size: (18/16rem);
-		font-weight: 700;
+	.also-have-title {
+		margin: 0 0 (26/16rem);
+		font-size: clamp(2.625rem, 6vw, 4.25rem);
+		line-height: 1.02;
+		letter-spacing: 0.01em;
+		text-transform: uppercase;
 		color: #fff;
-		margin-bottom: (8/16rem);
+
+		span {
+			color: var(--primary);
+		}
+	}
+
+	.also-have-pills {
+		margin: 0 0 (20/16rem);
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: (12/16rem);
+
+		li {
+			display: inline-flex;
+			align-items: center;
+			gap: (8/16rem);
+			font-size: (16/16rem);
+			font-weight: 800;
+			line-height: 1.2em;
+			color: #fff;
+			background: #141414;
+			border: 1px solid rgba(255, 255, 255, 0.25);
+			border-radius: 999px;
+			padding: (11/16rem) (18/16rem);
+
+			&::before {
+				content: "";
+				width: (8/16rem);
+				height: (8/16rem);
+				border-radius: 50%;
+				background: var(--secondary);
+				flex: none;
+			}
+		}
 	}
 
 	.also-have-note {
-		font-size: (14/16rem);
+		margin: 0 0 (28/16rem);
+		font-size: (16/16rem);
 		color: #a8a8a8;
-		margin-bottom: 0;
 	}
 </style>

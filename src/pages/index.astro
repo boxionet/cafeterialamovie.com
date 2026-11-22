@@ -4,7 +4,6 @@ import { Icon } from "astro-icon/components";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import DishCard from "@components/DishCard/DishCard.astro";
 import OrderBar from "@components/OrderBar/OrderBar.astro";
-import AlsoHave from "@components/AlsoHave/AlsoHave.astro";
 import VisitInfo from "@components/VisitInfo/VisitInfo.astro";
 import Reviews from "@components/Reviews/Reviews.astro";
 import Faq from "@components/Faq/Faq.astro";
@@ -39,7 +38,7 @@ const orderWays = [
 		solid: true,
 	},
 	{
-		icon: "fa6-solid:bag-shopping",
+		icon: "fa6-solid:motorcycle",
 		title: "Delivery",
 		desc: "Te lo llevamos a la puerta.",
 		cta: "Pedir delivery",
@@ -59,8 +58,8 @@ const orderWays = [
 ---
 
 <BaseLayout
-	title="Cafetería La Movie — Comida dominicana de noche en Los Mina"
-	description="Cafetería dominicana de noche en Los Mina, Santo Domingo Este. Chimis, mofongo, yaroa y más, hechos al momento. Pide por WhatsApp — pickup o delivery."
+	title="Cafetería La Movie — Comida dominicana en Los Mina"
+	description="Cafetería dominicana en Los Mina, Santo Domingo Este. Chimis, mofongo, yaroa y más, hechos al momento. Pide por WhatsApp — para recoger o a domicilio."
 >
 	<!-- ============================================ -->
 	<!--                    Hero                      -->
@@ -97,7 +96,7 @@ const orderWays = [
 			</a>
 		</div>
 		<p class="hero-info">
-			<span>Pickup o delivery</span><span class="hero-info-dot" aria-hidden="true">•</span><span
+			<span>Recoger o delivery</span><span class="hero-info-dot" aria-hidden="true">•</span><span
 				>Mié–Dom · 6:45 PM – 12:00 AM</span
 			><span class="hero-info-dot" aria-hidden="true">•</span><span>Lun y Mar cerrado</span>
 		</p>
@@ -263,21 +262,28 @@ const orderWays = [
 		/>
 		<div class="about-teaser-text">
 			<p class="sec-kicker">Conócenos</p>
-			<h2 class="sec-title">Una cafetería de barrio, de noche</h2>
+			<h2 class="sec-title">Una cafetería de Los Mina</h2>
 			<p>
-				En Los Mina, Katanga, servimos comida dominicana hecha al momento, de noche.
+				En Los Mina, Katanga, servimos comida dominicana hecha al momento.
 				Sin formalidades: pides por WhatsApp, recoges o te lo llevamos.
 			</p>
 			<a href="/conocenos/" class="cs-button-solid">Conócenos</a>
 		</div>
 	</section>
-	<AlsoHave />
 
 	<!-- ============================================ -->
 	<!--                 Cierre                       -->
 	<!-- ============================================ -->
 	<section class="close">
+		<p class="close-kicker">También tenemos</p>
 		<h2 class="font-display">Pide <span class="stroke">ahora</span></h2>
+		<ul class="close-extras">
+			<li>Batidas</li>
+			<li>Jugos naturales</li>
+			<li>Bebidas</li>
+			<li>Tacos</li>
+			<li>Bizcocho</li>
+		</ul>
 		<p>Tu antojo no espera. Escríbenos y lo preparamos al momento.</p>
 		<a href={BUSINESS.whatsapp} target="_blank" rel="noopener" class="cs-button-solid">
 			Pedir por WhatsApp
@@ -394,7 +400,8 @@ const orderWays = [
 		margin-top: (30/16rem);
 
 		// proposal hero buttons are mixed case (not uppercase) and a touch
-		// larger, with a soft red glow on the solid one.
+		// larger. The solid one's red glow comes from the base rule, on
+		// hover only — it must not be permanent here.
 		// Center the label with flex: the old line-height:(56/16em) trick
 		// computed to 3.5em × 18px = 63px inside a 56px button, so the
 		// text sat ~3.5px below center.
@@ -407,10 +414,6 @@ const orderWays = [
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
-		}
-
-		.cs-button-solid {
-			box-shadow: 0 (8/16rem) (24/16rem) rgba(254, 5, 0, 0.45);
 		}
 
 		.cs-button-transparent {
@@ -730,6 +733,15 @@ const orderWays = [
 		text-align: center;
 		padding: (90/16rem) (16/16rem) (84/16rem);
 
+		.close-kicker {
+			margin: 0 0 (12/16rem);
+			font-size: (13/16rem);
+			font-weight: 800;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			color: var(--secondary);
+		}
+
 		// proposal .bigclose: "Pide" solid cream + "ahora" yellow outline
 		h2 {
 			margin: 0 0 (10/16rem);
@@ -741,6 +753,41 @@ const orderWays = [
 			.stroke {
 				color: transparent;
 				-webkit-text-stroke: 2.5px var(--secondary);
+			}
+		}
+
+		// The "También tenemos" extras, folded in from the old AlsoHave
+		// section (variant B): dark pills with gold dots, centered.
+		.close-extras {
+			margin: 0 auto (20/16rem);
+			padding: 0;
+			list-style: none;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: (12/16rem);
+
+			li {
+				display: inline-flex;
+				align-items: center;
+				gap: (8/16rem);
+				font-size: (16/16rem);
+				font-weight: 800;
+				line-height: 1.2em;
+				color: #fff;
+				background: #141414;
+				border: 1px solid rgba(255, 255, 255, 0.25);
+				border-radius: 999px;
+				padding: (11/16rem) (18/16rem);
+
+				&::before {
+					content: "";
+					width: (8/16rem);
+					height: (8/16rem);
+					border-radius: 50%;
+					background: var(--secondary);
+					flex: none;
+				}
 			}
 		}
 
