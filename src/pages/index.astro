@@ -4,7 +4,6 @@ import { Icon } from "astro-icon/components";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import DishCard from "@components/DishCard/DishCard.astro";
 import OrderBar from "@components/OrderBar/OrderBar.astro";
-import AlsoHave from "@components/AlsoHave/AlsoHave.astro";
 import VisitInfo from "@components/VisitInfo/VisitInfo.astro";
 import Reviews from "@components/Reviews/Reviews.astro";
 import Faq from "@components/Faq/Faq.astro";
@@ -271,13 +270,20 @@ const orderWays = [
 			<a href="/conocenos/" class="cs-button-solid">Conócenos</a>
 		</div>
 	</section>
-	<AlsoHave />
 
 	<!-- ============================================ -->
 	<!--                 Cierre                       -->
 	<!-- ============================================ -->
 	<section class="close">
+		<p class="close-kicker">También tenemos</p>
 		<h2 class="font-display">Pide <span class="stroke">ahora</span></h2>
+		<ul class="close-extras">
+			<li>Batidas</li>
+			<li>Jugos naturales</li>
+			<li>Bebidas</li>
+			<li>Tacos</li>
+			<li>Bizcocho</li>
+		</ul>
 		<p>Tu antojo no espera. Escríbenos y lo preparamos al momento.</p>
 		<a href={BUSINESS.whatsapp} target="_blank" rel="noopener" class="cs-button-solid">
 			Pedir por WhatsApp
@@ -727,6 +733,15 @@ const orderWays = [
 		text-align: center;
 		padding: (90/16rem) (16/16rem) (84/16rem);
 
+		.close-kicker {
+			margin: 0 0 (12/16rem);
+			font-size: (13/16rem);
+			font-weight: 800;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			color: var(--secondary);
+		}
+
 		// proposal .bigclose: "Pide" solid cream + "ahora" yellow outline
 		h2 {
 			margin: 0 0 (10/16rem);
@@ -738,6 +753,41 @@ const orderWays = [
 			.stroke {
 				color: transparent;
 				-webkit-text-stroke: 2.5px var(--secondary);
+			}
+		}
+
+		// The "También tenemos" extras, folded in from the old AlsoHave
+		// section (variant B): dark pills with gold dots, centered.
+		.close-extras {
+			margin: 0 auto (20/16rem);
+			padding: 0;
+			list-style: none;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: (12/16rem);
+
+			li {
+				display: inline-flex;
+				align-items: center;
+				gap: (8/16rem);
+				font-size: (16/16rem);
+				font-weight: 800;
+				line-height: 1.2em;
+				color: #fff;
+				background: #141414;
+				border: 1px solid rgba(255, 255, 255, 0.25);
+				border-radius: 999px;
+				padding: (11/16rem) (18/16rem);
+
+				&::before {
+					content: "";
+					width: (8/16rem);
+					height: (8/16rem);
+					border-radius: 50%;
+					background: var(--secondary);
+					flex: none;
+				}
 			}
 		}
 
