@@ -62,6 +62,8 @@ const currentYear = getCurrentYear();
 							{BUSINESS.address.lineOne}
 							<br />
 							{BUSINESS.address.lineTwo}
+							<br />
+							{BUSINESS.address.lineThree}
 						</a>
 					</li>
 
@@ -263,14 +265,16 @@ const currentYear = getCurrentYear();
 			}
 
 			.right-section {
-				width: (609/16rem);
+				width: auto;
 				max-width: none;
 				margin: 0;
 				.lists {
-					width: 96%;
+					width: auto;
 					max-width: (769/16rem);
 					max-width: initial;
 					margin: 0;
+					justify-content: flex-start;
+					gap: (64/16rem);
 
 					ul {
 						&:nth-of-type(2) {

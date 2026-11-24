@@ -5,8 +5,9 @@ export const BUSINESS = {
 	whatsapp: "https://wa.me/18292755220",
 	logo: "/assets/logo.svg",
 	address: {
-		lineOne: "Calle S2 #53",
-		lineTwo: "Los Mina Katanga, Santo Domingo Este 11903, República Dominicana",
+		lineOne: "Calle S2 #53,",
+		lineTwo: "Los Mina Katanga,",
+		lineThree: "Santo Domingo Este 11903",
 		city: "Santo Domingo Este",
 		state: "RD",
 		zip: "11903",
