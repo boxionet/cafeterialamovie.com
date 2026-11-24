@@ -20,7 +20,9 @@ import { BUSINESS } from "@data/client";
 	<section class="contact-cards">
 		<div class="contact-card contact-card--whatsapp">
 			<p class="contact-card-label">WhatsApp</p>
-			<p class="contact-card-number font-display">{BUSINESS.phoneFormatted}</p>
+			<a class="contact-card-number font-display" href={`tel:+${BUSINESS.phoneForTel}`}>
+				{BUSINESS.phoneFormatted}
+			</a>
 			<p class="contact-card-text">
 				Arma tu pedido en el menú y envíalo, o escríbenos directo.
 			</p>
@@ -96,6 +98,7 @@ import { BUSINESS } from "@data/client";
 		line-height: 1.1em;
 		color: #fff;
 		margin-bottom: 0;
+		text-decoration: none;
 	}
 
 	.contact-card-text {
