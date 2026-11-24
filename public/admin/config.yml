@@ -1,24 +1,17 @@
 # Decap CMS — Cafetería La Movie (cafeterialamovie.com)
-# Login: https://cafeterialamovie.com/admin (GitHub account, via DecapBridge)
+# Login: https://cafeterialamovie.com/admin (invited users only, via DecapBridge)
 #
-# SETUP (one time — see README "Setting Up Decap CMS with DecapBridge"):
-# 1. Create a free account at decapbridge.com and a site for this repo
-#    (GitHub repo: boxionet/cafeterialamovie.com, CMS URL:
-#    https://cafeterialamovie.com/admin).
-# 2. Create a fine-grained GitHub token (Contents + Pull requests,
-#    read and write) and paste it into DecapBridge.
-# 3. DecapBridge gives you a backend snippet — replace the
-#    YOUR-DECAPBRIDGE-SITE-ID placeholders below with your site id
-#    (or paste the whole snippet over the backend block).
-# Until step 3 is done, /admin will show a login error — that is expected.
+# DecapBridge site: e9d365da-e6b0-4e5f-8f21-53fdb0281303 (configured 2026-11-23)
+# GitHub repo: boxionet/cafeterialamovie.com, branch main.
+# To invite an editor: DecapBridge dashboard → this site → Manage collaborators.
 backend:
   name: git-gateway
   repo: boxionet/cafeterialamovie.com
   branch: main
   auth_type: pkce
   base_url: https://auth.decapbridge.com
-  auth_endpoint: /sites/YOUR-DECAPBRIDGE-SITE-ID/pkce
-  auth_token_endpoint: /sites/YOUR-DECAPBRIDGE-SITE-ID/token
+  auth_endpoint: /sites/e9d365da-e6b0-4e5f-8f21-53fdb0281303/pkce
+  auth_token_endpoint: /sites/e9d365da-e6b0-4e5f-8f21-53fdb0281303/token
   gateway_url: https://gateway.decapbridge.com
   commit_messages:
     create: 'Create Menú via Decap CMS'
