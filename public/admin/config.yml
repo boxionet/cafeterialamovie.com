@@ -88,7 +88,7 @@ collections:
                 name: "platePhoto"
                 widget: "string"
                 required: false
-                hint: "Nombre del archivo de la foto recreada en plato negro (ej. chimi-de-pierna-black-plate.jpg)."
+                hint: "Nombre del archivo de la foto recreada en plato negro (ej. chimi-de-pierna-black-plate.webp)."
               - name: "options"
                 label: "Opciones y precios"
                 widget: "list"
