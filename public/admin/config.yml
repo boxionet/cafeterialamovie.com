@@ -38,63 +38,66 @@ public_folder: /assets/images/dishes
 collections:
   - name: "menu"
     label: "Menú"
-    file: "src/data/menu.json"
-    description: "Platos, categorías y precios. Al guardar, el cambio se publica solo."
-    fields:
-      - name: "categories"
-        label: "Categorías"
-        widget: "list"
+    files:
+      - name: "menu"
+        label: "Menú"
+        file: "src/data/menu.json"
+        description: "Platos, categorías y precios. Al guardar, el cambio se publica solo."
         fields:
-          - label: "ID"
-            name: "id"
-            widget: "string"
-            hint: "No cambiar — es el identificador interno de la categoría."
-          - label: "Nombre"
-            name: "label"
-            widget: "string"
-      - name: "dishes"
-        label: "Platos"
-        widget: "list"
-        fields:
-          - label: "ID"
-            name: "id"
-            widget: "string"
-            hint: "No cambiar — es la dirección de la página del plato (/menu/…/)."
-          - label: "Nombre"
-            name: "name"
-            widget: "string"
-          - label: "Descripción"
-            name: "desc"
-            widget: "text"
-            required: false
-          - label: "Categoría"
-            name: "category"
-            widget: "select"
-            options:
-              - { label: "Hamburguesas y Hot Dogs", value: "hamburguesas" }
-              - { label: "Mofongo", value: "mofongo" }
-              - { label: "Pollo, Cerdo y Res a la Plancha", value: "plancha" }
-              - { label: "Yaroa, Patacón, Chimi y Burritos", value: "yaroa" }
-              - { label: "Sándwiches y Tostadas", value: "sandwiches" }
-              - { label: "Papas, Fritos y Extras", value: "extras" }
-          - label: "Foto"
-            name: "photo"
-            widget: "string"
-            hint: "Nombre del archivo en src/assets/images/dishes/ (ej. 23-chimi-de-pierna.webp)."
-          - label: "Foto plato negro"
-            name: "platePhoto"
-            widget: "string"
-            required: false
-            hint: "Nombre del archivo de la foto recreada en plato negro (ej. chimi-de-pierna-black-plate.jpg)."
-          - name: "options"
-            label: "Opciones y precios"
+          - name: "categories"
+            label: "Categorías"
             widget: "list"
             fields:
-              - label: "Opción"
+              - label: "ID"
+                name: "id"
+                widget: "string"
+                hint: "No cambiar — es el identificador interno de la categoría."
+              - label: "Nombre"
                 name: "label"
                 widget: "string"
-              - label: "Precio (RD$)"
-                name: "price"
-                widget: "number"
-                value_type: "int"
-                min: 0
+          - name: "dishes"
+            label: "Platos"
+            widget: "list"
+            fields:
+              - label: "ID"
+                name: "id"
+                widget: "string"
+                hint: "No cambiar — es la dirección de la página del plato (/menu/…/)."
+              - label: "Nombre"
+                name: "name"
+                widget: "string"
+              - label: "Descripción"
+                name: "desc"
+                widget: "text"
+                required: false
+              - label: "Categoría"
+                name: "category"
+                widget: "select"
+                options:
+                  - { label: "Hamburguesas y Hot Dogs", value: "hamburguesas" }
+                  - { label: "Mofongo", value: "mofongo" }
+                  - { label: "Pollo, Cerdo y Res a la Plancha", value: "plancha" }
+                  - { label: "Yaroa, Patacón, Chimi y Burritos", value: "yaroa" }
+                  - { label: "Sándwiches y Tostadas", value: "sandwiches" }
+                  - { label: "Papas, Fritos y Extras", value: "extras" }
+              - label: "Foto"
+                name: "photo"
+                widget: "string"
+                hint: "Nombre del archivo en src/assets/images/dishes/ (ej. 23-chimi-de-pierna.webp)."
+              - label: "Foto plato negro"
+                name: "platePhoto"
+                widget: "string"
+                required: false
+                hint: "Nombre del archivo de la foto recreada en plato negro (ej. chimi-de-pierna-black-plate.jpg)."
+              - name: "options"
+                label: "Opciones y precios"
+                widget: "list"
+                fields:
+                  - label: "Opción"
+                    name: "label"
+                    widget: "string"
+                  - label: "Precio (RD$)"
+                    name: "price"
+                    widget: "number"
+                    value_type: "int"
+                    min: 0
