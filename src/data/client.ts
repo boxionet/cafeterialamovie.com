@@ -6,7 +6,9 @@ export const BUSINESS = {
 	logo: "/assets/logo.svg",
 	address: {
 		lineOne: "Calle S2 #53",
-		lineTwo: "Los Mina Katanga, Santo Domingo Este 11903, República Dominicana",
+		lineTwo: "Los Mina Katanga",
+		lineThree: "Santo Domingo Este 11903",
+		lineFour: "República Dominicana",
 		city: "Santo Domingo Este",
 		state: "RD",
 		zip: "11903",
