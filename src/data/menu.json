@@ -32,7 +32,7 @@
       "desc": "Con papas fritas y salsas de la casa.",
       "category": "hamburguesas",
       "photo": "11-hamburguesa.webp",
-      "platePhoto": "hamburguesa-black-plate.jpg",
+      "platePhoto": "hamburguesa-black-plate.webp",
       "options": [
         {
           "label": "Sola",
@@ -50,7 +50,7 @@
       "desc": "Clásico hot dog de la casa.",
       "category": "hamburguesas",
       "photo": "04-hot-dog.webp",
-      "platePhoto": "hot-dog-black-plate.jpg",
+      "platePhoto": "hot-dog-black-plate.webp",
       "options": [
         {
           "label": "Clásico",
@@ -64,7 +64,7 @@
       "desc": "Hot dog con papas fritas.",
       "category": "hamburguesas",
       "photo": "05-hotdog-con-papas.webp",
-      "platePhoto": "hotdog-con-papa-black-plate.jpg",
+      "platePhoto": "hotdog-con-papa-black-plate.webp",
       "options": [
         {
           "label": "Solo",
@@ -82,7 +82,7 @@
       "desc": "Mofongo con queso y longaniza.",
       "category": "mofongo",
       "photo": "12-mofongo-con-longaniza.webp",
-      "platePhoto": "mofongo-con-longaniza-black-plate.jpg",
+      "platePhoto": "mofongo-con-longaniza-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -96,7 +96,7 @@
       "desc": "Mofongo con pechuga a la plancha.",
       "category": "mofongo",
       "photo": "29-mofongo-con-camarones-a-la-crema.webp",
-      "platePhoto": "mofongo-con-pechuga-black-plate.jpg",
+      "platePhoto": "mofongo-con-pechuga-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -110,7 +110,7 @@
       "desc": "Mofongo con camarones a la crema.",
       "category": "mofongo",
       "photo": "29-mofongo-con-camarones-a-la-crema.webp",
-      "platePhoto": "mofongo-con-camarones-a-la-crema-black-plate.jpg",
+      "platePhoto": "mofongo-con-camarones-a-la-crema-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -124,7 +124,7 @@
       "desc": "Con mofongo o fritos.",
       "category": "mofongo",
       "photo": "02-camarones-a-la-criolla-con-mofongo.webp",
-      "platePhoto": "camarones-con-mofongo-black-plate.jpg",
+      "platePhoto": "camarones-con-mofongo-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -138,7 +138,7 @@
       "desc": "Chuleta a la plancha con papas fritas.",
       "category": "plancha",
       "photo": "01-chuleta-a-la-plancha-con-papas.webp",
-      "platePhoto": "chuleta-a-la-plancha-black-plate.jpg",
+      "platePhoto": "chuleta-a-la-plancha-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -152,7 +152,7 @@
       "desc": "Papas fritas, fritos o ensalada.",
       "category": "plancha",
       "photo": "06-chuleta-a-la-plancha-con-ensalada.webp",
-      "platePhoto": "chuleta-con-ensalada-black-plate.jpg",
+      "platePhoto": "chuleta-con-ensalada-black-plate.webp",
       "options": [
         {
           "label": "Sola",
@@ -170,7 +170,7 @@
       "desc": "Papas fritas o fritos y ensalada.",
       "category": "plancha",
       "photo": "26-pechuga-a-la-plancha.webp",
-      "platePhoto": "pechuga-a-la-plancha-black-plate.jpg",
+      "platePhoto": "pechuga-a-la-plancha-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -184,7 +184,7 @@
       "desc": "Papas fritas, fritos o mofongo.",
       "category": "plancha",
       "photo": "19-pechuga-a-la-crema.webp",
-      "platePhoto": "pechuga-a-la-crema-black-plate.jpg",
+      "platePhoto": "pechuga-a-la-crema-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -198,7 +198,7 @@
       "desc": "Papas fritas, fritos o mofongo.",
       "category": "plancha",
       "photo": "19-pechuga-a-la-crema.webp",
-      "platePhoto": "camarones-a-la-crema-black-plate.jpg",
+      "platePhoto": "camarones-a-la-crema-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -212,7 +212,7 @@
       "desc": "Pierna con frito o papa.",
       "category": "plancha",
       "photo": "17-pierna-con-frito.webp",
-      "platePhoto": "pierna-con-frito-black-plate.jpg",
+      "platePhoto": "pierna-con-frito-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -226,7 +226,7 @@
       "desc": "Pescado frito con fritos.",
       "category": "plancha",
       "photo": "27-pescado-con-fritos.webp",
-      "platePhoto": "pescado-con-fritos-black-plate.jpg",
+      "platePhoto": "pescado-con-fritos-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -240,7 +240,7 @@
       "desc": "Queso derretido, carne a elegir y salsas.",
       "category": "yaroa",
       "photo": "24-yaroa.webp",
-      "platePhoto": "yaroa-black-plate.jpg",
+      "platePhoto": "yaroa-black-plate.webp",
       "options": [
         {
           "label": "Pollo · Pequeña",
@@ -274,7 +274,7 @@
       "desc": "Patacón con pollo o pierna.",
       "category": "yaroa",
       "photo": "18-patacon.webp",
-      "platePhoto": "patacon-black-plate.jpg",
+      "platePhoto": "patacon-black-plate.webp",
       "options": [
         {
           "label": "Pollo",
@@ -292,7 +292,7 @@
       "desc": "De pierna, con repollo, tomate y salsas de la casa.",
       "category": "yaroa",
       "photo": "23-chimi-de-pierna.webp",
-      "platePhoto": "chimi-de-pierna-black-plate.jpg",
+      "platePhoto": "chimi-de-pierna-black-plate.webp",
       "options": [
         {
           "label": "Solo",
@@ -310,7 +310,7 @@
       "desc": "Pollo, res o pierna.",
       "category": "yaroa",
       "photo": "21-burritos.webp",
-      "platePhoto": "burritos-black-plate.jpg",
+      "platePhoto": "burritos-black-plate.webp",
       "options": [
         {
           "label": "Solo",
@@ -328,7 +328,7 @@
       "desc": "Pollo, res o pierna, con papas fritas.",
       "category": "yaroa",
       "photo": "07-burrito-con-papas.webp",
-      "platePhoto": "burrito-con-papa-black-plate.jpg",
+      "platePhoto": "burrito-con-papa-black-plate.webp",
       "options": [
         {
           "label": "Pollo o res",
@@ -346,7 +346,7 @@
       "desc": "Normal, pollo o res.",
       "category": "sandwiches",
       "photo": "30-sandwich.webp",
-      "platePhoto": "sandwich-black-plate.jpg",
+      "platePhoto": "sandwich-black-plate.webp",
       "options": [
         {
           "label": "Normal",
@@ -368,7 +368,7 @@
       "desc": "Jamón y queso, vegetales, pollo, res, huevo o completa.",
       "category": "sandwiches",
       "photo": "08-club-sandwich.webp",
-      "platePhoto": "tostadas-black-plate.jpg",
+      "platePhoto": "tostadas-black-plate.webp",
       "options": [
         {
           "label": "Jamón y queso",
@@ -402,7 +402,7 @@
       "desc": "Club sándwich de la casa.",
       "category": "sandwiches",
       "photo": "08-club-sandwich.webp",
-      "platePhoto": "club-sandwich-black-plate.jpg",
+      "platePhoto": "club-sandwich-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -416,7 +416,7 @@
       "desc": "Pollo, res o cerdo.",
       "category": "sandwiches",
       "photo": "13-pasteles-en-hoja.webp",
-      "platePhoto": "pasteles-en-hoja-black-plate.jpg",
+      "platePhoto": "pasteles-en-hoja-black-plate.webp",
       "options": [
         {
           "label": "Plato",
@@ -430,7 +430,7 @@
       "desc": "Papas fritas con queso derretido.",
       "category": "extras",
       "photo": "10-papa-con-queso.webp",
-      "platePhoto": "papa-con-queso-black-plate.jpg",
+      "platePhoto": "papa-con-queso-black-plate.webp",
       "options": [
         {
           "label": "Pequeña",
@@ -452,7 +452,7 @@
       "desc": "Salchicha con papas fritas.",
       "category": "extras",
       "photo": "16-salchipapas.webp",
-      "platePhoto": "salchipapas-black-plate.jpg",
+      "platePhoto": "salchipapas-black-plate.webp",
       "options": [
         {
           "label": "Pequeña",
@@ -474,7 +474,7 @@
       "desc": "Frito con jamón.",
       "category": "extras",
       "photo": "20-frito-con-jamon.webp",
-      "platePhoto": "frito-con-jamon-black-plate.jpg",
+      "platePhoto": "frito-con-jamon-black-plate.webp",
       "options": [
         {
           "label": "Pequeño",
@@ -496,7 +496,7 @@
       "desc": "Jamón con papa.",
       "category": "extras",
       "photo": "22-jamon-con-papa.webp",
-      "platePhoto": "jamon-con-papa-black-plate.jpg",
+      "platePhoto": "jamon-con-papa-black-plate.webp",
       "options": [
         {
           "label": "Pequeña",
@@ -518,7 +518,7 @@
       "desc": "Picante, BBQ o normal — con papa o frito · 5 alitas.",
       "category": "extras",
       "photo": "03-alitas-fritas.webp",
-      "platePhoto": "alitas-fritas-black-plate.jpg",
+      "platePhoto": "alitas-fritas-black-plate.webp",
       "options": [
         {
           "label": "5 alitas",
@@ -532,7 +532,7 @@
       "desc": "Porción de papa o frito.",
       "category": "extras",
       "photo": "09-hamburguesa-con-papas-tray.webp",
-      "platePhoto": "servicio-de-papa-o-frito-black-plate.jpg",
+      "platePhoto": "servicio-de-papa-o-frito-black-plate.webp",
       "options": [
         {
           "label": "Porción",
