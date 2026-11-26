@@ -546,6 +546,27 @@ const initialMenu = menuData;
 			}
 			.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 			.toast.error { background: var(--red); color: #fff; }
+			/* ---------- save error banner ---------- */
+			.save-error {
+				max-width: 1200px;
+				margin: 16px auto 0;
+				padding: 14px 20px;
+				background: #fdecea;
+				border: 1.5px solid var(--red);
+				border-radius: 14px;
+				color: #7a1414;
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 12px;
+			}
+			:root[data-theme="dark"] .save-error { background: #2a1210; color: #ffb4ab; }
+			.save-error[hidden] { display: none; }
+			.save-error-text { flex: 1 1 260px; font-size: 0.97rem; line-height: 1.45; }
+			.save-error-text strong { display: block; font-size: 1.02rem; }
+			.save-error-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+			.save-error-actions .btn-red { padding: 9px 18px; font-size: 0.95rem; }
+			.save-error-actions .link-btn { color: inherit; }
 			/* ---------- login gate (shown when not logged in) ---------- */
 			.login-gate {
 				max-width: 480px;
@@ -645,6 +666,18 @@ const initialMenu = menuData;
 			</div>
 		</header>
 
+		<div class="save-error" id="saveError" hidden>
+			<div class="save-error-text">
+				<strong>No se pudo guardar.</strong>
+				<span id="saveErrorMsg"></span>
+			</div>
+			<div class="save-error-actions">
+				<button class="btn btn-red" id="retrySaveBtn" type="button">Reintentar</button>
+				<button class="link-btn" id="downloadBackupBtn" type="button">Descargar copia</button>
+				<button class="link-btn" id="dismissSaveErrorBtn" type="button">Cerrar</button>
+			</div>
+		</div>
+
 		<div class="login-gate" id="loginGate" hidden>
 			<img class="logo" src="/assets/logo.svg" alt="Cafetería La Movie" />
 			<h2>Panel del Menú</h2>
@@ -734,7 +767,30 @@ const initialMenu = menuData;
 			const NONCE_KEY = "lamovie-panel-nonce";
 
 			// ---- state ----
-			const menu = JSON.parse(JSON.stringify(initialMenu));
+			// Draft: unsaved edits are kept in localStorage so they survive
+			// a reload (e.g. when the session expires and the user logs in again).
+			const DRAFT_KEY = "lamovie-panel-draft";
+			function saveDraft() {
+				try { localStorage.setItem(DRAFT_KEY, JSON.stringify(menu)); } catch (e) {}
+			}
+			function loadDraft() {
+				try {
+					const raw = localStorage.getItem(DRAFT_KEY);
+					return raw ? JSON.parse(raw) : null;
+				} catch { return null; }
+			}
+			function clearDraft() {
+				try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+			}
+			let menu = JSON.parse(JSON.stringify(initialMenu));
+			let draftRestored = false;
+			const _draft = loadDraft();
+			if (_draft && _draft.dishes && Array.isArray(_draft.dishes) && Array.isArray(_draft.categories)) {
+				if (JSON.stringify(_draft) !== JSON.stringify(initialMenu)) {
+					menu = _draft;
+					draftRestored = true;
+				}
+			}
 			let filter = "all";
 			let query = "";
 			let token = localStorage.getItem(TOKEN_KEY) || "";
@@ -755,6 +811,25 @@ const initialMenu = menuData;
 				clearTimeout(toastTimer);
 				toastTimer = setTimeout(() => toastEl.classList.remove("show"), 4200);
 			}
+
+			// ---- save error banner (replaces the old automatic download) ----
+			let lastSaveMessage = "";
+			function showSaveError(msg) {
+				$("saveErrorMsg").textContent = msg;
+				$("saveError").hidden = false;
+			}
+			function hideSaveError() { $("saveError").hidden = true; }
+			function downloadBackup() {
+				const blob = new Blob([JSON.stringify(menu, null, 2)], { type: "application/json" });
+				const a = document.createElement("a");
+				a.href = URL.createObjectURL(blob);
+				a.download = "menu.json";
+				a.click();
+				URL.revokeObjectURL(a.href);
+			}
+			$("retrySaveBtn").addEventListener("click", () => saveMenu(lastSaveMessage || "Panel del Menú: guardar cambios"));
+			$("downloadBackupBtn").addEventListener("click", () => { downloadBackup(); toast("Se descargó una copia de menu.json."); });
+			$("dismissSaveErrorBtn").addEventListener("click", hideSaveError);
 
 			function esc(s) {
 				return String(s ?? "").replace(/[&<>"']/g, (c) => ({
@@ -871,6 +946,7 @@ const initialMenu = menuData;
 				if (!d) return;
 				if (!confirm(`¿Eliminar "${d.name}" del menú?`)) return;
 				menu.dishes = menu.dishes.filter((x) => x.id !== editingId);
+				saveDraft();
 				closeEdit();
 				await saveMenu(`Panel del Menú: eliminar "${d.name}"`);
 			});
@@ -902,6 +978,7 @@ const initialMenu = menuData;
 					const i = menu.dishes.findIndex((x) => x.id === id);
 					if (i >= 0) menu.dishes[i] = dish;
 				}
+				saveDraft();
 				closeEdit();
 				renderGrid();
 				await saveMenu(`Panel del Menú: ${isNew ? "agregar" : "actualizar"} "${name}"`);
@@ -1108,13 +1185,20 @@ const initialMenu = menuData;
 				return res;
 			}
 			async function saveMenu(message) {
-				if (!token) {
-					toast("Inicia sesión para guardar los cambios.", true);
-					renderGrid();
+				lastSaveMessage = message || "Panel del Menú: guardar cambios";
+				hideSaveError();
+				// Never lose the edits: keep a draft so a reload or a
+				// re-login can restore them.
+				saveDraft();
+				if (!token || !tokenValid()) {
+					showSaveError("Tu sesión expiró. Inicia sesión de nuevo y pulsa Reintentar. Tu edición está guardada y no se pierde.");
+					toast("Tu sesión expiró. Inicia sesión de nuevo para guardar.", true);
 					startLogin();
 					return;
 				}
 				const saveBtn = $("saveDishBtn");
+				const origBtnText = saveBtn ? saveBtn.textContent : "";
+				if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = "Guardando…"; }
 				try {
 					// 1) Upload a new photo first, if one was chosen.
 					if (pendingUpload) {
@@ -1140,7 +1224,7 @@ const initialMenu = menuData;
 						method: "PUT",
 						headers: { "Content-Type": "application/json" },
 						body: JSON.stringify({
-							message,
+							message: lastSaveMessage,
 							content: toBase64(json),
 							sha: curData.sha,
 							branch: BRANCH,
@@ -1150,19 +1234,21 @@ const initialMenu = menuData;
 						const err = await put.json().catch(() => ({}));
 						throw new Error(err.message || ("No se pudo guardar (" + put.status + ")"));
 					}
+					clearDraft();
 					toast("Guardado. El sitio se actualizará en unos minutos.");
 				} catch (err) {
 					console.error(err);
-					toast("No se pudo guardar: " + err.message, true);
-					// Offer a download so the work is never lost.
-					const blob = new Blob([JSON.stringify(menu, null, 2)], { type: "application/json" });
-					const a = document.createElement("a");
-					a.href = URL.createObjectURL(blob);
-					a.download = "menu.json";
-					a.click();
-					URL.revokeObjectURL(a.href);
-					toast("Se descargó una copia de menu.json como respaldo.", true);
+					const msg = err.message || "Error desconocido";
+					// Auth problems (expired token / no permission) get a plain
+					// explanation; anything else shows the exact gateway error.
+					if (/401|403|expir|invalid token|sesión/i.test(msg)) {
+						showSaveError("Tu sesión expiró o no tienes permiso para guardar (" + msg + "). Inicia sesión de nuevo y pulsa Reintentar. Tu edición está guardada y no se pierde.");
+					} else {
+						showSaveError("No se pudo guardar: " + msg + " Tu edición está guardada en este navegador; pulsa Reintentar.");
+					}
+					toast("No se pudo guardar: " + msg, true);
 				} finally {
+					if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = origBtnText; }
 					renderGrid();
 				}
 			}
@@ -1206,6 +1292,7 @@ const initialMenu = menuData;
 				if (isLoggedIn()) {
 					renderPills();
 					renderGrid();
+					if (draftRestored) toast("Se restauró tu edición sin guardar.");
 				}
 			})();
 		</script>
