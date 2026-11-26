@@ -93,7 +93,7 @@ const initialMenu = menuData;
 			/* Smooth theme change across the whole panel */
 			body, .topbar, .card, .modal, .search, .pill, .btn, .field input,
 			.field textarea, .field select, .opt-remove, .picker-grid button,
-			.toast, .login-note, .card-price, .card-cat, .topbar h1,
+			.toast, .card-price, .card-cat, .topbar h1,
 			.user-chip, .empty, .add-opt, .link-btn, .theme-switch, .ts-knob {
 				transition: background-color 0.35s ease, color 0.35s ease,
 					border-color 0.35s ease, box-shadow 0.35s ease;
@@ -463,14 +463,30 @@ const initialMenu = menuData;
 			}
 			.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 			.toast.error { background: var(--red); color: #fff; }
-			.login-note {
-				max-width: 1200px;
+			/* ---------- login gate (shown when not logged in) ---------- */
+			.login-gate {
+				max-width: 480px;
 				margin: 0 auto;
-				padding: 0 20px;
-				color: var(--grey);
-				font-size: 0.92rem;
+				padding: 72px 20px 40px;
+				text-align: center;
 			}
-			.login-note b { color: var(--ink); }
+			.login-gate .logo { height: 96px; width: auto; }
+			.login-gate h2 {
+				font-family: var(--font-display), "Lilita One", "Arial Black", sans-serif;
+				font-size: clamp(1.7rem, 5vw, 2.1rem);
+				text-transform: uppercase;
+				letter-spacing: 0.02em;
+				margin: 20px 0 8px;
+				line-height: 1.1;
+			}
+			.login-gate p {
+				color: var(--grey);
+				font-size: 1.05rem;
+				line-height: 1.55;
+				margin: 0 0 26px;
+			}
+			.login-gate .btn-red { padding: 14px 34px; font-size: 1.08rem; }
+			.login-gate .gate-note { font-size: 0.9rem; margin: 18px 0 0; }
 			@media (max-width: 640px) {
 				.topbar-inner { gap: 10px; padding: 10px 14px; }
 				.topbar .logo { height: 42px; }
@@ -521,10 +537,15 @@ const initialMenu = menuData;
 			</div>
 		</header>
 
-		<p class="login-note" id="loginNote">
-			Para guardar cambios, <b>inicia sesión</b> con la misma cuenta de Decap CMS. Puedes ver y editar sin sesión, pero el botón Guardar pedirá iniciar sesión.
-		</p>
+		<div class="login-gate" id="loginGate" hidden>
+			<img class="logo" src="/assets/logo.svg" alt="Cafetería La Movie" />
+			<h2>Panel del Menú</h2>
+			<p>Inicia sesión con tu cuenta de Decap CMS para ver y editar el menú.</p>
+			<button class="btn btn-red" id="gateLoginBtn" type="button">Iniciar sesión</button>
+			<p class="gate-note">Solo las personas invitadas pueden entrar.</p>
+		</div>
 
+		<div id="dashboard" hidden>
 		<div class="toolbar">
 			<label class="search">
 				<span aria-hidden="true">🔍</span>
@@ -536,6 +557,7 @@ const initialMenu = menuData;
 
 		<main class="grid" id="grid"></main>
 		<p class="empty" id="emptyMsg" hidden>No hay platos con ese filtro.</p>
+		</div>
 
 		<!-- Edit / add dish -->
 		<div class="overlay" id="editOverlay" role="dialog" aria-modal="true" aria-label="Editar plato">
@@ -892,28 +914,45 @@ const initialMenu = menuData;
 					return payload.first_name || payload.name || payload.email || "";
 				} catch { return ""; }
 			}
+			// True only when the stored token exists and has not expired.
+			function tokenValid() {
+				if (!token) return false;
+				try {
+					const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+					if (payload.exp && typeof payload.exp === "number") {
+						return payload.exp * 1000 > Date.now();
+					}
+					return true;
+				} catch { return false; }
+			}
+			function isLoggedIn() { return tokenValid(); }
 			function refreshAuthUI() {
-				const chip = $("userChip"), btn = $("loginBtn"), note = $("loginNote");
-				if (token) {
+				const chip = $("userChip"), btn = $("loginBtn");
+				const loggedIn = isLoggedIn();
+				if (loggedIn) {
 					const label = userLabel();
 					chip.hidden = false;
 					chip.textContent = label ? `Sesión: ${label}` : "Sesión iniciada";
 					btn.textContent = "Cerrar sesión";
-					note.hidden = true;
 				} else {
 					chip.hidden = true;
 					btn.textContent = "Iniciar sesión";
-					note.hidden = false;
 				}
+				// Login gate: nobody sees the dashboard without a valid login.
+				$("loginGate").hidden = loggedIn;
+				$("dashboard").hidden = !loggedIn;
 			}
 			$("loginBtn").addEventListener("click", () => {
 				if (token) {
 					token = "";
 					localStorage.removeItem(TOKEN_KEY);
+					grid.innerHTML = "";
+					pillsEl.innerHTML = "";
 					refreshAuthUI();
 					toast("Sesión cerrada.");
 				} else startLogin();
 			});
+			$("gateLoginBtn").addEventListener("click", startLogin);
 
 			// ---- save (DecapBridge git-gateway = GitHub Contents API) ----
 			function toBase64(str) {
@@ -1024,9 +1063,18 @@ const initialMenu = menuData;
 			(async () => {
 				applyTheme(currentTheme(), false);
 				await completeAuthIfNeeded();
+				// Drop an expired stored token so the login gate shows.
+				if (token && !tokenValid()) {
+					token = "";
+					localStorage.removeItem(TOKEN_KEY);
+				}
 				refreshAuthUI();
-				renderPills();
-				renderGrid();
+				// Only render the menu once logged in — logged-out visitors
+				// see just the login screen, never the dashboard.
+				if (isLoggedIn()) {
+					renderPills();
+					renderGrid();
+				}
 			})();
 		</script>
 	</body>
