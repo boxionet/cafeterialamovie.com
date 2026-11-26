@@ -579,6 +579,17 @@ const initialMenu = menuData;
 				.topbar .logo { height: 3.75rem; }
 				.topbar h1 { font-size: 1.3rem; }
 				.topbar .btn { padding: 9px 13px; font-size: 0.88rem; }
+				/* Pills: one horizontal swipeable row instead of a pile of wrapped rows. */
+				.pills {
+					flex-wrap: nowrap;
+					overflow-x: auto;
+					-webkit-overflow-scrolling: touch;
+					scrollbar-width: none;
+					margin: 0 -20px;
+					padding: 2px 20px 6px;
+				}
+				.pills::-webkit-scrollbar { display: none; }
+				.pills .pill { flex: none; }
 			}
 			@media (max-width: 480px) {
 				/* Add button goes full-width under the search instead of floating alone */
