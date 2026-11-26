@@ -383,8 +383,8 @@ const initialMenu = menuData;
 			.field select:focus { outline: 2px solid var(--red); outline-offset: 0; border-color: var(--red); }
 			.field textarea { resize: vertical; min-height: 64px; }
 			.opt-row { display: flex; gap: 8px; align-items: center; }
-			.opt-row input:first-child { flex: 1 1 auto; }
-			.opt-row input.price { flex: 0 0 130px; }
+			.opt-row input:first-child { flex: 1 1 auto; min-width: 0; }
+			.opt-row input.price { flex: 0 0 96px; min-width: 0; }
 			.opt-remove {
 				flex: none;
 				width: 38px;
@@ -409,7 +409,7 @@ const initialMenu = menuData;
 				text-align: left;
 				padding: 0;
 			}
-			.modal-actions { display: flex; align-items: center; gap: 16px; margin-top: 6px; }
+			.modal-actions { display: flex; align-items: center; gap: 16px; margin-top: 6px; flex-wrap: wrap; }
 			.modal-actions .btn-red { flex: 1; padding: 13px 18px; font-size: 1.05rem; }
 			.link-btn {
 				background: none;
@@ -478,6 +478,23 @@ const initialMenu = menuData;
 				.topbar .btn { padding: 9px 13px; font-size: 0.88rem; }
 				.topbar .ver-sitio { display: none; }
 				.user-chip { display: none; }
+			}
+			@media (max-width: 480px) {
+				/* Add button goes full-width under the search instead of floating alone */
+				.toolbar .btn-red { flex: 1 1 100%; justify-content: center; }
+				/* Modal actions: save on its own row, Cancel / Delete share the next row */
+				.modal-actions .btn-red { flex: 1 1 100%; }
+				.modal-actions .link-btn { flex: 1; text-align: center; }
+			}
+			@media (max-width: 400px) {
+				.topbar .logo { height: 38px; }
+				.topbar h1 { font-size: 1rem; }
+				.topbar .btn { padding: 8px 11px; font-size: 0.85rem; }
+				.theme-switch { width: 58px; height: 32px; }
+				.theme-switch .ts-knob { width: 24px; height: 24px; }
+				:root[data-theme="dark"] .theme-switch .ts-knob {
+					transform: translateY(-50%) translateX(27px);
+				}
 			}
 		</style>
 	</head>
