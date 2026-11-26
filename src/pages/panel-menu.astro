@@ -758,7 +758,6 @@ const initialMenu = menuData;
 			const SITE_ID = "e9d365da-e6b0-4e5f-8f21-53fdb0281303";
 			const AUTH_BASE = "https://auth.decapbridge.com";
 			const GATEWAY = "https://gateway.decapbridge.com/github";
-			const REPO = "boxionet/cafeterialamovie.com";
 			const BRANCH = "main";
 			const MENU_PATH = "src/data/menu.json";
 			const DISHES_DIR = "src/assets/images/dishes";
@@ -1174,7 +1173,12 @@ const initialMenu = menuData;
 				return dataUrl.split(",")[1] || "";
 			}
 			async function gw(path, opts) {
-				const res = await fetch(`${GATEWAY}/repos/${REPO}/contents/${path}`, {
+				// The gateway already knows the repo from the DecapBridge
+				// site config — the path is just /contents/<file>, NOT
+				// /repos/<owner>/<repo>/contents/<file>. The longer form
+				// is rejected by the gateway ("Access to endpoint not
+				// allowed: this part of GitHub's API has been restricted").
+				const res = await fetch(`${GATEWAY}/contents/${path}`, {
 					...opts,
 					headers: {
 						Authorization: `Bearer ${token}`,
