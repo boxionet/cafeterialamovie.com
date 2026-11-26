@@ -94,7 +94,8 @@ const initialMenu = menuData;
 			body, .topbar, .card, .modal, .search, .pill, .btn, .field input,
 			.field textarea, .field select, .opt-remove, .picker-grid button,
 			.toast, .card-price, .card-cat, .topbar h1,
-			.user-chip, .empty, .add-opt, .link-btn, .theme-switch, .ts-knob {
+			.account-btn, .account-popover, .ap-item, .ap-session, .ap-logout,
+			.empty, .add-opt, .link-btn, .theme-switch, .ts-knob {
 				transition: background-color 0.35s ease, color 0.35s ease,
 					border-color 0.35s ease, box-shadow 0.35s ease;
 			}
@@ -121,7 +122,7 @@ const initialMenu = menuData;
 				align-items: center;
 				gap: 16px;
 			}
-			.topbar .logo { height: 100px; width: auto; flex: none; }
+			.topbar .logo { height: 4.5rem; width: auto; flex: none; }
 			.topbar h1 {
 				font-family: var(--font-display), "Lilita One", "Arial Black", sans-serif;
 				font-size: clamp(1.5rem, 3.4vw, 2rem);
@@ -155,15 +156,6 @@ const initialMenu = menuData;
 			.btn-red { background: var(--red); color: #fff; }
 			.btn-red:hover { background: var(--red-dark); }
 			.btn-red:disabled { opacity: 0.55; cursor: wait; }
-			.user-chip {
-				font-size: 0.9rem;
-				font-weight: 700;
-				color: var(--grey);
-				max-width: 220px;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-			}
 			/* ---------- theme switch (sun / moon) ---------- */
 			.theme-switch {
 				flex: none;
@@ -224,6 +216,87 @@ const initialMenu = menuData;
 				opacity: 1;
 				transform: rotate(0deg) scale(1);
 			}
+			/* ---------- account menu (person icon + popover) ---------- */
+			.account-menu { position: relative; flex: none; }
+			.account-btn {
+				width: 44px;
+				height: 44px;
+				border-radius: 50%;
+				border: 1.5px solid var(--line);
+				background: var(--card);
+				color: var(--ink);
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0;
+			}
+			.account-btn:hover { border-color: var(--red); color: var(--red); }
+			.account-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+			.account-btn svg { width: 24px; height: 24px; }
+			.account-popover {
+				position: absolute;
+				top: calc(100% + 10px);
+				right: 0;
+				min-width: 250px;
+				background: var(--card);
+				border: 1px solid var(--line);
+				border-radius: 14px;
+				box-shadow: 0 10px 30px var(--modal-shadow);
+				padding: 8px;
+				z-index: 40;
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+			}
+			.account-popover[hidden] { display: none; }
+			.ap-session {
+				margin: 0;
+				padding: 10px 12px 12px;
+				font-size: 0.92rem;
+				font-weight: 800;
+				color: var(--ink);
+				border-bottom: 1px solid var(--line);
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.ap-session[hidden] { display: none; }
+			.ap-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+				padding: 10px 12px;
+				border-radius: 9px;
+				font-size: 0.98rem;
+				font-weight: 700;
+				color: var(--ink);
+				text-decoration: none;
+				cursor: pointer;
+				background: none;
+				border: 0;
+				font-family: inherit;
+				text-align: left;
+				width: 100%;
+			}
+			a.ap-item:hover { background: var(--input-bg); }
+			.ap-theme { cursor: default; }
+			.ap-logout {
+				width: 100%;
+				margin-top: 6px;
+				padding: 11px 16px;
+				border-radius: 10px;
+				border: 0;
+				background: var(--red);
+				color: #fff;
+				font-family: inherit;
+				font-size: 1rem;
+				font-weight: 800;
+				cursor: pointer;
+				text-align: center;
+			}
+			.ap-logout:hover { background: var(--red-dark); }
 			/* ---------- toolbar ---------- */
 			.toolbar {
 				max-width: 1200px;
@@ -497,17 +570,15 @@ const initialMenu = menuData;
 			}
 			.login-gate .btn-red { padding: 14px 34px; font-size: 1.08rem; }
 			.login-gate .gate-note { font-size: 0.9rem; margin: 18px 0 0; }
-			/* Logo sizes: desktop 100px, tablet 80px, mobile 60px. */
+			/* Logo sizes in rem: desktop 4.5rem, tablet 4rem, mobile 3.75rem. */
 			@media (max-width: 1024px) {
-				.topbar .logo { height: 80px; }
+				.topbar .logo { height: 4rem; }
 			}
 			@media (max-width: 640px) {
 				.topbar-inner { gap: 10px; padding: 10px 14px; }
-				.topbar .logo { height: 60px; }
+				.topbar .logo { height: 3.75rem; }
 				.topbar h1 { font-size: 1.3rem; }
 				.topbar .btn { padding: 9px 13px; font-size: 0.88rem; }
-				.topbar .ver-sitio { display: none; }
-				.user-chip { display: none; }
 			}
 			@media (max-width: 480px) {
 				/* Add button goes full-width under the search instead of floating alone */
@@ -533,20 +604,33 @@ const initialMenu = menuData;
 				<img class="logo" src="/assets/logo.svg" alt="Cafetería La Movie" />
 				<h1>Panel del Menú</h1>
 				<div class="spacer"></div>
-				<span class="user-chip" id="userChip" hidden></span>
-				<a class="btn btn-outline ver-sitio" href="/" target="_blank" rel="noopener">Ver sitio</a>
-				<button class="theme-switch" id="themeSwitch" type="button" role="switch" aria-checked="false" aria-label="Cambiar entre modo claro y oscuro" title="Cambiar entre modo claro y oscuro">
-					<span class="ts-knob">
-						<svg class="ts-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
-							<circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" />
-							<path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6" />
+				<div class="account-menu">
+					<button class="account-btn" id="accountBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Menú de cuenta">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<circle cx="12" cy="8" r="4" />
+							<path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
 						</svg>
-						<svg class="ts-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-							<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
-						</svg>
-					</span>
-				</button>
-				<button class="btn btn-red" id="loginBtn" type="button">Iniciar sesión</button>
+					</button>
+					<div class="account-popover" id="accountPopover" hidden>
+						<p class="ap-session" id="userChip" hidden></p>
+						<a class="ap-item" id="apVerSitio" href="/" target="_blank" rel="noopener">Ver sitio</a>
+						<div class="ap-item ap-theme">
+							<span>Modo oscuro</span>
+							<button class="theme-switch" id="themeSwitch" type="button" role="switch" aria-checked="false" aria-label="Cambiar entre modo claro y oscuro" title="Cambiar entre modo claro y oscuro">
+								<span class="ts-knob">
+									<svg class="ts-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+										<circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" />
+										<path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6" />
+									</svg>
+									<svg class="ts-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+										<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+									</svg>
+								</span>
+							</button>
+						</div>
+						<button class="ap-logout" id="loginBtn" type="button">Iniciar sesión</button>
+					</div>
+				</div>
 			</div>
 		</header>
 
@@ -957,6 +1041,27 @@ const initialMenu = menuData;
 				$("loginGate").hidden = loggedIn;
 				$("dashboard").hidden = !loggedIn;
 			}
+			// ---- account popover (person icon menu) ----
+			function closeAccountPopover() {
+				const pop = $("accountPopover");
+				if (!pop || pop.hidden) return;
+				pop.hidden = true;
+				$("accountBtn").setAttribute("aria-expanded", "false");
+			}
+			$("accountBtn").addEventListener("click", (e) => {
+				e.stopPropagation();
+				const pop = $("accountPopover");
+				const willOpen = pop.hidden;
+				pop.hidden = !willOpen;
+				$("accountBtn").setAttribute("aria-expanded", String(willOpen));
+			});
+			document.addEventListener("click", (e) => {
+				if (!e.target.closest(".account-menu")) closeAccountPopover();
+			});
+			document.addEventListener("keydown", (e) => {
+				if (e.key === "Escape") closeAccountPopover();
+			});
+			$("apVerSitio").addEventListener("click", closeAccountPopover);
 			$("loginBtn").addEventListener("click", () => {
 				if (token) {
 					token = "";
@@ -964,6 +1069,7 @@ const initialMenu = menuData;
 					grid.innerHTML = "";
 					pillsEl.innerHTML = "";
 					refreshAuthUI();
+					closeAccountPopover();
 					toast("Sesión cerrada.");
 				} else startLogin();
 			});
