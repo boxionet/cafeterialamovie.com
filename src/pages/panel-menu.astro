@@ -162,6 +162,7 @@ const initialMenu = menuData;
 			.btn-publish { background: var(--yellow); color: #1a1a1a; white-space: nowrap; }
 			.btn-publish:hover:not(:disabled) { filter: brightness(0.95); }
 			.btn-publish:disabled { opacity: 0.45; cursor: not-allowed; }
+			.btn-publish[hidden] { display: none; }
 			.draft-badge {
 				display: inline-block;
 				background: var(--yellow);
@@ -653,7 +654,7 @@ const initialMenu = menuData;
 				<img class="logo" src="/assets/logo.svg" alt="Cafetería La Movie" />
 				<h1>Panel del Menú</h1>
 				<div class="spacer"></div>
-				<button class="btn btn-publish" id="publishBtn" type="button" disabled>Publicar</button>
+				<button class="btn btn-publish" id="publishBtn" type="button" disabled hidden>Publicar</button>
 				<div class="account-menu">
 					<button class="account-btn" id="accountBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Menú de cuenta">
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1202,6 +1203,9 @@ const initialMenu = menuData;
 				// Login gate: nobody sees the dashboard without a valid login.
 				$("loginGate").hidden = loggedIn;
 				$("dashboard").hidden = !loggedIn;
+				// The Publish button lives in the topbar (outside the
+				// dashboard), so hide it too until logged in.
+				$("publishBtn").hidden = !loggedIn;
 			}
 			// ---- account popover (person icon menu) ----
 			function closeAccountPopover() {
