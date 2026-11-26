@@ -236,11 +236,11 @@
     },
     {
       "id": "yaroa",
-      "name": "Pasteles en oja",
+      "name": "Yaroa",
       "desc": "Queso derretido, carne a elegir y salsas.",
       "category": "yaroa",
       "photo": "",
-      "platePhoto": "yaroa-black-plate.webp",
+      "platePhoto": "pasteles-en-hoja-black-plate.webp",
       "options": [
         {
           "label": "Pollo · Pequeña",
@@ -256,7 +256,7 @@
         },
         {
           "label": "Res · Pequeña",
-          "price": 275
+          "price": 250
         },
         {
           "label": "Res · Mediana",
@@ -415,8 +415,8 @@
       "name": "Pasteles en hoja",
       "desc": "Pollo, res o cerdo.",
       "category": "sandwiches",
-      "photo": "13-pasteles-en-hoja.webp",
-      "platePhoto": "pasteles-en-hoja-black-plate.webp",
+      "photo": "",
+      "platePhoto": "yaroa-black-plate.webp",
       "options": [
         {
           "label": "Plato",
