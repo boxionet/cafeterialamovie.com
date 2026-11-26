@@ -156,6 +156,22 @@ const initialMenu = menuData;
 			.btn-red { background: var(--red); color: #fff; }
 			.btn-red:hover { background: var(--red-dark); }
 			.btn-red:disabled { opacity: 0.55; cursor: wait; }
+			/* Publish: one commit/build for every batched change. */
+			.btn-publish { background: var(--yellow); color: #1a1a1a; }
+			.btn-publish:hover { filter: brightness(0.95); }
+			.btn-publish[hidden] { display: none; }
+			.btn-publish:disabled { opacity: 0.65; cursor: wait; }
+			.draft-badge {
+				display: inline-block;
+				background: var(--yellow);
+				color: #1a1a1a;
+				font-size: 0.72rem;
+				font-weight: 800;
+				border-radius: 999px;
+				padding: 3px 9px;
+				margin-left: 6px;
+				vertical-align: middle;
+			}
 			/* ---------- theme switch (sun / moon) ---------- */
 			.theme-switch {
 				flex: none;
@@ -613,8 +629,8 @@ const initialMenu = menuData;
 				.pills .pill { flex: none; }
 			}
 			@media (max-width: 480px) {
-				/* Add button goes full-width under the search instead of floating alone */
-				.toolbar .btn-red { flex: 1 1 100%; justify-content: center; }
+				/* Add / Publish buttons go full-width under the search instead of floating alone */
+				.toolbar .btn-red, .toolbar .btn-publish { flex: 1 1 100%; justify-content: center; }
 				/* Modal actions: save on its own row, Cancel / Delete share the next row */
 				.modal-actions .btn-red { flex: 1 1 100%; }
 				.modal-actions .link-btn { flex: 1; text-align: center; }
@@ -693,6 +709,7 @@ const initialMenu = menuData;
 				<input id="searchInput" type="search" placeholder="Buscar plato..." autocomplete="off" />
 			</label>
 			<button class="btn btn-red" id="addBtn" type="button">+ Agregar plato</button>
+			<button class="btn btn-publish" id="publishBtn" type="button" hidden>Publicar cambios</button>
 			<div class="pills" id="pills"></div>
 		</div>
 
@@ -790,12 +807,32 @@ const initialMenu = menuData;
 					draftRestored = true;
 				}
 			}
+			// What is live on GitHub right now. Edits are compared against
+			// this (not initialMenu) so the Publish button clears after a
+			// successful publish even before the site rebuilds.
+			let publishedMenu = JSON.parse(JSON.stringify(initialMenu));
+			// New photos waiting to be uploaded at publish time, keyed by
+			// filename. Persisted so a reload does not lose them.
+			const PENDING_PHOTOS_KEY = "lamovie-panel-pending-photos";
+			function savePendingUploads() {
+				try { localStorage.setItem(PENDING_PHOTOS_KEY, JSON.stringify(pendingUploads)); } catch (e) {}
+			}
+			function loadPendingUploads() {
+				try {
+					const raw = localStorage.getItem(PENDING_PHOTOS_KEY);
+					return raw ? JSON.parse(raw) : {};
+				} catch { return {}; }
+			}
+			function clearPendingUploads() {
+				try { localStorage.removeItem(PENDING_PHOTOS_KEY); } catch (e) {}
+			}
+			let pendingUploads = loadPendingUploads();
 			let filter = "all";
 			let query = "";
 			let token = localStorage.getItem(TOKEN_KEY) || "";
 			let editingId = null; // dish id, or null for a new dish
 			let editingPhoto = ""; // chosen photo filename
-			let pendingUpload = null; // {file, name, dataUrl} — uploaded on save
+			let pendingUpload = null; // {file, name, dataUrl} — this edit only; moved to pendingUploads on save
 			let pickerTarget = "photo";
 
 			const $ = (id) => document.getElementById(id);
@@ -874,10 +911,12 @@ const initialMenu = menuData;
 				emptyMsg.hidden = list.length > 0;
 				grid.innerHTML = list.map((d) => {
 					const img = displayPhoto(d);
+					const orig = publishedMenu.dishes.find((x) => x.id === d.id);
+					const isDraft = !orig || JSON.stringify(orig) !== JSON.stringify(d);
 					return `<article class="card">
 						${img ? `<img src="${esc(img)}" alt="${esc(d.name)}" loading="lazy" />` : ""}
 						<div class="card-body">
-							<h2>${esc(d.name)}</h2>
+							<h2>${esc(d.name)}${isDraft ? `<span class="draft-badge">Sin publicar</span>` : ""}</h2>
 							<span class="card-cat">${esc(catLabel(d.category))}</span>
 							<span class="card-price">${esc(priceLabel(d))}</span>
 							<button type="button" class="btn btn-outline" data-edit="${esc(d.id)}">Editar</button>
@@ -887,6 +926,27 @@ const initialMenu = menuData;
 				grid.querySelectorAll("[data-edit]").forEach((b) =>
 					b.addEventListener("click", () => openEdit(b.dataset.edit))
 				);
+			}
+
+			// ---- batch publish: edits stay local until "Publicar cambios" ----
+			// One commit (one Netlify build) for every batch of edits, instead
+			// of one build per dish. Count added + removed + modified dishes.
+			function countChanges() {
+				let n = 0;
+				for (const d of menu.dishes) {
+					const orig = publishedMenu.dishes.find((x) => x.id === d.id);
+					if (!orig || JSON.stringify(orig) !== JSON.stringify(d)) n++;
+				}
+				for (const d of publishedMenu.dishes) {
+					if (!menu.dishes.some((x) => x.id === d.id)) n++;
+				}
+				return n;
+			}
+			function updatePublishUI() {
+				const n = countChanges();
+				const btn = $("publishBtn");
+				btn.hidden = n === 0;
+				btn.textContent = n === 1 ? "Publicar 1 cambio" : `Publicar ${n} cambios`;
 			}
 
 			// ---- edit modal ----
@@ -947,7 +1007,9 @@ const initialMenu = menuData;
 				menu.dishes = menu.dishes.filter((x) => x.id !== editingId);
 				saveDraft();
 				closeEdit();
-				await saveMenu(`Panel del Menú: eliminar "${d.name}"`);
+				renderGrid();
+				updatePublishUI();
+				toast("Plato eliminado del panel. Pulsa Publicar cambios para actualizar el menú.");
 			});
 
 			$("editForm").addEventListener("submit", async (e) => {
@@ -977,10 +1039,17 @@ const initialMenu = menuData;
 					const i = menu.dishes.findIndex((x) => x.id === id);
 					if (i >= 0) menu.dishes[i] = dish;
 				}
+				// A new photo chosen for this dish waits in pendingUploads
+				// until Publish (one upload per photo, then menu.json).
+				if (pendingUpload) {
+					pendingUploads[pendingUpload.name] = { name: pendingUpload.name, dataUrl: pendingUpload.dataUrl };
+					savePendingUploads();
+				}
 				saveDraft();
 				closeEdit();
 				renderGrid();
-				await saveMenu(`Panel del Menú: ${isNew ? "agregar" : "actualizar"} "${name}"`);
+				updatePublishUI();
+				toast("Guardado en el panel. Pulsa Publicar cambios para actualizar el menú.");
 			});
 			function uniqueId(name) {
 				let base = slugify(name), id = base, n = 2;
@@ -1032,6 +1101,11 @@ const initialMenu = menuData;
 			// ---- search / add ----
 			$("searchInput").addEventListener("input", (e) => { query = e.target.value; renderGrid(); });
 			$("addBtn").addEventListener("click", () => openEdit(null));
+			$("publishBtn").addEventListener("click", async () => {
+				const n = countChanges();
+				if (n === 0) return;
+				await saveMenu(`Panel del Menú: publicar ${n} cambio${n === 1 ? "" : "s"}`);
+			});
 
 			// ---- auth (DecapBridge PKCE, same as Decap CMS) ----
 			function b64url(bytes) {
@@ -1200,27 +1274,27 @@ const initialMenu = menuData;
 					startLogin();
 					return;
 				}
-				const saveBtn = $("saveDishBtn");
-				const origBtnText = saveBtn ? saveBtn.textContent : "";
-				if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = "Guardando…"; }
+				const pubBtn = $("publishBtn");
+				if (pubBtn) { pubBtn.disabled = true; pubBtn.textContent = "Publicando…"; }
 				try {
-					// 1) Upload a new photo first, if one was chosen.
-					if (pendingUpload) {
-						const up = await gw(`${DISHES_DIR}/${pendingUpload.name}`, {
+					// 1) Upload any new photos first, if any were chosen.
+					for (const up of Object.values(pendingUploads)) {
+						const res = await gw(`${DISHES_DIR}/${up.name}`, {
 							method: "PUT",
 							headers: { "Content-Type": "application/json" },
 							body: JSON.stringify({
-								message: `Panel del Menú: subir foto ${pendingUpload.name}`,
-								content: base64OfDataUrl(pendingUpload.dataUrl),
+								message: `Panel del Menú: subir foto ${up.name}`,
+								content: base64OfDataUrl(up.dataUrl),
 								branch: BRANCH,
 							}),
 						});
-						if (!up.ok) {
-							const err = await up.json().catch(() => ({}));
-							throw new Error((err.message || err.msg || "No se pudo subir la foto") + " (" + up.status + ")");
+						if (!res.ok) {
+							const err = await res.json().catch(() => ({}));
+							throw new Error((err.message || err.msg || "No se pudo subir la foto") + " (" + res.status + ")");
 						}
-						pendingUpload = null;
 					}
+					pendingUploads = {};
+					clearPendingUploads();
 					// 2) Get the current SHA so we don't clash with other edits.
 					const cur = await gw(`${MENU_PATH}?ref=${BRANCH}`, { method: "GET" });
 					if (!cur.ok) {
@@ -1245,7 +1319,9 @@ const initialMenu = menuData;
 						throw new Error((err.message || err.msg || "No se pudo guardar") + " (" + put.status + ")");
 					}
 					clearDraft();
-					toast("Guardado. El sitio se actualizará en unos minutos.");
+					publishedMenu = JSON.parse(JSON.stringify(menu));
+					updatePublishUI();
+					toast("Publicado. El sitio se actualizará en unos minutos.");
 				} catch (err) {
 					console.error(err);
 					const msg = err.message || "Error desconocido";
@@ -1263,7 +1339,7 @@ const initialMenu = menuData;
 					}
 					toast("No se pudo guardar: " + msg, true);
 				} finally {
-					if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = origBtnText; }
+					if (pubBtn) { pubBtn.disabled = false; updatePublishUI(); }
 					renderGrid();
 				}
 			}
@@ -1307,6 +1383,7 @@ const initialMenu = menuData;
 				if (isLoggedIn()) {
 					renderPills();
 					renderGrid();
+					updatePublishUI();
 					if (draftRestored) toast("Se restauró tu edición sin guardar.");
 				}
 			})();
