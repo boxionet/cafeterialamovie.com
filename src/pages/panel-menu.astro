@@ -1211,12 +1211,18 @@ const initialMenu = menuData;
 								branch: BRANCH,
 							}),
 						});
-						if (!up.ok) throw new Error("No se pudo subir la foto (" + up.status + ")");
+						if (!up.ok) {
+							const err = await up.json().catch(() => ({}));
+							throw new Error((err.message || err.msg || "No se pudo subir la foto") + " (" + up.status + ")");
+						}
 						pendingUpload = null;
 					}
 					// 2) Get the current SHA so we don't clash with other edits.
 					const cur = await gw(`${MENU_PATH}?ref=${BRANCH}`, { method: "GET" });
-					if (!cur.ok) throw new Error("No se pudo leer el menú actual (" + cur.status + ")");
+					if (!cur.ok) {
+						const err = await cur.json().catch(() => ({}));
+						throw new Error((err.message || err.msg || "No se pudo leer el menú actual") + " (" + cur.status + ")");
+					}
 					const curData = await cur.json();
 					// 3) Write the updated menu.json.
 					const json = JSON.stringify(menu, null, 2) + "\n";
@@ -1232,7 +1238,7 @@ const initialMenu = menuData;
 					});
 					if (!put.ok) {
 						const err = await put.json().catch(() => ({}));
-						throw new Error(err.message || ("No se pudo guardar (" + put.status + ")"));
+						throw new Error((err.message || err.msg || "No se pudo guardar") + " (" + put.status + ")");
 					}
 					clearDraft();
 					toast("Guardado. El sitio se actualizará en unos minutos.");
@@ -1241,7 +1247,12 @@ const initialMenu = menuData;
 					const msg = err.message || "Error desconocido";
 					// Auth problems (expired token / no permission) get a plain
 					// explanation; anything else shows the exact gateway error.
-					if (/401|403|expir|invalid token|sesión/i.test(msg)) {
+					// "Bad credentials" means GitHub rejected DecapBridge's
+					// stored token — that one is fixed in DecapBridge, not
+					// by logging in again.
+					if (/bad credentials/i.test(msg)) {
+						showSaveError("GitHub rechazó el token guardado en DecapBridge (" + msg + "). Vuelve a conectar GitHub en DecapBridge y pulsa Reintentar. Tu edición está guardada y no se pierde.");
+					} else if (/401|403|expir|invalid token|sesión/i.test(msg)) {
 						showSaveError("Tu sesión expiró o no tienes permiso para guardar (" + msg + "). Inicia sesión de nuevo y pulsa Reintentar. Tu edición está guardada y no se pierde.");
 					} else {
 						showSaveError("No se pudo guardar: " + msg + " Tu edición está guardada en este navegador; pulsa Reintentar.");
