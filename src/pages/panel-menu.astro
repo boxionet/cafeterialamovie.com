@@ -156,11 +156,12 @@ const initialMenu = menuData;
 			.btn-red { background: var(--red); color: #fff; }
 			.btn-red:hover { background: var(--red-dark); }
 			.btn-red:disabled { opacity: 0.55; cursor: wait; }
-			/* Publish: one commit/build for every batched change. */
-			.btn-publish { background: var(--yellow); color: #1a1a1a; }
-			.btn-publish:hover { filter: brightness(0.95); }
-			.btn-publish[hidden] { display: none; }
-			.btn-publish:disabled { opacity: 0.65; cursor: wait; }
+			/* Publish: one commit/build for every batched change.
+			   Always visible in the topbar; disabled when there is
+			   nothing to publish, enabled with the count after editing. */
+			.btn-publish { background: var(--yellow); color: #1a1a1a; white-space: nowrap; }
+			.btn-publish:hover:not(:disabled) { filter: brightness(0.95); }
+			.btn-publish:disabled { opacity: 0.45; cursor: not-allowed; }
 			.draft-badge {
 				display: inline-block;
 				background: var(--yellow);
@@ -629,8 +630,8 @@ const initialMenu = menuData;
 				.pills .pill { flex: none; }
 			}
 			@media (max-width: 480px) {
-				/* Add / Publish buttons go full-width under the search instead of floating alone */
-				.toolbar .btn-red, .toolbar .btn-publish { flex: 1 1 100%; justify-content: center; }
+				/* Add button goes full-width under the search instead of floating alone */
+				.toolbar .btn-red { flex: 1 1 100%; justify-content: center; }
 				/* Modal actions: save on its own row, Cancel / Delete share the next row */
 				.modal-actions .btn-red { flex: 1 1 100%; }
 				.modal-actions .link-btn { flex: 1; text-align: center; }
@@ -652,6 +653,7 @@ const initialMenu = menuData;
 				<img class="logo" src="/assets/logo.svg" alt="Cafetería La Movie" />
 				<h1>Panel del Menú</h1>
 				<div class="spacer"></div>
+				<button class="btn btn-publish" id="publishBtn" type="button" disabled>Publicar</button>
 				<div class="account-menu">
 					<button class="account-btn" id="accountBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Menú de cuenta">
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -709,7 +711,6 @@ const initialMenu = menuData;
 				<input id="searchInput" type="search" placeholder="Buscar plato..." autocomplete="off" />
 			</label>
 			<button class="btn btn-red" id="addBtn" type="button">+ Agregar plato</button>
-			<button class="btn btn-publish" id="publishBtn" type="button" hidden>Publicar cambios</button>
 			<div class="pills" id="pills"></div>
 		</div>
 
@@ -945,8 +946,8 @@ const initialMenu = menuData;
 			function updatePublishUI() {
 				const n = countChanges();
 				const btn = $("publishBtn");
-				btn.hidden = n === 0;
-				btn.textContent = n === 1 ? "Publicar 1 cambio" : `Publicar ${n} cambios`;
+				btn.disabled = n === 0;
+				btn.textContent = n === 0 ? "Publicar" : `Publicar (${n})`;
 			}
 
 			// ---- edit modal ----
@@ -1009,7 +1010,7 @@ const initialMenu = menuData;
 				closeEdit();
 				renderGrid();
 				updatePublishUI();
-				toast("Plato eliminado del panel. Pulsa Publicar cambios para actualizar el menú.");
+				toast("Plato eliminado del panel. Pulsa Publicar para actualizar el menú.");
 			});
 
 			$("editForm").addEventListener("submit", async (e) => {
@@ -1049,7 +1050,7 @@ const initialMenu = menuData;
 				closeEdit();
 				renderGrid();
 				updatePublishUI();
-				toast("Guardado en el panel. Pulsa Publicar cambios para actualizar el menú.");
+				toast("Guardado en el panel. Pulsa Publicar para actualizar el menú.");
 			});
 			function uniqueId(name) {
 				let base = slugify(name), id = base, n = 2;
