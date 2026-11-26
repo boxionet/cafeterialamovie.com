@@ -1,0 +1,860 @@
+---
+// Panel del Menú — custom dashboard for Cafetería La Movie (Option 2, light version).
+// Replaces the Decap CMS menu editor with a simple card UI for Frank.
+// Saves back to the same src/data/menu.json via the DecapBridge git-gateway
+// (same login as /admin), so the site rebuilds on every save.
+// Standalone page: no public header/footer, noindex, excluded from sitemap.
+import { Font } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import menuData from "@data/menu.json";
+
+// All dish photos (built URLs) for the cards and the photo picker.
+const photoGlobs = import.meta.glob<{ default: ImageMetadata }>(
+	"/src/assets/images/dishes/*.{webp,jpg}",
+	{ eager: true },
+);
+const photoUrls: Record<string, string> = {};
+for (const [path, mod] of Object.entries(photoGlobs)) {
+	const file = path.split("/").pop()!;
+	photoUrls[file] = mod.default.src;
+}
+const photoList = Object.keys(photoUrls).sort();
+const initialMenu = menuData;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="robots" content="noindex, nofollow" />
+		<title>Panel del Menú — Cafetería La Movie</title>
+		<link rel="icon" href="/assets/logo.svg" type="image/svg+xml" />
+		<Font cssVariable="--font-primary" />
+		<Font cssVariable="--font-display" />
+		<style is:global>
+			:root {
+				--red: #fe0500;
+				--red-dark: #bf1313;
+				--yellow: #fdcc00;
+				--ink: #1a1a1a;
+				--grey: #6b6b6b;
+				--line: #e8e8e8;
+				--bg: #f6f6f6;
+				--card: #ffffff;
+			}
+			* { box-sizing: border-box; }
+			body {
+				margin: 0;
+				background: var(--bg);
+				color: var(--ink);
+				font-family: var(--font-primary), "Nunito", Arial, sans-serif;
+			}
+			/* ---------- top bar ---------- */
+			.topbar {
+				position: sticky;
+				top: 0;
+				z-index: 20;
+				background: var(--card);
+				border-bottom: 1px solid var(--line);
+			}
+			.topbar-inner {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 12px 20px;
+				display: flex;
+				align-items: center;
+				gap: 16px;
+			}
+			.topbar .logo { height: 52px; width: auto; flex: none; }
+			.topbar h1 {
+				font-family: var(--font-display), "Lilita One", "Arial Black", sans-serif;
+				font-size: clamp(1.5rem, 3.4vw, 2rem);
+				text-transform: uppercase;
+				letter-spacing: 0.02em;
+				margin: 0;
+				line-height: 1;
+			}
+			.topbar .spacer { flex: 1; }
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 6px;
+				border: 0;
+				border-radius: 999px;
+				padding: 10px 18px;
+				font-family: inherit;
+				font-size: 0.95rem;
+				font-weight: 800;
+				cursor: pointer;
+				text-decoration: none;
+				white-space: nowrap;
+			}
+			.btn-outline {
+				background: #fff;
+				color: var(--ink);
+				border: 1.5px solid var(--line);
+			}
+			.btn-outline:hover { border-color: var(--ink); }
+			.btn-red { background: var(--red); color: #fff; }
+			.btn-red:hover { background: var(--red-dark); }
+			.btn-red:disabled { opacity: 0.55; cursor: wait; }
+			.user-chip {
+				font-size: 0.9rem;
+				font-weight: 700;
+				color: var(--grey);
+				max-width: 220px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			/* ---------- toolbar ---------- */
+			.toolbar {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 24px 20px 8px;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px;
+				align-items: center;
+			}
+			.search {
+				flex: 1 1 260px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				background: #fff;
+				border: 1.5px solid var(--line);
+				border-radius: 999px;
+				padding: 10px 16px;
+			}
+			.search input {
+				border: 0;
+				outline: 0;
+				flex: 1;
+				font-family: inherit;
+				font-size: 1rem;
+				background: transparent;
+			}
+			.pills {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				flex: 1 1 100%;
+			}
+			.pill {
+				border: 0;
+				border-radius: 999px;
+				padding: 9px 16px;
+				font-family: inherit;
+				font-size: 0.92rem;
+				font-weight: 700;
+				background: #e9e9e9;
+				color: #333;
+				cursor: pointer;
+			}
+			.pill.active { background: var(--red); color: #fff; }
+			/* ---------- dish grid ---------- */
+			.grid {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 16px 20px 48px;
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+				gap: 20px;
+			}
+			.card {
+				background: var(--card);
+				border-radius: 16px;
+				overflow: hidden;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+				display: flex;
+				flex-direction: column;
+			}
+			.card img {
+				width: 100%;
+				aspect-ratio: 4 / 3;
+				object-fit: cover;
+				background: #eee;
+				display: block;
+			}
+			.card-body {
+				padding: 16px 18px 18px;
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				flex: 1;
+			}
+			.card-body h2 { font-size: 1.25rem; margin: 0; line-height: 1.2; }
+			.card-cat { font-size: 0.88rem; color: var(--grey); }
+			.card-price {
+				font-size: 1.25rem;
+				font-weight: 800;
+				color: var(--red);
+				margin: 4px 0 10px;
+			}
+			.card .btn-outline { width: 100%; }
+			.empty {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 40px 20px;
+				text-align: center;
+				color: var(--grey);
+				font-size: 1.05rem;
+			}
+			/* ---------- modals ---------- */
+			.overlay {
+				position: fixed;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.55);
+				z-index: 50;
+				display: none;
+				align-items: flex-start;
+				justify-content: center;
+				padding: 24px 16px;
+				overflow-y: auto;
+			}
+			.overlay.open { display: flex; }
+			.modal {
+				background: #fff;
+				border-radius: 20px;
+				width: 100%;
+				max-width: 560px;
+				margin: auto 0;
+				overflow: hidden;
+				box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+			}
+			.modal h2 {
+				font-family: var(--font-display), "Lilita One", "Arial Black", sans-serif;
+				font-size: 1.8rem;
+				text-transform: uppercase;
+				margin: 0;
+				padding: 22px 24px 0;
+			}
+			.modal .photo-wrap { position: relative; margin: 16px 24px 0; border-radius: 14px; overflow: hidden; }
+			.modal .photo-wrap img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #eee; }
+			.modal .photo-wrap .change-photo {
+				position: absolute;
+				right: 12px;
+				bottom: 12px;
+				background: rgba(0, 0, 0, 0.72);
+				color: #fff;
+				border: 1.5px solid var(--yellow);
+				border-radius: 999px;
+				padding: 8px 14px;
+				font-family: inherit;
+				font-weight: 800;
+				font-size: 0.9rem;
+				cursor: pointer;
+			}
+			.modal form { padding: 18px 24px 24px; display: flex; flex-direction: column; gap: 14px; }
+			.field label { display: block; font-weight: 800; font-size: 0.92rem; margin-bottom: 6px; }
+			.field input,
+			.field textarea,
+			.field select {
+				width: 100%;
+				border: 1.5px solid var(--line);
+				border-radius: 10px;
+				padding: 11px 12px;
+				font-family: inherit;
+				font-size: 1rem;
+				background: #fff;
+			}
+			.field input:focus,
+			.field textarea:focus,
+			.field select:focus { outline: 2px solid var(--red); outline-offset: 0; border-color: var(--red); }
+			.field textarea { resize: vertical; min-height: 64px; }
+			.opt-row { display: flex; gap: 8px; align-items: center; }
+			.opt-row input:first-child { flex: 1 1 auto; }
+			.opt-row input.price { flex: 0 0 130px; }
+			.opt-remove {
+				flex: none;
+				width: 38px;
+				height: 38px;
+				border-radius: 50%;
+				border: 1.5px solid var(--line);
+				background: #fff;
+				font-size: 1.05rem;
+				line-height: 1;
+				cursor: pointer;
+			}
+			.opt-remove:hover { border-color: var(--red); color: var(--red); }
+			.add-opt {
+				background: none;
+				border: 0;
+				color: var(--red);
+				font-family: inherit;
+				font-weight: 800;
+				font-size: 0.95rem;
+				cursor: pointer;
+				text-align: left;
+				padding: 0;
+			}
+			.modal-actions { display: flex; align-items: center; gap: 16px; margin-top: 6px; }
+			.modal-actions .btn-red { flex: 1; padding: 13px 18px; font-size: 1.05rem; }
+			.link-btn {
+				background: none;
+				border: 0;
+				font-family: inherit;
+				font-size: 1rem;
+				color: var(--grey);
+				text-decoration: underline;
+				cursor: pointer;
+			}
+			.danger { color: var(--red); }
+			/* photo picker */
+			.picker-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+				gap: 10px;
+				padding: 18px 24px;
+				max-height: 46vh;
+				overflow-y: auto;
+			}
+			.picker-grid button {
+				border: 2px solid transparent;
+				border-radius: 12px;
+				overflow: hidden;
+				padding: 0;
+				cursor: pointer;
+				background: #eee;
+			}
+			.picker-grid button.selected { border-color: var(--red); }
+			.picker-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+			.picker-foot { padding: 0 24px 22px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+			.picker-foot .hint { font-size: 0.88rem; color: var(--grey); }
+			/* toast */
+			.toast {
+				position: fixed;
+				left: 50%;
+				bottom: 24px;
+				transform: translateX(-50%) translateY(20px);
+				background: #1a1a1a;
+				color: #fff;
+				border-radius: 999px;
+				padding: 12px 22px;
+				font-weight: 700;
+				font-size: 0.98rem;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.2s, transform 0.2s;
+				z-index: 100;
+				max-width: calc(100vw - 32px);
+				text-align: center;
+			}
+			.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+			.toast.error { background: var(--red); }
+			.login-note {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 0 20px;
+				color: var(--grey);
+				font-size: 0.92rem;
+			}
+			.login-note b { color: var(--ink); }
+			@media (max-width: 640px) {
+				.topbar .logo { height: 42px; }
+				.topbar h1 { font-size: 1.3rem; }
+				.topbar .btn { padding: 9px 13px; font-size: 0.88rem; }
+				.user-chip { display: none; }
+			}
+		</style>
+	</head>
+	<body>
+		<header class="topbar">
+			<div class="topbar-inner">
+				<img class="logo" src="/assets/logo.svg" alt="Cafetería La Movie" />
+				<h1>Panel del Menú</h1>
+				<div class="spacer"></div>
+				<span class="user-chip" id="userChip" hidden></span>
+				<a class="btn btn-outline" href="/" target="_blank" rel="noopener">Ver sitio</a>
+				<button class="btn btn-red" id="loginBtn" type="button">Iniciar sesión</button>
+			</div>
+		</header>
+
+		<p class="login-note" id="loginNote">
+			Para guardar cambios, <b>inicia sesión</b> con la misma cuenta de Decap CMS. Puedes ver y editar sin sesión, pero el botón Guardar pedirá iniciar sesión.
+		</p>
+
+		<div class="toolbar">
+			<label class="search">
+				<span aria-hidden="true">🔍</span>
+				<input id="searchInput" type="search" placeholder="Buscar plato..." autocomplete="off" />
+			</label>
+			<button class="btn btn-red" id="addBtn" type="button">+ Agregar plato</button>
+			<div class="pills" id="pills"></div>
+		</div>
+
+		<main class="grid" id="grid"></main>
+		<p class="empty" id="emptyMsg" hidden>No hay platos con ese filtro.</p>
+
+		<!-- Edit / add dish -->
+		<div class="overlay" id="editOverlay" role="dialog" aria-modal="true" aria-label="Editar plato">
+			<div class="modal">
+				<h2 id="editTitle">Editar plato</h2>
+				<div class="photo-wrap">
+					<img id="editPhoto" src="" alt="Foto del plato" />
+					<button class="change-photo" id="changePhotoBtn" type="button">📷 Cambiar foto</button>
+				</div>
+				<form id="editForm">
+					<div class="field">
+						<label for="fName">Nombre</label>
+						<input id="fName" required maxlength="80" />
+					</div>
+					<div class="field">
+						<label for="fDesc">Descripción</label>
+						<textarea id="fDesc" maxlength="200"></textarea>
+					</div>
+					<div class="field">
+						<label for="fCat">Categoría</label>
+						<select id="fCat"></select>
+					</div>
+					<div class="field">
+						<label>Opciones y precios</label>
+						<div id="optList" style="display:flex;flex-direction:column;gap:10px;"></div>
+						<button class="add-opt" id="addOptBtn" type="button">+ Agregar opción</button>
+					</div>
+					<div class="modal-actions">
+						<button class="btn btn-red" id="saveDishBtn" type="submit">Guardar cambios</button>
+						<button class="link-btn" id="cancelEditBtn" type="button">Cancelar</button>
+						<button class="link-btn danger" id="deleteDishBtn" type="button">Eliminar plato</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<!-- Photo picker -->
+		<div class="overlay" id="pickerOverlay" role="dialog" aria-modal="true" aria-label="Elegir foto">
+			<div class="modal">
+				<h2>Elegir foto</h2>
+				<div class="picker-grid" id="pickerGrid"></div>
+				<div class="picker-foot">
+					<label class="btn btn-outline" for="uploadInput">Subir nueva foto</label>
+					<input id="uploadInput" type="file" accept=".webp,.jpg,.jpeg" hidden />
+					<span class="hint">Solo .webp o .jpg. La foto se sube al guardar.</span>
+					<button class="link-btn" id="closePickerBtn" type="button">Cerrar</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="toast" id="toast" role="status"></div>
+
+		<script define:vars={{ initialMenu, photoUrls, photoList }}>
+			// ---- config (same backend as Decap CMS /admin) ----
+			const SITE_ID = "e9d365da-e6b0-4e5f-8f21-53fdb0281303";
+			const AUTH_BASE = "https://auth.decapbridge.com";
+			const GATEWAY = "https://gateway.decapbridge.com/github";
+			const REPO = "boxionet/cafeterialamovie.com";
+			const BRANCH = "main";
+			const MENU_PATH = "src/data/menu.json";
+			const DISHES_DIR = "src/assets/images/dishes";
+			const TOKEN_KEY = "lamovie-panel-token";
+			const VERIFIER_KEY = "lamovie-panel-verifier";
+			const NONCE_KEY = "lamovie-panel-nonce";
+
+			// ---- state ----
+			const menu = JSON.parse(JSON.stringify(initialMenu));
+			let filter = "all";
+			let query = "";
+			let token = localStorage.getItem(TOKEN_KEY) || "";
+			let editingId = null; // dish id, or null for a new dish
+			let editingPhoto = ""; // chosen photo filename
+			let pendingUpload = null; // {file, name, dataUrl} — uploaded on save
+			let pickerTarget = "photo";
+
+			const $ = (id) => document.getElementById(id);
+			const grid = $("grid"), pillsEl = $("pills"), emptyMsg = $("emptyMsg");
+			const toastEl = $("toast");
+
+			let toastTimer = null;
+			function toast(msg, isError) {
+				toastEl.textContent = msg;
+				toastEl.classList.toggle("error", !!isError);
+				toastEl.classList.add("show");
+				clearTimeout(toastTimer);
+				toastTimer = setTimeout(() => toastEl.classList.remove("show"), 4200);
+			}
+
+			function esc(s) {
+				return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+					"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+				})[c]);
+			}
+			function photoUrl(file) { return photoUrls[file] || ""; }
+			function displayPhoto(d) { return photoUrl(d.platePhoto || d.photo); }
+			function minPrice(d) {
+				if (!d.options || !d.options.length) return null;
+				return Math.min(...d.options.map((o) => o.price));
+			}
+			function priceLabel(d) {
+				const p = minPrice(d);
+				if (p == null) return "Sin precio";
+				return (d.options.length > 1 ? "desde " : "") + "RD$" + p;
+			}
+			function catLabel(id) {
+				const c = menu.categories.find((c) => c.id === id);
+				return c ? c.label : id;
+			}
+			function slugify(s) {
+				return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+					.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 60) || "plato";
+			}
+
+			// ---- render ----
+			function renderPills() {
+				const all = [{ id: "all", label: "Todos" }, ...menu.categories];
+				pillsEl.innerHTML = all.map((c) =>
+					`<button type="button" class="pill${filter === c.id ? " active" : ""}" data-cat="${esc(c.id)}">${esc(c.label)}</button>`
+				).join("");
+				pillsEl.querySelectorAll(".pill").forEach((b) =>
+					b.addEventListener("click", () => { filter = b.dataset.cat; renderPills(); renderGrid(); })
+				);
+			}
+			function renderGrid() {
+				const q = query.trim().toLowerCase();
+				const list = menu.dishes.filter((d) =>
+					(filter === "all" || d.category === filter) &&
+					(!q || d.name.toLowerCase().includes(q))
+				);
+				emptyMsg.hidden = list.length > 0;
+				grid.innerHTML = list.map((d) => {
+					const img = displayPhoto(d);
+					return `<article class="card">
+						${img ? `<img src="${esc(img)}" alt="${esc(d.name)}" loading="lazy" />` : ""}
+						<div class="card-body">
+							<h2>${esc(d.name)}</h2>
+							<span class="card-cat">${esc(catLabel(d.category))}</span>
+							<span class="card-price">${esc(priceLabel(d))}</span>
+							<button type="button" class="btn btn-outline" data-edit="${esc(d.id)}">Editar</button>
+						</div>
+					</article>`;
+				}).join("");
+				grid.querySelectorAll("[data-edit]").forEach((b) =>
+					b.addEventListener("click", () => openEdit(b.dataset.edit))
+				);
+			}
+
+			// ---- edit modal ----
+			function optRowHTML(opt) {
+				return `<div class="opt-row">
+					<input type="text" class="opt-label" value="${esc(opt.label)}" placeholder="Opción (ej. Sola)" maxlength="40" />
+					<input type="number" class="opt-price price" value="${opt.price}" min="0" step="1" placeholder="RD$" />
+					<button type="button" class="opt-remove" title="Quitar opción" aria-label="Quitar opción">×</button>
+				</div>`;
+			}
+			function openEdit(id) {
+				const isNew = !id;
+				editingId = isNew ? null : id;
+				const d = isNew
+					? { id: "", name: "", desc: "", category: menu.categories[0]?.id || "", photo: "", platePhoto: "", options: [{ label: "Sola", price: 0 }] }
+					: menu.dishes.find((x) => x.id === id);
+				if (!d) return;
+				editingPhoto = d.platePhoto || d.photo || "";
+				pendingUpload = null;
+				$("editTitle").textContent = isNew ? "Agregar plato" : "Editar plato";
+				$("editPhoto").src = displayPhoto(d) || "";
+				$("editPhoto").alt = d.name || "Foto del plato";
+				$("fName").value = d.name;
+				$("fDesc").value = d.desc || "";
+				$("fCat").innerHTML = menu.categories.map((c) =>
+					`<option value="${esc(c.id)}"${c.id === d.category ? " selected" : ""}>${esc(c.label)}</option>`
+				).join("");
+				$("optList").innerHTML = (d.options.length ? d.options : [{ label: "Sola", price: 0 }]).map(optRowHTML).join("");
+				bindOptRows();
+				$("deleteDishBtn").style.display = isNew ? "none" : "";
+				$("saveDishBtn").textContent = isNew ? "Agregar plato" : "Guardar cambios";
+				$("editOverlay").classList.add("open");
+				$("fName").focus();
+			}
+			function bindOptRows() {
+				$("optList").querySelectorAll(".opt-remove").forEach((b) =>
+					b.addEventListener("click", () => {
+						if ($("optList").children.length <= 1) { toast("El plato necesita al menos una opción.", true); return; }
+						b.closest(".opt-row").remove();
+					})
+				);
+			}
+			function closeEdit() { $("editOverlay").classList.remove("open"); editingId = null; pendingUpload = null; }
+
+			$("addOptBtn").addEventListener("click", () => {
+				$("optList").insertAdjacentHTML("beforeend", optRowHTML({ label: "", price: 0 }));
+				bindOptRows();
+				const rows = $("optList").querySelectorAll(".opt-row");
+				rows[rows.length - 1].querySelector(".opt-label").focus();
+			});
+			$("cancelEditBtn").addEventListener("click", closeEdit);
+			$("editOverlay").addEventListener("click", (e) => { if (e.target === $("editOverlay")) closeEdit(); });
+			$("deleteDishBtn").addEventListener("click", async () => {
+				if (!editingId) return;
+				const d = menu.dishes.find((x) => x.id === editingId);
+				if (!d) return;
+				if (!confirm(`¿Eliminar "${d.name}" del menú?`)) return;
+				menu.dishes = menu.dishes.filter((x) => x.id !== editingId);
+				closeEdit();
+				await saveMenu(`Panel del Menú: eliminar "${d.name}"`);
+			});
+
+			$("editForm").addEventListener("submit", async (e) => {
+				e.preventDefault();
+				const name = $("fName").value.trim();
+				if (!name) { toast("El plato necesita un nombre.", true); return; }
+				const options = [...$("optList").querySelectorAll(".opt-row")].map((row) => ({
+					label: row.querySelector(".opt-label").value.trim(),
+					price: Math.max(0, Math.round(Number(row.querySelector(".opt-price").value) || 0)),
+				})).filter((o) => o.label);
+				if (!options.length) { toast("Agrega al menos una opción con precio.", true); return; }
+				const isNew = !editingId;
+				const id = isNew ? uniqueId(name) : editingId;
+				const dish = {
+					id,
+					name,
+					desc: $("fDesc").value.trim(),
+					category: $("fCat").value,
+					photo: editingPhoto,
+					platePhoto: "",
+					options,
+				};
+				// If the chosen photo is one of the black-plate shots, keep it as platePhoto.
+				if (/black-plate/i.test(editingPhoto)) { dish.platePhoto = editingPhoto; dish.photo = ""; }
+				if (isNew) menu.dishes.push(dish);
+				else {
+					const i = menu.dishes.findIndex((x) => x.id === id);
+					if (i >= 0) menu.dishes[i] = dish;
+				}
+				closeEdit();
+				renderGrid();
+				await saveMenu(`Panel del Menú: ${isNew ? "agregar" : "actualizar"} "${name}"`);
+			});
+			function uniqueId(name) {
+				let base = slugify(name), id = base, n = 2;
+				while (menu.dishes.some((d) => d.id === id)) id = `${base}-${n++}`;
+				return id;
+			}
+
+			// ---- photo picker ----
+			function openPicker() {
+				$("pickerGrid").innerHTML = photoList.map((f) =>
+					`<button type="button" data-file="${esc(f)}" class="${f === editingPhoto ? "selected" : ""}" title="${esc(f)}">
+						<img src="${esc(photoUrl(f))}" alt="${esc(f)}" loading="lazy" />
+					</button>`
+				).join("");
+				$("pickerGrid").querySelectorAll("button").forEach((b) =>
+					b.addEventListener("click", () => {
+						editingPhoto = b.dataset.file;
+						pendingUpload = null;
+						$("editPhoto").src = photoUrl(editingPhoto);
+						$("pickerOverlay").classList.remove("open");
+					})
+				);
+				$("pickerOverlay").classList.add("open");
+			}
+			$("changePhotoBtn").addEventListener("click", openPicker);
+			$("closePickerBtn").addEventListener("click", () => $("pickerOverlay").classList.remove("open"));
+			$("pickerOverlay").addEventListener("click", (e) => { if (e.target === $("pickerOverlay")) $("pickerOverlay").classList.remove("open"); });
+			$("uploadInput").addEventListener("change", async (e) => {
+				const file = e.target.files && e.target.files[0];
+				e.target.value = "";
+				if (!file) return;
+				if (!/\.(webp|jpe?g)$/i.test(file.name)) { toast("Solo se aceptan fotos .webp o .jpg.", true); return; }
+				if (file.size > 4 * 1024 * 1024) { toast("La foto es muy grande (máx. 4 MB).", true); return; }
+				const ext = file.name.toLowerCase().endsWith(".webp") ? "webp" : "jpg";
+				const name = `${slugify(file.name.replace(/\.[^.]+$/, ""))}-${Date.now()}.${ext}`;
+				const dataUrl = await new Promise((res, rej) => {
+					const r = new FileReader();
+					r.onload = () => res(r.result);
+					r.onerror = rej;
+					r.readAsDataURL(file);
+				});
+				pendingUpload = { file, name, dataUrl };
+				editingPhoto = name;
+				$("editPhoto").src = dataUrl;
+				$("pickerOverlay").classList.remove("open");
+				toast("Foto lista — se subirá al guardar.");
+			});
+
+			// ---- search / add ----
+			$("searchInput").addEventListener("input", (e) => { query = e.target.value; renderGrid(); });
+			$("addBtn").addEventListener("click", () => openEdit(null));
+
+			// ---- auth (DecapBridge PKCE, same as Decap CMS) ----
+			function b64url(bytes) {
+				let s = "";
+				bytes.forEach((b) => { s += String.fromCharCode(b); });
+				return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+			}
+			function randomString(len) {
+				const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.";
+				const arr = new Uint8Array(len);
+				crypto.getRandomValues(arr);
+				return [...arr].map((b) => chars[b % chars.length]).join("");
+			}
+			async function startLogin() {
+				const verifier = randomString(128);
+				const nonce = randomString(24);
+				sessionStorage.setItem(VERIFIER_KEY, verifier);
+				sessionStorage.setItem(NONCE_KEY, nonce);
+				const challenge = b64url(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier))));
+				const url = new URL(`${AUTH_BASE}/sites/${SITE_ID}/pkce`);
+				url.searchParams.set("client_id", "");
+				url.searchParams.set("redirect_uri", location.origin + location.pathname);
+				url.searchParams.set("response_type", "code");
+				url.searchParams.set("state", JSON.stringify({ auth_type: "pkce", nonce }));
+				url.searchParams.set("code_challenge_method", "S256");
+				url.searchParams.set("code_challenge", challenge);
+				location.assign(url.toString());
+			}
+			async function completeAuthIfNeeded() {
+				const params = new URLSearchParams(location.search);
+				const code = params.get("code");
+				if (!code) return false;
+				if (params.get("error")) { toast("No se pudo iniciar sesión: " + params.get("error"), true); return false; }
+				const verifier = sessionStorage.getItem(VERIFIER_KEY);
+				if (!verifier) { toast("Sesión de inicio expirada. Inténtalo de nuevo.", true); return false; }
+				try {
+					const res = await fetch(`${AUTH_BASE}/sites/${SITE_ID}/token`, {
+						method: "POST",
+						headers: { "Content-Type": "application/x-www-form-urlencoded" },
+						body: new URLSearchParams({
+							client_id: "",
+							code,
+							grant_type: "authorization_code",
+							redirect_uri: location.origin + location.pathname,
+							code_verifier: verifier,
+						}).toString(),
+					});
+					const data = await res.json();
+					if (!res.ok || !data.access_token) throw new Error(data.error_description || data.error || "token");
+					token = data.access_token;
+					localStorage.setItem(TOKEN_KEY, token);
+					sessionStorage.removeItem(VERIFIER_KEY);
+					sessionStorage.removeItem(NONCE_KEY);
+					history.replaceState(null, "", location.pathname);
+					toast("Sesión iniciada.");
+					return true;
+				} catch (err) {
+					console.error(err);
+					toast("No se pudo completar el inicio de sesión.", true);
+					return false;
+				}
+			}
+			function userLabel() {
+				try {
+					const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+					return payload.first_name || payload.name || payload.email || "";
+				} catch { return ""; }
+			}
+			function refreshAuthUI() {
+				const chip = $("userChip"), btn = $("loginBtn"), note = $("loginNote");
+				if (token) {
+					const label = userLabel();
+					chip.hidden = false;
+					chip.textContent = label ? `Sesión: ${label}` : "Sesión iniciada";
+					btn.textContent = "Cerrar sesión";
+					note.hidden = true;
+				} else {
+					chip.hidden = true;
+					btn.textContent = "Iniciar sesión";
+					note.hidden = false;
+				}
+			}
+			$("loginBtn").addEventListener("click", () => {
+				if (token) {
+					token = "";
+					localStorage.removeItem(TOKEN_KEY);
+					refreshAuthUI();
+					toast("Sesión cerrada.");
+				} else startLogin();
+			});
+
+			// ---- save (DecapBridge git-gateway = GitHub Contents API) ----
+			function toBase64(str) {
+				const bytes = new TextEncoder().encode(str);
+				let bin = "";
+				bytes.forEach((b) => { bin += String.fromCharCode(b); });
+				return btoa(bin);
+			}
+			function base64OfDataUrl(dataUrl) {
+				return dataUrl.split(",")[1] || "";
+			}
+			async function gw(path, opts) {
+				const res = await fetch(`${GATEWAY}/repos/${REPO}/contents/${path}`, {
+					...opts,
+					headers: {
+						Authorization: `Bearer ${token}`,
+						Accept: "application/vnd.github+json",
+						...(opts && opts.headers ? opts.headers : {}),
+					},
+				});
+				return res;
+			}
+			async function saveMenu(message) {
+				if (!token) {
+					toast("Inicia sesión para guardar los cambios.", true);
+					renderGrid();
+					startLogin();
+					return;
+				}
+				const saveBtn = $("saveDishBtn");
+				try {
+					// 1) Upload a new photo first, if one was chosen.
+					if (pendingUpload) {
+						const up = await gw(`${DISHES_DIR}/${pendingUpload.name}`, {
+							method: "PUT",
+							headers: { "Content-Type": "application/json" },
+							body: JSON.stringify({
+								message: `Panel del Menú: subir foto ${pendingUpload.name}`,
+								content: base64OfDataUrl(pendingUpload.dataUrl),
+								branch: BRANCH,
+							}),
+						});
+						if (!up.ok) throw new Error("No se pudo subir la foto (" + up.status + ")");
+						pendingUpload = null;
+					}
+					// 2) Get the current SHA so we don't clash with other edits.
+					const cur = await gw(`${MENU_PATH}?ref=${BRANCH}`, { method: "GET" });
+					if (!cur.ok) throw new Error("No se pudo leer el menú actual (" + cur.status + ")");
+					const curData = await cur.json();
+					// 3) Write the updated menu.json.
+					const json = JSON.stringify(menu, null, 2) + "\n";
+					const put = await gw(MENU_PATH, {
+						method: "PUT",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							message,
+							content: toBase64(json),
+							sha: curData.sha,
+							branch: BRANCH,
+						}),
+					});
+					if (!put.ok) {
+						const err = await put.json().catch(() => ({}));
+						throw new Error(err.message || ("No se pudo guardar (" + put.status + ")"));
+					}
+					toast("Guardado. El sitio se actualizará en unos minutos.");
+				} catch (err) {
+					console.error(err);
+					toast("No se pudo guardar: " + err.message, true);
+					// Offer a download so the work is never lost.
+					const blob = new Blob([JSON.stringify(menu, null, 2)], { type: "application/json" });
+					const a = document.createElement("a");
+					a.href = URL.createObjectURL(blob);
+					a.download = "menu.json";
+					a.click();
+					URL.revokeObjectURL(a.href);
+					toast("Se descargó una copia de menu.json como respaldo.", true);
+				} finally {
+					renderGrid();
+				}
+			}
+
+			// ---- boot ----
+			(async () => {
+				await completeAuthIfNeeded();
+				refreshAuthUI();
+				renderPills();
+				renderGrid();
+			})();
+		</script>
+	</body>
+</html>
