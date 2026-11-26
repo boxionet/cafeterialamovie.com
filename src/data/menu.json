@@ -236,10 +236,10 @@
     },
     {
       "id": "yaroa",
-      "name": "Yaroa",
+      "name": "Pasteles en oja",
       "desc": "Queso derretido, carne a elegir y salsas.",
       "category": "yaroa",
-      "photo": "24-yaroa.webp",
+      "photo": "",
       "platePhoto": "yaroa-black-plate.webp",
       "options": [
         {
