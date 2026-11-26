@@ -410,6 +410,17 @@ const initialMenu = menuData;
 				color: var(--grey);
 				font-size: 1.05rem;
 			}
+			/* ---------- footer ---------- */
+			.panel-footer {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 28px 20px 36px;
+				text-align: center;
+				color: var(--grey);
+				font-size: 0.92rem;
+			}
+			.panel-footer a { color: var(--ink); font-weight: 700; text-decoration: none; }
+			.panel-footer a:hover { text-decoration: underline; }
 			/* ---------- modals ---------- */
 			.overlay {
 				position: fixed;
@@ -666,7 +677,7 @@ const initialMenu = menuData;
 						<p class="ap-session" id="userChip" hidden></p>
 						<a class="ap-item" id="apVerSitio" href="/" target="_blank" rel="noopener">Ver sitio</a>
 						<div class="ap-item ap-theme">
-							<span>Modo oscuro</span>
+							<span id="themeLabel">Modo oscuro</span>
 							<button class="theme-switch" id="themeSwitch" type="button" role="switch" aria-checked="false" aria-label="Cambiar entre modo claro y oscuro" title="Cambiar entre modo claro y oscuro">
 								<span class="ts-knob">
 									<svg class="ts-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
@@ -718,6 +729,10 @@ const initialMenu = menuData;
 		<main class="grid" id="grid"></main>
 		<p class="empty" id="emptyMsg" hidden>No hay platos con ese filtro.</p>
 		</div>
+
+		<footer class="panel-footer">
+			Hecho y mantenido por <a href="https://boxionet.com" target="_blank" rel="noopener">Boxionet</a>
+		</footer>
 
 		<!-- Edit / add dish -->
 		<div class="overlay" id="editOverlay" role="dialog" aria-modal="true" aria-label="Editar plato">
@@ -1361,6 +1376,9 @@ const initialMenu = menuData;
 				}
 				const sw = $("themeSwitch");
 				if (sw) sw.setAttribute("aria-checked", theme === "dark" ? "true" : "false");
+				// The label names the mode the switch will turn ON.
+				const label = $("themeLabel");
+				if (label) label.textContent = theme === "dark" ? "Modo claro" : "Modo oscuro";
 			}
 			$("themeSwitch").addEventListener("click", () => {
 				applyTheme(currentTheme() === "dark" ? "light" : "dark");
