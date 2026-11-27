@@ -163,6 +163,12 @@ const initialMenu = menuData;
 			.btn-publish:hover:not(:disabled) { filter: brightness(0.95); }
 			.btn-publish:disabled { opacity: 0.45; cursor: not-allowed; }
 			.btn-publish[hidden] { display: none; }
+			/* Reset all: discard every unpublished change. Red outline so it
+			   reads as a destructive action next to the gold Publish button.
+			   Only shown while there are unpublished changes. */
+			.btn-reset-all { background: var(--card); color: #c8102e; border: 2px solid #c8102e; white-space: nowrap; }
+			.btn-reset-all:hover { background: #fdeeee; }
+			.btn-reset-all[hidden] { display: none; }
 			.draft-badge {
 				display: inline-block;
 				background: var(--yellow);
@@ -629,6 +635,9 @@ const initialMenu = menuData;
 				.topbar .logo { height: 3.75rem; }
 				.topbar h1 { font-size: 1.3rem; }
 				.topbar .btn { padding: 9px 13px; font-size: 0.88rem; }
+				/* Reset-all becomes icon-only so the topbar still fits with
+				   both buttons visible (Publish + Restablecer todo). */
+				.btn-reset-all .ra-label { display: none; }
 				/* Pills: one horizontal swipeable row instead of a pile of wrapped rows. */
 				.pills {
 					flex-wrap: nowrap;
@@ -665,6 +674,7 @@ const initialMenu = menuData;
 				<img class="logo" src="/assets/logo.svg" alt="Cafetería La Movie" />
 				<h1>Panel del Menú</h1>
 				<div class="spacer"></div>
+				<button class="btn btn-reset-all" id="resetAllBtn" type="button" hidden><span aria-hidden="true">↺</span> <span class="ra-label">Restablecer todo</span></button>
 				<button class="btn btn-publish" id="publishBtn" type="button" disabled hidden>Publicar</button>
 				<div class="account-menu">
 					<button class="account-btn" id="accountBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Menú de cuenta">
@@ -966,7 +976,22 @@ const initialMenu = menuData;
 				const btn = $("publishBtn");
 				btn.disabled = n === 0;
 				btn.textContent = n === 0 ? "Publicar" : `Publicar (${n})`;
+				// Reset-all only makes sense while something is unpublished.
+				$("resetAllBtn").hidden = n === 0;
 			}
+			// Discard every unpublished change and go back to the live menu.
+			$("resetAllBtn").addEventListener("click", () => {
+				const n = countChanges();
+				if (n === 0) return;
+				if (!confirm(`¿Descartar los ${n} cambio(s) sin publicar y volver al menú publicado?`)) return;
+				menu = JSON.parse(JSON.stringify(publishedMenu));
+				pendingUploads = {};
+				clearPendingUploads();
+				clearDraft();
+				renderGrid();
+				updatePublishUI();
+				toast("Cambios descartados. El menú vuelve a la versión publicada.");
+			});
 
 			// ---- edit modal ----
 			function optRowHTML(opt) {
@@ -1028,9 +1053,25 @@ const initialMenu = menuData;
 			});
 			$("cancelEditBtn").addEventListener("click", closeEdit);
 			$("resetDishBtn").addEventListener("click", () => {
-				if (!editingOriginal) return;
-				fillEditForm(editingOriginal);
-				toast("Cambios restablecidos a la versión publicada.");
+				if (!editingOriginal || !editingId) return;
+				const i = menu.dishes.findIndex((x) => x.id === editingId);
+				if (i < 0) return;
+				// Restore the published dish itself (not a form rebuild), so
+				// the count and the "Sin publicar" badge clear immediately.
+				// A form rebuild would drop the dish's other photo field
+				// (most dishes carry both photo and platePhoto).
+				const cur = menu.dishes[i];
+				const curPhoto = cur.platePhoto || cur.photo;
+				if (curPhoto && pendingUploads[curPhoto]) {
+					delete pendingUploads[curPhoto];
+					savePendingUploads();
+				}
+				menu.dishes[i] = JSON.parse(JSON.stringify(editingOriginal));
+				saveDraft();
+				closeEdit();
+				renderGrid();
+				updatePublishUI();
+				toast("Plato restablecido a la versión publicada.");
 			});
 			$("editOverlay").addEventListener("click", (e) => { if (e.target === $("editOverlay")) closeEdit(); });
 			$("deleteDishBtn").addEventListener("click", async () => {
@@ -1236,8 +1277,10 @@ const initialMenu = menuData;
 				$("loginGate").hidden = loggedIn;
 				$("dashboard").hidden = !loggedIn;
 				// The Publish button lives in the topbar (outside the
-				// dashboard), so hide it too until logged in.
+				// dashboard), so hide it too until logged in. Same for
+				// Reset-all, which also lives in the topbar.
 				$("publishBtn").hidden = !loggedIn;
+				$("resetAllBtn").hidden = !loggedIn || countChanges() === 0;
 			}
 			// ---- account popover (person icon menu) ----
 			function closeAccountPopover() {
