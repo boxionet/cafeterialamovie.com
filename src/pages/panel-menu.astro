@@ -521,6 +521,32 @@ const initialMenu = menuData;
 			}
 			.modal-actions { display: flex; align-items: center; gap: 16px; margin-top: 6px; flex-wrap: wrap; }
 			.modal-actions .btn-red { flex: 1; padding: 13px 18px; font-size: 1.05rem; }
+			/* ---------- confirm dialog (replaces the browser's native confirm()) ---------- */
+			.confirm-card {
+				background: var(--card);
+				border-radius: 20px;
+				width: 100%;
+				max-width: 440px;
+				margin: auto;
+				padding: 28px 26px 24px;
+				text-align: center;
+				box-shadow: 0 12px 40px var(--modal-shadow);
+			}
+			.confirm-icon {
+				width: 56px; height: 56px; border-radius: 50%;
+				background: var(--red); color: #fff;
+				font-family: var(--font-display), "Lilita One", "Arial Black", sans-serif;
+				font-size: 2rem; line-height: 56px;
+				margin: 0 auto 14px;
+			}
+			.confirm-card h2 {
+				font-family: var(--font-display), "Lilita One", "Arial Black", sans-serif;
+				font-size: 1.5rem; text-transform: uppercase;
+				margin: 0 0 8px; padding: 0;
+			}
+			.confirm-card p { color: var(--grey); font-size: 1rem; line-height: 1.55; margin: 0 0 22px; }
+			.confirm-actions { display: flex; gap: 12px; }
+			.confirm-actions .btn { flex: 1; padding: 12px 16px; font-size: 1rem; }
 			.link-btn {
 				background: none;
 				border: 0;
@@ -796,6 +822,19 @@ const initialMenu = menuData;
 			</div>
 		</div>
 
+		<!-- Confirm dialog (replaces the browser's native confirm()) -->
+		<div class="overlay" id="confirmOverlay" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMsg">
+			<div class="confirm-card">
+				<div class="confirm-icon" aria-hidden="true">!</div>
+				<h2 id="confirmTitle">¿Confirmar?</h2>
+				<p id="confirmMsg"></p>
+				<div class="confirm-actions">
+					<button class="btn btn-red" id="confirmOkBtn" type="button">Confirmar</button>
+					<button class="btn btn-outline" id="confirmCancelBtn" type="button">Cancelar</button>
+				</div>
+			</div>
+		</div>
+
 		<div class="toast" id="toast" role="status"></div>
 
 		<script define:vars={{ initialMenu, photoUrls, photoList }}>
@@ -980,10 +1019,15 @@ const initialMenu = menuData;
 				$("resetAllBtn").hidden = n === 0;
 			}
 			// Discard every unpublished change and go back to the live menu.
-			$("resetAllBtn").addEventListener("click", () => {
+			$("resetAllBtn").addEventListener("click", async () => {
 				const n = countChanges();
 				if (n === 0) return;
-				if (!confirm(`¿Descartar los ${n} cambio(s) sin publicar y volver al menú publicado?`)) return;
+				const ok = await confirmDialog({
+					title: "¿Descartar todos los cambios?",
+					message: `Se descartarán los ${n} cambio(s) sin publicar y el menú volverá a la versión publicada.`,
+					confirmLabel: "Sí, descartar todo",
+				});
+				if (!ok) return;
 				menu = JSON.parse(JSON.stringify(publishedMenu));
 				pendingUploads = {};
 				clearPendingUploads();
@@ -991,6 +1035,31 @@ const initialMenu = menuData;
 				renderGrid();
 				updatePublishUI();
 				toast("Cambios descartados. El menú vuelve a la versión publicada.");
+			});
+
+			// ---- custom confirm dialog (replaces the browser's native confirm()) ----
+			// Returns a Promise<boolean>. One shared dialog; each call re-arms
+			// it with its own title, message and confirm label.
+			let confirmResolve = null;
+			function confirmDialog({ title, message, confirmLabel = "Confirmar" }) {
+				return new Promise((resolve) => {
+					confirmResolve = resolve;
+					$("confirmTitle").textContent = title;
+					$("confirmMsg").textContent = message;
+					$("confirmOkBtn").textContent = confirmLabel;
+					$("confirmOverlay").classList.add("open");
+					$("confirmOkBtn").focus();
+				});
+			}
+			function closeConfirm(result) {
+				$("confirmOverlay").classList.remove("open");
+				if (confirmResolve) { const r = confirmResolve; confirmResolve = null; r(result); }
+			}
+			$("confirmOkBtn").addEventListener("click", () => closeConfirm(true));
+			$("confirmCancelBtn").addEventListener("click", () => closeConfirm(false));
+			$("confirmOverlay").addEventListener("click", (e) => { if (e.target === $("confirmOverlay")) closeConfirm(false); });
+			document.addEventListener("keydown", (e) => {
+				if (e.key === "Escape" && $("confirmOverlay").classList.contains("open")) closeConfirm(false);
 			});
 
 			// ---- edit modal ----
@@ -1078,7 +1147,12 @@ const initialMenu = menuData;
 				if (!editingId) return;
 				const d = menu.dishes.find((x) => x.id === editingId);
 				if (!d) return;
-				if (!confirm(`¿Eliminar "${d.name}" del menú?`)) return;
+				const ok = await confirmDialog({
+					title: `¿Eliminar "${d.name}"?`,
+					message: "El plato se quitará del menú. Pulsa Publicar para actualizar el sitio.",
+					confirmLabel: "Sí, eliminar",
+				});
+				if (!ok) return;
 				menu.dishes = menu.dishes.filter((x) => x.id !== editingId);
 				saveDraft();
 				closeEdit();
@@ -1107,8 +1181,20 @@ const initialMenu = menuData;
 					platePhoto: "",
 					options,
 				};
-				// If the chosen photo is one of the black-plate shots, keep it as platePhoto.
-				if (/black-plate/i.test(editingPhoto)) { dish.platePhoto = editingPhoto; dish.photo = ""; }
+				// The form only tracks the displayed photo. If the user did
+				// not change it, keep both of the dish's photo fields — a
+				// rebuild would drop the other one (most dishes carry both
+				// photo and platePhoto). Only a newly chosen photo goes
+				// through the black-plate rule (and clears the other field,
+				// so the new photo is the one that displays).
+				const origDish = isNew ? null : menu.dishes.find((x) => x.id === id);
+				const origDisplayed = origDish ? (origDish.platePhoto || origDish.photo || "") : "";
+				if (origDish && editingPhoto === origDisplayed) {
+					dish.photo = origDish.photo;
+					dish.platePhoto = origDish.platePhoto;
+				} else if (/black-plate/i.test(editingPhoto)) {
+					dish.platePhoto = editingPhoto; dish.photo = "";
+				}
 				if (isNew) menu.dishes.push(dish);
 				else {
 					const i = menu.dishes.findIndex((x) => x.id === id);
