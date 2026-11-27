@@ -14,7 +14,7 @@ export function getLocalBusinessSchema(origin, locale) {
 		logo: origin + BUSINESS.logo,
 		image: origin + BUSINESS.logo,
 		telephone: BUSINESS.phoneForTel,
-		openingHours: ["We-Su 18:45-24:00"],
+		openingHours: ["We-Su 18:30-00:30"],
 		servesCuisine: "Dominican",
 		priceRange: "RD$60 - RD$600",
 		geo: {

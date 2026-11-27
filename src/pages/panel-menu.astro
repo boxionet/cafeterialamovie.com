@@ -763,6 +763,7 @@ const initialMenu = menuData;
 						</div>
 						<div class="modal-actions">
 							<button class="btn btn-red" id="saveDishBtn" type="submit">Guardar cambios</button>
+							<button class="link-btn" id="resetDishBtn" type="button">Restablecer</button>
 							<button class="link-btn" id="cancelEditBtn" type="button">Cancelar</button>
 							<button class="link-btn danger" id="deleteDishBtn" type="button">Eliminar plato</button>
 						</div>
@@ -848,6 +849,7 @@ const initialMenu = menuData;
 			let query = "";
 			let token = localStorage.getItem(TOKEN_KEY) || "";
 			let editingId = null; // dish id, or null for a new dish
+			let editingOriginal = null; // published version of the dish being edited (Restablecer target)
 			let editingPhoto = ""; // chosen photo filename
 			let pendingUpload = null; // {file, name, dataUrl} — this edit only; moved to pendingUploads on save
 			let pickerTarget = "photo";
@@ -974,16 +976,10 @@ const initialMenu = menuData;
 					<button type="button" class="opt-remove" title="Quitar opción" aria-label="Quitar opción">×</button>
 				</div>`;
 			}
-			function openEdit(id) {
-				const isNew = !id;
-				editingId = isNew ? null : id;
-				const d = isNew
-					? { id: "", name: "", desc: "", category: menu.categories[0]?.id || "", photo: "", platePhoto: "", options: [{ label: "Sola", price: 0 }] }
-					: menu.dishes.find((x) => x.id === id);
-				if (!d) return;
+			// Re-fill the edit form from a dish object (used by openEdit and Restablecer).
+			function fillEditForm(d) {
 				editingPhoto = d.platePhoto || d.photo || "";
 				pendingUpload = null;
-				$("editTitle").textContent = isNew ? "Agregar plato" : "Editar plato";
 				$("editPhoto").src = displayPhoto(d) || "";
 				$("editPhoto").alt = d.name || "Foto del plato";
 				$("fName").value = d.name;
@@ -993,8 +989,24 @@ const initialMenu = menuData;
 				).join("");
 				$("optList").innerHTML = (d.options.length ? d.options : [{ label: "Sola", price: 0 }]).map(optRowHTML).join("");
 				bindOptRows();
+			}
+			function openEdit(id) {
+				const isNew = !id;
+				editingId = isNew ? null : id;
+				const d = isNew
+					? { id: "", name: "", desc: "", category: menu.categories[0]?.id || "", photo: "", platePhoto: "", options: [{ label: "Sola", price: 0 }] }
+					: menu.dishes.find((x) => x.id === id);
+				if (!d) return;
+				// The published version is what Restablecer reverts to, so a
+				// saved-but-unpublished edit can be undone too. New dishes
+				// have no published version, so the button stays hidden.
+				const published = isNew ? null : publishedMenu.dishes.find((x) => x.id === id);
+				editingOriginal = published || null;
+				fillEditForm(d);
+				$("editTitle").textContent = isNew ? "Agregar plato" : "Editar plato";
 				$("deleteDishBtn").style.display = isNew ? "none" : "";
 				$("saveDishBtn").textContent = isNew ? "Agregar plato" : "Guardar cambios";
+				$("resetDishBtn").style.display = published ? "" : "none";
 				$("editOverlay").classList.add("open");
 				$("fName").focus();
 			}
@@ -1015,6 +1027,11 @@ const initialMenu = menuData;
 				rows[rows.length - 1].querySelector(".opt-label").focus();
 			});
 			$("cancelEditBtn").addEventListener("click", closeEdit);
+			$("resetDishBtn").addEventListener("click", () => {
+				if (!editingOriginal) return;
+				fillEditForm(editingOriginal);
+				toast("Cambios restablecidos a la versión publicada.");
+			});
 			$("editOverlay").addEventListener("click", (e) => { if (e.target === $("editOverlay")) closeEdit(); });
 			$("deleteDishBtn").addEventListener("click", async () => {
 				if (!editingId) return;

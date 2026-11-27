@@ -18,8 +18,8 @@ export const BUSINESS = {
 	// confirmed Nov 23: the address is Calle S2 #53, Los Mina Katanga.
 	geo: { latitude: 18.5152884, longitude: -69.8661444 },
 	hours: {
-		open: "Miércoles a domingo · 6:45 PM – 12:00 AM",
+		open: "Miércoles a domingo · 6:30 PM – 12:30 AM",
 		closed: "Lunes y martes · Cerrado",
-		short: "Mié–Dom · 6:45 PM – 12 AM",
+		short: "Mié–Dom · 6:30 PM – 12:30 AM",
 	},
 };
