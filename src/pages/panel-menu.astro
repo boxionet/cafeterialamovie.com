@@ -594,7 +594,10 @@ const initialMenu = menuData;
 				transform: translateX(-50%) translateY(20px);
 				background: var(--toast-bg);
 				color: var(--toast-ink);
-				border-radius: 999px;
+				/* Rounded rectangle, not a pill: on mobile a long message
+				   wraps to several lines and a 999px radius turns the
+				   toast into a tall round capsule. */
+				border-radius: 12px;
 				padding: 12px 22px;
 				font-weight: 700;
 				font-size: 0.98rem;
